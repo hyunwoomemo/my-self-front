@@ -1,2 +1,7 @@
 # my-self
-나 혼자 / 프로젝트
+
+moim moim 프로젝트
+
+npm i
+
+npm run dev
