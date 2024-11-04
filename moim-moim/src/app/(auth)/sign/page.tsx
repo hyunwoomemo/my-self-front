@@ -1,5 +1,6 @@
-import SignContainer from "./SignContainer";
+import React from 'react';
+import { SignContainer } from './SignContainer';
 
-const Page = () => <SignContainer />;
-
-export default Page;
+export default function Page() {
+  return <SignContainer />;
+}

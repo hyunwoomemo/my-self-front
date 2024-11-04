@@ -1,11 +1,9 @@
-import { signIn } from "next-auth/react";
+import { signIn } from 'next-auth/react';
 
-export const handleEmailSignIn = (email: string, password: string) => {
-  console.log("Email:", email);
-  console.log("Password:", password);
-  // 로그인 로직 추가
-};
-
-export const handleSocialSignIn = (provider: string) => {
-  signIn(provider);
-};
+export function loginWithProvider(provider: string) {
+  // 소셜 로그인 실행
+  console.log('소셜 로그인!', provider);
+  return signIn(provider, { callbackUrl: '/dashboard' })
+    .then(() => console.log(`Logged in with ${provider}`))
+    .catch((error) => console.error(`Login failed with ${provider}`, error));
+}

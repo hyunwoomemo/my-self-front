@@ -1,13 +1,33 @@
-import React from "react";
-import { handleSocialSignIn } from "../action/LoginAction";
+'use client'
+import React from 'react';
+// import '../../styles/socialLoginButtons.scss'
+interface SocialLoginButtonsProps {
+  onLoginWithGoogle: () => void;
+  onLoginWithKakao: () => void;
+  onLoginWithNaver: () => void;
+  onLoginWithApple: () => void;
+}
 
-const SocialLoginButtons = () => (
-  <div className="social-buttons">
-    <button onClick={() => handleSocialSignIn("google")}>Google</button>
-    <button onClick={() => handleSocialSignIn("naver")}>Naver</button>
-    <button onClick={() => handleSocialSignIn("kakao")}>Kakao</button>
-    <button onClick={() => handleSocialSignIn("instagram")}>Instagram</button>
-  </div>
-);
-
-export default SocialLoginButtons;
+export function SocialLoginButtons({
+  onLoginWithGoogle,
+  onLoginWithKakao,
+  onLoginWithNaver,
+  onLoginWithApple,
+}: SocialLoginButtonsProps) {
+  return (
+    <div className="social-login">
+      <button className="social-button google" onClick={onLoginWithGoogle}>
+        구글로 로그인
+      </button>
+      <button className="social-button kakao" onClick={onLoginWithKakao}>
+        카카오로 로그인
+      </button>
+      <button className="social-button naver" onClick={onLoginWithNaver}>
+        네이버로 로그인
+      </button>
+      <button className="social-button apple" onClick={onLoginWithApple}>
+        애플로 로그인
+      </button>
+    </div>
+  );
+}

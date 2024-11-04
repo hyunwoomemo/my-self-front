@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "jsonwebtoken": "^9.0.2",
     "next": "15.0.1",
     "next-auth": "^4.24.10",
     "react": "19.0.0-rc-69d4b800-20241021",
     "react-dom": "19.0.0-rc-69d4b800-20241021",
-    "sass": "^1.80.4"
+    "sass": "^1.80.6"
   },
   "devDependencies": {
     "@types/node": "^20",

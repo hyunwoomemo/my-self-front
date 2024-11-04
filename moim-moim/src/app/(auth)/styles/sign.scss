@@ -1,4 +1,4 @@
-.login-container {
+.sign-container {
   display: flex;
   justify-content: center; // 중앙 정렬
   align-items: center; // 수직 중앙 정렬
@@ -6,7 +6,7 @@
   padding: 0 20px; // 좌우 여백 설정
   background-color: #f0f2f5; // 배경색 설정
 
-  .login-form {
+  .sign-form {
     background-color: white; // 폼 배경색
     padding: 20px;
     border-radius: 8px; // 둥근 모서리
@@ -28,7 +28,8 @@
       display: flex;
       flex-direction: column;
 
-      input {
+      input,
+      select {
         padding: 12px; // 입력 필드 패딩
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -63,6 +64,7 @@
       display: grid; // 그리드 레이아웃
       grid-template-columns: repeat(2, 1fr); // 2열 구성
       gap: 10px; // 그리드 요소 간 간격
+      margin-top: 20px; // 소셜 로그인 버튼 위 여백
 
       button {
         padding: 10px;

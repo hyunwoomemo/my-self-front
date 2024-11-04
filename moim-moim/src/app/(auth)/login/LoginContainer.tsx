@@ -1,16 +1,41 @@
-"use client";
+"use client"
 
-import React from "react";
-import LoginForm from "./components/LoginForm";
-import SocialLoginButtons from "./components/SocialLoginButtons";
-import { handleEmailSignIn } from "./action/LoginAction";
-import "../styles/login.scss";
-const LoginContainer = () => (
-  <div className="auth-container">
-    <h1>Login</h1>
-    <LoginForm onLogin={handleEmailSignIn} />
-    <SocialLoginButtons />
-  </div>
-);
+import React from 'react';
+import { LoginForm } from './components/LoginForm';
+import { loginWithProvider } from './action/LoginAction';
+import '../styles/login.scss';
 
-export default LoginContainer;
+export function LoginContainer() {
+  const handleLoginWithGoogle = () => {
+    loginWithProvider('google');
+  };
+
+  const handleLoginWithKakao = () => {
+    loginWithProvider('kakao');
+  };
+
+  const handleLoginWithNaver = () => {
+    loginWithProvider('naver');
+  };
+
+  const handleLoginWithApple = () => {
+    loginWithProvider('apple');
+  };
+
+  const handleLoginClick = async (data: { email: string; password: string }) => {
+    console.log('로그인 시도:', data);
+    // 로그인 API 호출 로직 추가
+  };
+
+  return (
+    <div className="login-container">
+      <LoginForm
+        onLoginClick={handleLoginClick}
+        onLoginWithGoogle={handleLoginWithGoogle}
+        onLoginWithKakao={handleLoginWithKakao}
+        onLoginWithNaver={handleLoginWithNaver}
+        onLoginWithApple={handleLoginWithApple}
+      />
+    </div>
+  );
+}
