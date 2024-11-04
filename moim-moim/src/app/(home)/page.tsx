@@ -1,8 +1,5 @@
-import { HomeContainer } from "./HomeContainer";
-import "./home.scss";
-
 const Home = () => {
-  return <HomeContainer />;
+  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 };
 
 export default Home;
