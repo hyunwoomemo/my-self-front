@@ -1,6 +1,6 @@
-'use client'
-import React from 'react';
-import { FormData } from '../types'; // FormData 타입을 import
+"use client";
+import React from "react";
+import { FormData } from "../types"; // FormData 타입을 import
 
 interface SignFormProps {
   onSignUpClick: (data: FormData) => void; // Action을 호출하는 props
@@ -8,12 +8,12 @@ interface SignFormProps {
 
 export function SignForm({ onSignUpClick }: SignFormProps) {
   const [formData, setFormData] = React.useState<FormData>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    nickName: '',
-    birthDate: '',
-    gender: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    nickName: "",
+    birthDate: "",
+    gender: "",
   });
 
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
@@ -30,27 +30,27 @@ export function SignForm({ onSignUpClick }: SignFormProps) {
     // 유효성 검사
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
-      newErrors.email = '유효한 이메일을 입력해주세요.';
+      newErrors.email = "유효한 이메일을 입력해주세요.";
     }
 
     if (formData.password.length < 8) {
-      newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다.';
+      newErrors.password = "비밀번호는 최소 8자 이상이어야 합니다.";
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
 
     if (!formData.nickName) {
-      newErrors.nickName = '닉네임을 입력해주세요.';
+      newErrors.nickName = "닉네임을 입력해주세요.";
     }
 
     if (!formData.birthDate) {
-      newErrors.birthDate = '생년월일을 입력해주세요.';
+      newErrors.birthDate = "생년월일을 입력해주세요.";
     }
 
     if (!formData.gender) {
-      newErrors.gender = '성별을 선택해주세요.';
+      newErrors.gender = "성별을 선택해주세요.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -71,11 +71,23 @@ export function SignForm({ onSignUpClick }: SignFormProps) {
         {errors.email && <div className="error">{errors.email}</div>}
       </div>
       <div className="form-group">
-        <input type="password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} />
+        <input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          value={formData.password}
+          onChange={handleChange}
+        />
         {errors.password && <div className="error">{errors.password}</div>}
       </div>
       <div className="form-group">
-        <input type="password" name="confirmPassword" placeholder="비밀번호 확인" value={formData.confirmPassword} onChange={handleChange} />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="비밀번호 확인"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+        />
         {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
       </div>
       <div className="form-group">

@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { LoginForm } from './components/LoginForm';
-import { loginWithProvider } from './action/LoginAction';
-import '../styles/login.scss';
+import React from "react";
+import { LoginForm } from "./components/LoginForm";
+import { loginWithProvider } from "./action/LoginAction";
+import "../styles/login.scss";
 
 export function LoginContainer() {
   const handleLoginWithGoogle = () => {
-    loginWithProvider('google');
+    loginWithProvider("google");
   };
 
   const handleLoginWithKakao = () => {
-    loginWithProvider('kakao');
+    loginWithProvider("kakao");
   };
 
   const handleLoginWithNaver = () => {
-    loginWithProvider('naver');
+    loginWithProvider("naver");
   };
 
   const handleLoginWithApple = () => {
-    loginWithProvider('apple');
+    loginWithProvider("apple");
   };
 
   const handleLoginClick = async (data: { email: string; password: string }) => {
-    console.log('로그인 시도:', data);
+    console.log("로그인 시도:", data);
     // 로그인 API 호출 로직 추가
   };
 

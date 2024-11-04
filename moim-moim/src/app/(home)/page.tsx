@@ -1,10 +1,8 @@
-import { HomeContainer } from './HomeContainer';
-import './home.scss';
+import { HomeContainer } from "./HomeContainer";
+import "./home.scss";
 
 const Home = () => {
-    return (
-        <HomeContainer />
-    );
+  return <HomeContainer />;
 };
 
 export default Home;
