@@ -1,9 +1,9 @@
-"use client"
-import React from 'react';
-import { FormData } from '../types';
-import { SocialLoginButtons } from './SocialLoginButtons';
+"use client";
+import React from "react";
+import { FormData } from "../types";
+import { SocialLoginButtons } from "./SocialLoginButtons";
 
-import '../../styles/login.scss'
+import "../../styles/login.scss";
 interface LoginFormProps {
   onLoginClick: (data: FormData) => void;
   onLoginWithGoogle: () => void;
@@ -19,7 +19,7 @@ export function LoginForm({
   onLoginWithNaver,
   onLoginWithApple,
 }: LoginFormProps) {
-  const [formData, setFormData] = React.useState<FormData>({ email: '', password: '' });
+  const [formData, setFormData] = React.useState<FormData>({ email: "", password: "" });
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +28,7 @@ export function LoginForm({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log('나는 로그인 버튼')
+    console.log("나는 로그인 버튼");
     e.preventDefault();
     onLoginClick(formData); // 로그인 클릭 핸들러 호출
   };
@@ -37,11 +37,18 @@ export function LoginForm({
     <form className="login-form" onSubmit={handleSubmit}>
       <h2>로그인</h2>
       <div className="form-group">
-        <input type="text" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} required/>
+        <input type="text" name="email" placeholder="이메일" value={formData.email} onChange={handleChange} required />
         {errors.email && <div className="error">{errors.email}</div>}
       </div>
       <div className="form-group">
-        <input type="password" name="password" placeholder="비밀번호" value={formData.password} onChange={handleChange} required/>
+        <input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
         {errors.password && <div className="error">{errors.password}</div>}
       </div>
 

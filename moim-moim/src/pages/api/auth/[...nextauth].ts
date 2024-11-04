@@ -1,22 +1,22 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import NaverProvider from 'next-auth/providers/naver';
-import KakaoProvider from 'next-auth/providers/kakao';
-import AppleProvider from 'next-auth/providers/apple';
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import NaverProvider from "next-auth/providers/naver";
+import KakaoProvider from "next-auth/providers/kakao";
+import AppleProvider from "next-auth/providers/apple";
 
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 function generateAppleClientSecret() {
   const payload = {
     iss: process.env.APPLE_TEAM_ID,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 180, // 180일 유효
-    aud: 'https://appleid.apple.com',
+    aud: "https://appleid.apple.com",
     sub: process.env.APPLE_ID,
   };
 
-  const privateKey = process.env.APPLE_PRIVATE_KEY!.replace(/\\n/g, '\n');
+  const privateKey = process.env.APPLE_PRIVATE_KEY!.replace(/\\n/g, "\n");
   return jwt.sign(payload, privateKey, {
-    algorithm: 'ES256',
+    algorithm: "ES256",
     keyid: process.env.APPLE_KEY_ID,
   });
 }
@@ -37,7 +37,7 @@ export const authOptions = {
     }),
     AppleProvider({
       clientId: process.env.APPLE_ID!,
-      clientSecret: generateAppleClientSecret()
+      clientSecret: generateAppleClientSecret(),
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
