@@ -4,7 +4,7 @@ import NaverProvider from "next-auth/providers/naver";
 import KakaoProvider from "next-auth/providers/kakao";
 import AppleProvider from "next-auth/providers/apple";
 
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; // 어캐 쓰능교 ..
 function generateAppleClientSecret() {
   const payload = {
     iss: process.env.APPLE_TEAM_ID,
