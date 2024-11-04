@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FormData } from "../types"; // FormData 타입을 import
+import { FormData } from "./types"; // FormData 타입을 import
 
 interface SignFormProps {
   onSignUpClick: (data: FormData) => void; // Action을 호출하는 props

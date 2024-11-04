@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
-import { FormData } from "../types";
+import { FormData } from "./types";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 
-import "../../styles/login.scss";
+// import "../../styles/login.scss";
+import "@/app/(auth)/styles/login.scss";
 interface LoginFormProps {
   onLoginClick: (data: FormData) => void;
   onLoginWithGoogle: () => void;

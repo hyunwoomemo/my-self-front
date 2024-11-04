@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { LoginForm } from "./components/LoginForm";
-import { loginWithProvider } from "./action/LoginAction";
-import "../styles/login.scss";
+import { LoginForm } from "@/components/login/LoginForm";
+import { loginWithProvider } from "@/acctions/login/LoginAction";
+import "@/app/(auth)/styles/login.scss";
 
 export function LoginContainer() {
   const handleLoginWithGoogle = () => {

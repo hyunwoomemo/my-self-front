@@ -1,4 +1,4 @@
-import { FormData } from "../types"; // FormData 타입을 import
+import { FormData } from "@/components/sign/types"; // FormData 타입을 import
 
 export async function signUpWithProvider(data: FormData) {
   try {
