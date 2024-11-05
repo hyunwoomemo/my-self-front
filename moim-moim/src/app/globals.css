@@ -4,7 +4,7 @@
 
 @layer components {
   .commonLayoutContainer {
-    @apply mx-auto flex min-h-full w-full min-w-[320px] max-w-[600px] flex-col bg-[--layoutBg];
+    @apply mx-auto flex min-h-full w-full min-w-[320px] max-w-[600px] flex-col bg-[--layoutBg] shadow-md;
   }
 }
 

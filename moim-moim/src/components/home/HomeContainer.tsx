@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import "./home.scss";
+import "@/styles/home.scss";
 
 export const HomeContainer = () => {
   return (
