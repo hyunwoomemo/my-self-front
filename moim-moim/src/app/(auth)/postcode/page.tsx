@@ -4,7 +4,6 @@ import DaumPostcodeContainer from "./DaumPostcodeContainer";
 export default function Page() {
   return (
     <div>
-      <h1>우편번호 찾기</h1>
       <DaumPostcodeContainer />
     </div>
   );

@@ -1,45 +1,50 @@
-"use client";
-import React, { useState } from "react";
-import useDaumPostcodePopup from "@/components/postcode/useDaumPostcodePopup";
-import "./daumPostcodeContainer.scss";
-import { Address } from "@/components/postcode";
+"use client"
+import React, { useState } from 'react';
+import AddressAutocomplete from './AddressAutocomplete';
+import styles from './DaumPostcodeContainer.module.scss';
 
-const DaumPostcodeContainer: React.FunctionComponent = () => {
-  const [addresses, setAddresses] = useState<{ address: string }[]>(Array(3).fill({ address: "" })); // 3개의 주소를 저장하는 상태
-  const openPostcodePopup = useDaumPostcodePopup(); // Daum 우편번호 팝업 열기 훅
+interface Address {
+  address_name: string;
+}
 
-  // 주소 선택 시 호출되는 핸들러
-  const handleComplete = (address: Address, index: number) => {
-    const formattedAddress = formatAddress(address); // 형식화된 주소
-    const updatedAddresses = [...addresses];
-    updatedAddresses[index] = { address: formattedAddress }; // 선택된 주소를 리스트에 추가
-    setAddresses(updatedAddresses); // 상태 업데이트
-  };
+const fetchAddresses = async (query: string): Promise<Address[]> => {
+  const response = await fetch(`/api/searchAddress?query=${query}`);
+  if (!response.ok) {
+    throw new Error('주소 검색에 실패했습니다.');
+  }
+  const data = await response.json();
+  return data.documents || [];
+};
 
-  const formatAddress = (address: Address) => {
-    console.log("address", address);
-    const { address: fullAddress } = address;
-    const addressParts = fullAddress.split(" "); // 주소를 공백으로 분할
+const renderAddressItem = (address: Address) => (
+  <div>{address.address_name}</div>
+);
 
-    // 필요한 부분만 추출: "시", "구", "동" 순서로 조합
-    const city = addressParts[0]; // 시
-    const district = addressParts[1]; // 구
-    const neighborhood = addressParts[2] || ""; // 동, 없으면 빈 문자열
+const DaumPostcodeContainer = () => {
+  const [selectedAddresses, setSelectedAddresses] = useState<string[]>([]); 
 
-    return `${city} ${district} ${neighborhood}`.trim(); // 형식화된 주소 반환
+  // 주소 선택 핸들러
+  const handleAddressSelect = (address: Address) => {
+    setSelectedAddresses((prev) => {
+      if (prev.length < 3) {
+        return [...prev, address.address_name]; // 주소 추가
+      } else {
+        alert('최대 3개의 주소만 선택 가능합니다.'); 
+        return prev;
+      }
+    });
   };
 
   return (
-    <div className="postcode-container">
-      <div className="postcode-inputs">
-        {addresses.map((item, index) => (
-          <div
-            key={index}
-            className="postcode-input"
-            onClick={() => openPostcodePopup({ onComplete: (address) => handleComplete(address, index) })}
-          >
-            <input type="text" value={item.address} placeholder={`주소 ${index + 1}`} readOnly />
-          </div>
+    <div className={styles.container}>
+      <AddressAutocomplete
+        fetchData={fetchAddresses} // 데이터 검색 함수
+        onSelect={handleAddressSelect} // 주소 선택 핸들러
+        renderItem={renderAddressItem} // 주소 항목 렌더링 함수
+      />
+      <div className={styles.selectedAddresses}>
+        {selectedAddresses.map((address, index) => (
+          <p key={index}>{address}</p> // 선택된 주소 목록
         ))}
       </div>
     </div>

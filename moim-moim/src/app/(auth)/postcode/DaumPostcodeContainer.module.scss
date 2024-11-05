@@ -1,0 +1,32 @@
+.container {
+  max-width: 600px; /* 최대 너비 설정 */
+  margin: 20px auto; /* 상하 여백과 중앙 정렬 */
+  padding: 20px; /* 전체 여백 추가 */
+  border: 1px solid #ccc; /* 경계선 스타일 */
+  border-radius: 8px; /* 둥근 모서리 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #f9f9f9; /* 배경 색상 */
+}
+
+.selectedAddresses {
+  margin-top: 20px; /* 상단 여백 추가 */
+}
+
+.selectedAddresses h3 {
+  font-size: 18px; /* 제목 글자 크기 */
+  margin-bottom: 10px; /* 제목과 리스트 간 여백 */
+}
+
+.selectedAddresses p {
+  background-color: #e0f7fa; /* 선택된 주소 배경색을 연한 하늘색으로 변경 */
+  color: #00796b; /* 선택된 주소 글자색을 어두운 청록색으로 변경 */
+  padding: 10px; /* 여백 추가 */
+  border-radius: 4px; /* 둥근 모서리 */
+  margin: 5px 0; /* 상하 여백 추가 */
+  border: 1px solid #b2ebf2; /* 경계선 추가 */
+  transition: background-color 0.3s; /* 배경색 변화에 애니메이션 효과 추가 */
+
+  &:hover {
+    background-color: #b2ebf2; /* 호버 시 배경색을 조금 더 진한 연한 하늘색으로 변경 */
+  }
+}
