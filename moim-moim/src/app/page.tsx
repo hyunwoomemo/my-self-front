@@ -1,13 +1,10 @@
-import Header from "@/components/home/Header";
-import MeetingList from "@/components/meeting/MettingList";
+import MeetingListContainer from "@/components/home/MeetingListContainer";
+import { useSocket } from "@/hooks/useSocket";
 
 const Home = () => {
-  return (
-    <div className="commonLayoutContainer">
-      <Header />
-      <MeetingList />
-    </div>
-  );
+  useSocket();
+
+  return <MeetingListContainer />;
 };
 
 export default Home;

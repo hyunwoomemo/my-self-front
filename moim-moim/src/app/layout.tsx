@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import Hr from "@/components/common/Hr";
+import Nav from "@/components/common/Nav";
+import Header from "@/components/home/Header";
+import React from "react";
 
 const gamtan = localFont({
   src: [
@@ -32,8 +36,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={gamtan.className}>
+      <body>
+        <div className="commonLayoutContainer">
+          <Header />
+          <Hr />
+          <main className="relative flex-1">{children}</main>
+          <Nav />
+        </div>
+      </body>
     </html>
   );
 }
