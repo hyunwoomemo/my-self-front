@@ -36,12 +36,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={gamtan.className}>
+    <html lang="en" className={`${gamtan.className} scrollbar`}>
       <body>
         <div className="commonLayoutContainer">
           <Header />
           <Hr />
-          <main className="relative flex-1">{children}</main>
+          <main className="relative w-full max-w-[600px]" style={{ height: "calc(100vh - 11rem)" }}>
+            {children}
+          </main>
           <Nav />
         </div>
       </body>

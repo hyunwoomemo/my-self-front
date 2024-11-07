@@ -17,9 +17,10 @@ const config: Config = {
         border: "#d9d9d9",
         surface: "#f5f5f5",
         text: "#333",
-        white: "#fff",
+        bg: "#fff",
         semiPrimary: "#bbdaed",
         textGray: "#929292",
+        hover: "#215c75",
       },
       backgroundImage: {
         main: "linear-gradient(to right, #24C76D, #0da0c5)",
@@ -64,7 +65,30 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addComponents, theme }) {
+      addComponents({
+        ".scrollbar": {
+          "&::-webkit-scrollbar": {
+            width: 10,
+            height: 10,
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: theme("colors.surface"),
+            borderRadius: 50,
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: theme("colors.primary"),
+            borderRadius: 10,
+            border: `2px solid ${theme("colors.surface")}`,
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: theme("colors.hover"),
+          },
+        },
+      });
+    },
+  ],
   // reactStrictMode: true,
 };
 export default config;
