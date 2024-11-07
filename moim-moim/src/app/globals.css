@@ -6,43 +6,36 @@
   .commonLayoutContainer {
     @apply mx-auto flex min-h-full w-full min-w-[320px] max-w-[600px] flex-col bg-[--layoutBg] shadow-md;
   }
+  .labelBtn {
+    @apply rounded-xl border border-solid font-normal !important;
+  }
+  .labelBtn.primary {
+    @apply border-primary text-primary !important;
+  }
+  .labelBtn.default {
+    @apply border-border text-text !important;
+  }
 }
-
-/* @font-face {
-  font-family: "gamtan";
-  src: url(../../fonts/gamtanLoadThin.otf);
-  font-weight: 300;
-}
-@font-face {
-  font-family: "gamtan";
-  src: url(../../fonts/gamtanLoadRegular.otf);
-  font-weight: normal;
-}
-@font-face {
-  font-family: "gamtan";
-  src: url(../../fonts/gamtanLoadBold.otf);
-  font-weight: bold;
-}
-@font-face {
-  font-family: "tantan";
-  src: url(../../fonts/gamtanLoadTanTan.otf);
-} */
 
 :root {
   --layoutBg: #ffffff;
-  --white: #ffffff;
+  --textWhite: #ffffff;
   --text: #333;
-  --primary: #05abb1;
+  --primary: #0da0c5;
   --point: #ed9e2f;
-  --semiPrimary: #afdcdc;
+  --semiPrimary: #bbdaed;
+  --colorBg: #effcff;
+  --semiPrimary30: rgba(187, 218, 237, 0.3);
   --border: #d9d9d9;
   --surface: #f5f5f5;
+  --darkSurface: #d9d9d9;
   --textGray: #929292;
   --textDisabled: #999;
   --textPlaceholder: #b3b3b3;
   --disabledBorder: #b2b2b2;
   --disabledBg: #d9d9d9;
   --font-gamtan: "gamtan", sans-serif;
+  --hover: #215c75;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -174,8 +167,12 @@ section {
   display: block;
 }
 
+html,
 body {
   height: 100%;
+}
+
+body {
   line-height: 1;
   overflow-y: auto;
 }
