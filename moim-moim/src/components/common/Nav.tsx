@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiHomeSmile, BiMap, BiUser } from "react-icons/bi";
 import { RiChatSmile2Line } from "react-icons/ri";
@@ -30,15 +31,20 @@ const NavLink = [
 
 const Nav = () => {
   const [active, setActive] = useState(NavLink[0].href);
+  const pathname = usePathname();
 
   const handleClick = (url: string) => {
     setActive(url);
   };
+
+  if (pathname !== "/moim/*/intro") {
+    return null;
+  }
   return (
     <nav className="relative z-40">
       <div
         id="gnb"
-        className="bg-bg fixed bottom-0 left-0 right-0 mx-auto flex w-full max-w-[600px] border-t border-solid border-border py-4"
+        className="fixed bottom-0 left-0 right-0 mx-auto flex w-full max-w-[600px] border-t border-solid border-border bg-bg py-4"
       >
         {NavLink.map((v, i) => (
           <Link

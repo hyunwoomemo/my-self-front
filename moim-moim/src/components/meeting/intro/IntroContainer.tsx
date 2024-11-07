@@ -27,7 +27,7 @@ const IntroContainer = ({ data }) => {
         <button className="text-2xl text-white">
           <SlSettings />
         </button>
-        <button className="text-4xl text-white">
+        <button className="text-4xl text-white" onClick={() => router.back()}>
           <IoCloseOutline />
         </button>
       </div>
