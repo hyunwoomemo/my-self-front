@@ -10,27 +10,27 @@ interface TabsProps {
   data: TabData[];
   type: "default" | "sub" | "xs";
   link?: boolean;
-  value: TabData | undefined;
-  setValue: Dispatch<SetStateAction<{ label: string; value: string }>>;
+  tabValue: TabData | undefined;
+  setTabValue: Dispatch<SetStateAction<{ label: string; value: string }>>;
 }
 
-const Tabs = ({ data, type, link, value, setValue }: TabsProps) => {
-  const tabTypeClass = () => {
+const Tabs = ({ data, type, link, tabValue, setTabValue }: TabsProps) => {
+  const tabTypeClass = (v: string) => {
     switch (type) {
       case "default":
-        return "min-w-16 flex flex-1 items-center justify-center p-3 text-center";
+        return `min-w-16 flex flex-1 items-center justify-center p-3 text-center border-solid ${tabValue?.value === v ? "border-b-4 border-primary" : "border-b border-surface"}`;
     }
   };
 
-  const tabTextTypeClass = (label: string) => {
+  const tabTextTypeClass = (v: string) => {
     switch (type) {
       case "default":
-        return value?.label === label ? "font-bold" : "text-[var(--textDisabled)]";
+        return tabValue?.value === v ? "font-bold" : "text-[var(--textDisabled)]";
     }
   };
 
   const handleTabActive = (tab: TabData) => {
-    setValue(tab);
+    setTabValue(tab);
   };
 
   if (link) {
@@ -48,8 +48,8 @@ const Tabs = ({ data, type, link, value, setValue }: TabsProps) => {
     <div>
       <ul className="flex">
         {data.map((v, i) => (
-          <li key={i} className={`${tabTypeClass()} cursor-pointer`} onClick={() => handleTabActive(v)}>
-            <span className={tabTextTypeClass(v.label)}>{v.label}</span>
+          <li key={i} className={`${tabTypeClass(v.value)} cursor-pointer`} onClick={() => handleTabActive(v)}>
+            <span className={tabTextTypeClass(v.value)}>{v.label}</span>
           </li>
         ))}
       </ul>
