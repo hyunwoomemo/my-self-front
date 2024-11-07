@@ -2,9 +2,9 @@
 import { MdCheck } from "react-icons/md";
 
 interface ButtonProps {
-  type: "label" | "full" | "default";
+  type: "label" | "full" | "default" | "flex";
   title: string;
-  value: boolean;
+  value?: boolean;
   onClick: () => void;
 }
 
@@ -13,6 +13,12 @@ const Button = ({ type, title, value, onClick }: ButtonProps) => {
     switch (type) {
       case "label":
         return `border-solid border border-border px-3 py-1 rounded-lg ${value ? "bg-semiPrimary border-semiPrimary" : "bg-layOutBg"} w-fit`;
+      case "default":
+        return "rounded-xl bg-primary p-5 min-w-20";
+      case "full":
+        return "rounded-xl bg-primary p-5 min-w-20 w-full";
+      case "flex":
+        return "rounded-xl bg-primary p-5 min-w-20 flex-1";
     }
   };
 
@@ -20,6 +26,12 @@ const Button = ({ type, title, value, onClick }: ButtonProps) => {
     switch (type) {
       case "label":
         return ``;
+      case "default":
+        return "text-white text-lg";
+      case "full":
+        return "text-white text-lg";
+      case "flex":
+        return "text-white text-lg";
     }
   };
 

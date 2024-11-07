@@ -18,7 +18,7 @@ const Tabs = ({ data, type, link, tabValue, setTabValue }: TabsProps) => {
   const tabTypeClass = (v: string) => {
     switch (type) {
       case "default":
-        return `min-w-16 flex flex-1 items-center justify-center p-3 text-center border-solid ${tabValue?.value === v ? "border-b-4 border-primary" : "border-b border-surface"}`;
+        return `bg-bg min-w-16 flex flex-1 items-center justify-center p-3 text-center border-solid ${tabValue?.value === v ? "border-b-4 border-primary" : "border-b border-surface"}`;
     }
   };
 
@@ -37,7 +37,7 @@ const Tabs = ({ data, type, link, tabValue, setTabValue }: TabsProps) => {
     return (
       <ul className="flex">
         {data.map((v, i) => (
-          <li key={i} className="">
+          <li key={i}>
             <Link href={v.value}>{v.label}</Link>
           </li>
         ))}
