@@ -5,6 +5,7 @@ import Hr from "@/components/common/Hr";
 import Nav from "@/components/common/Nav";
 import Header from "@/components/home/Header";
 import React from "react";
+import ClientLayout from "./client-layout";
 
 const gamtan = localFont({
   src: [
@@ -38,14 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${gamtan.className} scrollbar`}>
       <body>
-        <div className="commonLayoutContainer">
-          <Header />
-          <Hr />
-          <main className="relative w-full max-w-[600px]" style={{ height: "calc(100vh - 11rem)" }}>
-            {children}
-          </main>
-          <Nav />
-        </div>
+        <ClientLayout>
+          <div className="commonLayoutContainer">
+            <main className="relative w-full max-w-[600px]">{children}</main>
+            <Nav />
+          </div>
+        </ClientLayout>
       </body>
     </html>
   );
