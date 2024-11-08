@@ -31,32 +31,34 @@ const NavLink = [
 
 const Nav = () => {
   const [active, setActive] = useState(NavLink[0].href);
-  const pathname = usePathname();
+  const { pathname } = usePathname();
 
   const handleClick = (url: string) => {
     setActive(url);
   };
 
-  if (pathname !== "/moim/*/intro") {
+  if (pathname?.includes("/moim/") && pathname?.endsWith("/intro")) {
     return null;
   }
   return (
     <nav className="relative z-40">
-      <div
-        id="gnb"
-        className="fixed bottom-0 left-0 right-0 mx-auto flex w-full max-w-[600px] border-t border-solid border-border bg-bg py-4"
-      >
-        {NavLink.map((v, i) => (
-          <Link
-            key={i}
-            href={v.href}
-            className="flex flex-1 flex-col items-center gap-1 px-2 py-1"
-            onClick={() => handleClick(v.href)}
-          >
-            <v.icon className={`text-3xl ${active === v.href ? "text-primary" : "text-textGray"}`} />
-            <span className={`${active === v.href ? "font-bold text-primary" : "text-textGray"} `}>{v.label}</span>
-          </Link>
-        ))}
+      <div style={{ height: "calc(4.625rem + 21px)" }}>
+        <div
+          id="gnb"
+          className="fixed bottom-0 left-0 right-0 mx-auto flex w-full max-w-[600px] border-t border-solid border-border bg-bg py-4"
+        >
+          {NavLink.map((v, i) => (
+            <Link
+              key={i}
+              href={v.href}
+              className="flex flex-1 flex-col items-center gap-1 px-2 py-1"
+              onClick={() => handleClick(v.href)}
+            >
+              <v.icon className={`text-3xl ${active === v.href ? "text-primary" : "text-textGray"}`} />
+              <span className={`${active === v.href ? "font-bold text-primary" : "text-textGray"} `}>{v.label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
     </nav>
   );
