@@ -36,7 +36,6 @@ const Input = ({
   };
 
   if (label) {
-    console.log("dd", error);
     return (
       <div className="flex flex-col gap-1">
         <div className="text-lg font-bold">{label}</div>

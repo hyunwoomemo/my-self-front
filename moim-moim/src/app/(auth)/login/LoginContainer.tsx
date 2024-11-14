@@ -4,6 +4,7 @@ import React from "react";
 import { LoginForm } from "@/components/login/LoginForm";
 import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
+import { accountApi } from "@/app/api";
 
 export function LoginContainer() {
   const handleLoginWithGoogle = () => {
@@ -24,7 +25,8 @@ export function LoginContainer() {
 
   const handleLoginClick = async (data: { email: string; password: string }) => {
     console.log("로그인 시도:", data);
-    // 로그인 API 호출 로직 추가
+    const res = await accountApi.login(data);
+    console.log("res", res);
   };
 
   return (

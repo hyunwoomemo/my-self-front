@@ -39,7 +39,7 @@ export function LoginForm({
     e.preventDefault();
     onLoginClick(formData); // 로그인 클릭 핸들러 호출
   };
-
+  console.log("ddd", formData);
   return (
     <form
       className="flex w-2/3 min-w-[300px] flex-col gap-6 rounded-xl bg-white p-10 shadow-lg"
@@ -48,21 +48,21 @@ export function LoginForm({
       <div className="flex flex-col gap-6">
         <Input
           label="이메일 주소"
+          name="email"
           type="email"
           placeholder="moim@moimmoim.com"
-          value={formData.email}
           onChange={handleChange}
           required
         />
         <Input
           label="비밀번호"
+          name="password"
           type="password"
           placeholder="비밀번호 입력"
-          value={formData.password}
           onChange={handleChange}
           required
         />
-        <Button title="로그인" type="submit" custom="full" onClick={() => {}} />
+        <Button title="로그인" type="submit" custom="full" />
       </div>
       <div className="flex w-fit flex-col gap-2">
         <button className="text-left underline">Forgot password?</button>
