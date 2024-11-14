@@ -21,6 +21,10 @@ const config: Config = {
         semiPrimary: "#bbdaed",
         textGray: "#929292",
         hover: "#215c75",
+        disabled: "#eee",
+        disabledText: "#929292",
+        disabledBorder: "#b2b2b2",
+        error: "#b81515",
       },
       backgroundImage: {
         main: "linear-gradient(to right, #24C76D, #0da0c5)",
@@ -64,9 +68,9 @@ const config: Config = {
         shadowRolling: "shadowRolling 1s linear infinite",
       },
       screens: {
-        w_sm: { raw: "(min-width: 320px)" },
-        w_lg: { raw: "(min-width: 480px)" },
-        w_xl: { raw: "(min-width: 600px)" },
+        w_sm: { raw: "(max-width: 320px)" },
+        w_lg: { raw: "(max-width: 480px)" },
+        w_xl: { raw: "(max-width: 600px)" },
         h_sm: { raw: "(min-height: 600px)" },
         h_lg: { raw: "(min-height: 700px)" },
         h_xl: { raw: "(min-height: 800px)" },
@@ -76,13 +80,13 @@ const config: Config = {
   plugins: [
     function ({ addComponents, theme }) {
       addComponents({
-        ".scrollbar": {
+        ".react-datepicker__time-list, .scrollbar": {
           "&::-webkit-scrollbar": {
             width: 10,
             height: 10,
           },
           "&::-webkit-scrollbar-track": {
-            backgroundColor: theme("colors.surface"),
+            backgroundColor: "#fff",
             borderRadius: 50,
           },
           "&::-webkit-scrollbar-thumb": {

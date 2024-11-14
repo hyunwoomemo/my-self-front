@@ -243,3 +243,136 @@ a {
 .text-inherit * {
   color: inherit;
 }
+
+/* 데이트피커 */
+.react-datepicker__input-container {
+  display: flex;
+  align-items: center;
+}
+.input-datepicker .react-datepicker__input-container:focus-within {
+  border-color: #0da0c5 !important;
+}
+.input-datepicker .react-datepicker__input-container {
+  padding: 0.9rem;
+  border: 1px solid theme(colors.border);
+  border-radius: 10px;
+  display: flex;
+  gap: 1rem;
+}
+.react-datepicker__input-container .react-datepicker__calendar-icon {
+  font-size: 1.5rem;
+}
+.input-datepicker .react-datepicker__view-calendar-icon input {
+  padding-left: 3rem;
+  text-align: center;
+}
+.input-datepicker .react-datepicker-wrapper {
+  width: 100%;
+}
+.input-datepicker .react-datepicker__time-container {
+  width: 110px;
+}
+.input-datepicker .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+  width: 100%;
+}
+
+#checkbox.checkbox {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#checkbox + label:before {
+  content: "";
+}
+
+/* 데이트피커 */
+.custom-calendar.react-datepicker,
+.custom-calendar .react-datepicker__month-container {
+  width: 100%;
+  border-radius: 10px;
+  border: 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+.custom-calendar .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.custom-calendar .react-datepicker__header {
+  background-color: #fff;
+  padding: 10px;
+  border-bottom: 0;
+}
+.custom-calendar .react-datepicker__day-names div {
+  color: #999;
+}
+.custom-calendar .react-datepicker__month {
+  margin-top: 0;
+}
+
+.custom-calendar .react-datepicker__day-name,
+.custom-calendar .react-datepicker__day,
+.custom-calendar .react-datepicker__time-name {
+  width: 2rem;
+  line-height: 2rem;
+}
+
+.custom-calendar .react-datepicker__day {
+  font-weight: 600;
+  color: #333;
+}
+.react-datepicker__tab-loop,
+.react-datepicker-popper > div {
+  width: 100%;
+}
+
+.input-datepicker .react-datepicker__view-calendar-icon input {
+  width: 100%;
+}
+
+.custom-calendar .react-datepicker__day--keyboard-selected,
+.custom-calendar .react-datepicker__month-text--keyboard-selected,
+.custom-calendar .react-datepicker__quarter-text--keyboard-selected,
+.custom-calendar .react-datepicker__year-text--keyboard-selected {
+  background-color: #bbdaed;
+}
+.custom-calendar .react-datepicker__day--outside-month {
+  color: #999;
+  background-color: transparent;
+  font-weight: 400;
+}
+
+.custom-calendar .react-datepicker__day--selected,
+.custom-calendar .react-datepicker__day--in-selecting-range,
+.custom-calendar .react-datepicker__day--in-range,
+.custom-calendar .react-datepicker__month-text--selected,
+.custom-calendar .react-datepicker__month-text--in-selecting-range,
+.custom-calendar .react-datepicker__month-text--in-range,
+.custom-calendar .react-datepicker__quarter-text--selected,
+.custom-calendar .react-datepicker__quarter-text--in-selecting-range,
+.custom-calendar .react-datepicker__quarter-text--in-range,
+.custom-calendar .react-datepicker__year-text--selected,
+.custom-calendar .react-datepicker__year-text--in-selecting-range,
+.custom-calendar .react-datepicker__year-text--in-range {
+  background-color: #bbdaed;
+}
+
+/* sns 로그인 */
+.bg-social {
+  @apply h-10 w-10 rounded-full bg-contain;
+}
+.bg-social.google {
+  background-image: url("/account/google.png");
+}
+.bg-social.kakao {
+  background-image: url("/account/kakao.png");
+}
+.bg-social.naver {
+  background-image: url("/account/naver.png");
+}
+.bg-social.apple {
+  background-image: url("/account/apple.png");
+}

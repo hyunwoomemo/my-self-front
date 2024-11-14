@@ -15,19 +15,11 @@ export function SocialLoginButtons({
   onLoginWithApple,
 }: SocialLoginButtonsProps) {
   return (
-    <div className="social-login">
-      <button className="social-button google" onClick={onLoginWithGoogle}>
-        구글로 로그인
-      </button>
-      <button className="social-button kakao" onClick={onLoginWithKakao}>
-        카카오로 로그인
-      </button>
-      <button className="social-button naver" onClick={onLoginWithNaver}>
-        네이버로 로그인
-      </button>
-      <button className="social-button apple" onClick={onLoginWithApple}>
-        애플로 로그인
-      </button>
+    <div className="flex justify-center gap-8 py-5">
+      <button className="bg-social google" onClick={onLoginWithGoogle}></button>
+      <button className="bg-social kakao" onClick={onLoginWithKakao}></button>
+      <button className="bg-social naver" onClick={onLoginWithNaver}></button>
+      <button className="bg-social apple" onClick={onLoginWithApple}></button>
     </div>
   );
 }

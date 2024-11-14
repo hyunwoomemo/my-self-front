@@ -29,6 +29,7 @@ export interface getMeetingData {
   max_members: number;
   name: string;
   region_code: string;
+  userCount: number;
 }
 
 export const useSocket = () => {
@@ -38,7 +39,7 @@ export const useSocket = () => {
 
   if (!socket) {
     //socket이 여러개 연결되는 걸 방지, 없을 때만 연결하기!!!
-    socket = io("ws://moimmoim.duckdns.org", {
+    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
       transports: ["websocket"],
     });
   }
@@ -64,13 +65,17 @@ export const useSocket = () => {
   };
 
   useEffect(() => {
-    socket.on("connect", (data) => {
-      console.log("connect", data);
+    socket.on("connect", () => {
+      console.log("connected");
     });
 
     socket.on("list", handleGetList);
-
     socket.on("meetingData", handleGetMeetingData);
+
+    return () => {
+      socket.off("list", handleGetList);
+      socket.off("meetingData", handleGetMeetingData);
+    };
   }, []);
 
   return { socket, joinArea, enterMeeting };

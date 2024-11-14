@@ -2,24 +2,24 @@
 
 import React from "react";
 import { LoginForm } from "@/components/login/LoginForm";
-import { loginWithProvider } from "@/acctions/login/LoginAction";
+import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
 
 export function LoginContainer() {
   const handleLoginWithGoogle = () => {
-    loginWithProvider("google");
+    // loginWithProvider("google");
   };
 
   const handleLoginWithKakao = () => {
-    loginWithProvider("kakao");
+    // loginWithProvider("kakao");
   };
 
   const handleLoginWithNaver = () => {
-    loginWithProvider("naver");
+    // loginWithProvider("naver");
   };
 
   const handleLoginWithApple = () => {
-    loginWithProvider("apple");
+    // loginWithProvider("apple");
   };
 
   const handleLoginClick = async (data: { email: string; password: string }) => {

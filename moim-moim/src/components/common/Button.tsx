@@ -2,52 +2,52 @@
 import { MdCheck } from "react-icons/md";
 
 interface ButtonProps {
-  type: "label" | "full" | "default" | "flex";
+  type?: string;
+  custom?: "label" | "full";
   title: string;
   value?: boolean;
-  onClick: () => void;
+  onClick: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
+  flex?: boolean;
+  disabled?: boolean;
 }
 
-const Button = ({ type, title, value, onClick }: ButtonProps) => {
+const Button = ({ type, custom, title, value, onClick, flex, disabled }: ButtonProps) => {
   const btnClassType = () => {
-    switch (type) {
+    switch (custom) {
       case "label":
-        return `border-solid border border-border px-3 py-1 rounded-lg ${value ? "bg-semiPrimary border-semiPrimary" : "bg-layOutBg"} w-fit`;
-      case "default":
-        return "rounded-xl bg-primary p-5 min-w-20";
+        return `bg-layOutBg border-solid border border-border px-3 py-1 rounded-[7px] ${value ? "bg-semiPrimary border-semiPrimary" : "bg-white"} w-fit`;
+
       case "full":
-        return "rounded-xl bg-primary p-5 min-w-20 w-full";
-      case "flex":
-        return "rounded-xl bg-primary p-5 min-w-20 flex-1";
+        return `w-full`;
     }
   };
 
   const btnTextClassType = () => {
-    switch (type) {
+    switch (custom) {
       case "label":
-        return ``;
-      case "default":
-        return "text-white text-lg";
+        return `${disabled ? "text-disabledText" : "text-text"}`;
       case "full":
-        return "text-white text-lg";
-      case "flex":
-        return "text-white text-lg";
+        return "text-lg";
     }
   };
 
-  const handleClick = () => {
-    onClick();
-  };
-
   return (
-    <button className={btnClassType()} onClick={handleClick}>
+    <button
+      className={`min-w-20 rounded-xl p-5 ${btnClassType()} ${flex ? "flex-1" : undefined} ${disabled ? "bg-disabled" : "bg-primary"} ${custom === "full" ? "w-full" : undefined}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {value ? (
         <div className="flex items-center gap-2">
           <MdCheck />
           <span className={btnTextClassType()}>{title}</span>
         </div>
       ) : (
-        <span className={btnTextClassType()}>{title}</span>
+        <span
+          className={`${btnTextClassType()} ${disabled ? "text-disabledText" : !(custom === "label") ? "text-white" : "text-text"}`}
+        >
+          {title}
+        </span>
       )}
     </button>
   );
