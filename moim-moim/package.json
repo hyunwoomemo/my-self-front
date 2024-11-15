@@ -11,6 +11,7 @@
   "dependencies": {
     "@types/react-datepicker": "^7.0.0",
     "axios": "^1.7.7",
+    "cookies-next": "^5.0.2",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "jotai": "^2.10.1",

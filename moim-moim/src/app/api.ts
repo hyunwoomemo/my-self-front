@@ -10,12 +10,14 @@ export const accountApi = {
     interestes: [];
     addresses: [
       {
-        address: "string";
-        address_code: "string";
+        address: string;
+        address_code: string;
       },
     ];
-  }) => request.post("auth/register", data),
-  login: ({ email, password }: { email: string; password: string }) => {
-    return request.post("/auth/login", { email, password });
+  }) => {
+    return request.post("auth/register", data);
+  },
+  login: (data: { email: string; password: string }) => {
+    return request.post("/auth/login", data);
   },
 };

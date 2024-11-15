@@ -5,9 +5,11 @@ import { LoginForm } from "@/components/login/LoginForm";
 import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
 import { accountApi } from "@/app/api";
-import { setCookie } from "@/utils/cookie";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 export function LoginContainer() {
+  const router = useRouter();
   const handleLoginWithGoogle = () => {
     // loginWithProvider("google");
   };
@@ -27,8 +29,15 @@ export function LoginContainer() {
   const handleLoginClick = async (data: { email: string; password: string }) => {
     console.log("로그인 시도:", data);
     const res = await accountApi.login(data);
-    setCookie("accessToken", res.accessToken);
-    setCookie("refreshToken", res.refreshToken);
+    console.log("resres", res);
+    if (res.status === 200) {
+      setCookie("accessToken", res.data.accessToken);
+      setCookie("refreshToken", res.data.refreshToken);
+      console.log("성공?");
+      router.push("/");
+    } else {
+      return;
+    }
   };
 
   return (

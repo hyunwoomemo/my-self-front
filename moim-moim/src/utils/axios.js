@@ -1,9 +1,24 @@
 import axios from "axios";
+import { getCookie } from "cookies-next";
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 axios.interceptors.request.use(
   async (config) => {
-    //토큰 담기
+    if (typeof window !== "undefined") {
+      //서버 환경인가?
+      const accessToken = getCookie("accessToken");
+      const refreshToken = getCookie("refreshToken");
+      console.log("⭐", accessToken, refreshToken);
+      if (accessToken) {
+        //refreshToken은??
+        config.headers.token = accessToken;
+      } else {
+        // return config;
+        console.log("❌ No accessToken found.");
+      }
+    }
+
     return config;
   },
   (error) => {
@@ -12,7 +27,7 @@ axios.interceptors.request.use(
 );
 
 const responseBody = (response) => {
-  return response.data;
+  return response;
 };
 
 const request = {
