@@ -98,7 +98,7 @@ const IntroContainer = () => {
               <div className="rounded-lg bg-white p-5 text-3xl text-textGray">
                 <GoHeartFill />
               </div>
-              <Button title="입장하기" flex onClick={() => router.push("/")} />
+              <Button title="입장하기" flex textSize="lg" onClick={() => router.push("/")} />
             </div>
           </div>
 
