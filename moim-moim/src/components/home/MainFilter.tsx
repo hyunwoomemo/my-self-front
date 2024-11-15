@@ -22,28 +22,28 @@ const MainFilter = () => {
   }
 
   return (
-    <div id="mainFilter" className="bg-bg flex items-center gap-1 p-5 pb-0">
+    <div id="mainFilter" className="flex items-center gap-1 bg-bg p-5 pb-0">
       <Button
         title="추천"
-        type="label"
+        custom="label"
         value={selectedItems.recommend}
         onClick={() => setSelectedItems({ recommend: !selectedItems.recommend })}
       />
       <Button
         title="가까운 순"
-        type="label"
+        custom="label"
         value={selectedItems.distance}
         onClick={() => setSelectedItems({ distance: !selectedItems.distance })}
       />
       <Button
         title="최신순"
-        type="label"
+        custom="label"
         value={selectedItems.new}
         onClick={() => setSelectedItems({ new: !selectedItems.new })}
       />
       <Button
         title="마감임박"
-        type="label"
+        custom="label"
         value={selectedItems.closingSoon}
         onClick={() => setSelectedItems({ closingSoon: !selectedItems.closingSoon })}
       />
