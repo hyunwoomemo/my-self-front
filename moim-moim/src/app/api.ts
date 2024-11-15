@@ -16,6 +16,6 @@ export const accountApi = {
     ];
   }) => request.post("auth/register", data),
   login: ({ email, password }: { email: string; password: string }) => {
-    request.post("/auth/login", { email, password });
+    return request.post("/auth/login", { email, password });
   },
 };
