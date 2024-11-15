@@ -3,6 +3,7 @@ import axios from "axios";
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 axios.interceptors.request.use(
   async (config) => {
+    //토큰 담기
     return config;
   },
   (error) => {
@@ -10,7 +11,9 @@ axios.interceptors.request.use(
   },
 );
 
-const responseBody = (response) => response.data;
+const responseBody = (response) => {
+  return response.data;
+};
 
 const request = {
   get: (url) => axios.get(url).then(responseBody),

@@ -71,11 +71,6 @@ export const useSocket = () => {
 
     socket.on("list", handleGetList);
     socket.on("meetingData", handleGetMeetingData);
-
-    return () => {
-      socket.off("list", handleGetList);
-      socket.off("meetingData", handleGetMeetingData);
-    };
   }, []);
 
   return { socket, joinArea, enterMeeting };
