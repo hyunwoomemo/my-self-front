@@ -68,9 +68,9 @@ const config: Config = {
         shadowRolling: "shadowRolling 1s linear infinite",
       },
       screens: {
-        w_sm: { raw: "(max-width: 320px)" },
-        w_lg: { raw: "(max-width: 480px)" },
-        w_xl: { raw: "(max-width: 600px)" },
+        w_sm: { raw: "(min-width: 320px)" },
+        w_lg: { raw: "(min-width: 480px)" },
+        w_xl: { raw: "(min-width: 600px)" },
         h_sm: { raw: "(min-height: 600px)" },
         h_lg: { raw: "(min-height: 700px)" },
         h_xl: { raw: "(min-height: 800px)" },
