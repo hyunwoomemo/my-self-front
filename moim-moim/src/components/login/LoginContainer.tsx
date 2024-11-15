@@ -5,6 +5,7 @@ import { LoginForm } from "@/components/login/LoginForm";
 import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
 import { accountApi } from "@/app/api";
+import { setCookie } from "@/utils/cookie";
 
 export function LoginContainer() {
   const handleLoginWithGoogle = () => {
@@ -26,7 +27,8 @@ export function LoginContainer() {
   const handleLoginClick = async (data: { email: string; password: string }) => {
     console.log("로그인 시도:", data);
     const res = await accountApi.login(data);
-    console.log("res", res);
+    setCookie("accessToken", res.accessToken);
+    setCookie("refreshToken", res.refreshToken);
   };
 
   return (
