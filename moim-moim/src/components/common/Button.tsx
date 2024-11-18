@@ -4,24 +4,22 @@ import { MdCheck } from "react-icons/md";
 
 interface ButtonProps {
   type?: "submit" | "reset" | "button" | undefined;
-  custom?: "label" | "full" | "flex";
+  custom?: "label" | "full";
   title: string;
-  value?: boolean;
+  on?: boolean;
   onClick: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
   flex?: boolean;
   disabled?: boolean;
   textSize?: string;
 }
 
-const Button = ({ type, custom, title, value, onClick, flex, disabled, textSize }: ButtonProps) => {
+const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: ButtonProps) => {
   const btnClassType = () => {
     switch (custom) {
       case "label":
-        return `bg-layOutBg border-solid border border-border px-3 py-1 rounded-[7px] ${value ? "bg-semiPrimary border-semiPrimary" : "bg-white"} w-fit`;
+        return `bg-layOutBg border-solid border border-border px-3 py-1 rounded-[6px] ${on ? "bg-semiPrimary border-semiPrimary" : "bg-white"}  w-fit`;
       case "full":
         return `w-full`;
-      case "flex":
-        return "flex-1";
     }
   };
 
@@ -30,24 +28,26 @@ const Button = ({ type, custom, title, value, onClick, flex, disabled, textSize 
       case "label":
         return `${disabled ? "text-disabledText" : "text-text"}`;
       case "full":
-        return "text-lg";
+        return `text-lg ${disabled ? "text-disabledText" : "text-white"}`;
+      default:
+        return `text-white`;
     }
   };
 
   return (
     <button
       type={type}
-      className={`min-w-20 rounded-xl p-5 ${disabled ? "bg-disabled" : "bg-primary"} ${btnClassType()} `}
+      className={`min-w-20 rounded-xl p-5 ${disabled ? "bg-disabled" : "bg-primary"} ${flex ? "flex-1" : undefined} ${btnClassType()} `}
       onClick={onClick}
       disabled={disabled}
     >
-      {value ? (
+      {on ? (
         <div className="flex items-center gap-2">
           <MdCheck />
           <span className={btnTextClassType()}>{title}</span>
         </div>
       ) : (
-        <span className={`${disabled ? "text-disabledText" : "text-white"} text-${textSize} ${btnTextClassType()} `}>
+        <span className={` ${disabled ? "text-disabledText" : undefined} text-${textSize} ${btnTextClassType()} `}>
           {title}
         </span>
       )}
