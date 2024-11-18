@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Loader from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CiCalendar, CiTimer } from "react-icons/ci";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
@@ -13,11 +13,13 @@ import Checkbox from "@/components/common/Checkbox";
 import { ko } from "date-fns/locale";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Textarea from "@/components/common/Textarea";
+import { useAtomValue } from "jotai";
+import { selectedCategoryAtom } from "@/store/meeting/category/atom";
 
 interface Values {
   area: string;
-  category1v: string;
-  category2v: string;
+  category1: string | undefined;
+  category2: string | undefined;
   title: string;
   date: string;
   time: string;
@@ -31,13 +33,15 @@ interface Values {
   };
 }
 
-const CreateContainer = ({ category1, category2 }: { category1: string; category2: string }) => {
+const CreateContainer = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const selectedCategory = useAtomValue(selectedCategoryAtom);
   const [values, setValues] = useState<Values>({
     area: "",
-    category1v: category1,
-    category2v: category2,
+    category1: selectedCategory?.c1_name,
+    category2: selectedCategory?.c2_name,
     title: "",
     date: "",
     time: "",
@@ -125,8 +129,8 @@ const CreateContainer = ({ category1, category2 }: { category1: string; category
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">주제</div>
           <div className="flex gap-2">
-            <Input placeholder="대분류" value={category1} disabled type="main" />
-            <Input placeholder="소분류" value={category2} disabled type="main" />
+            <Input placeholder="대분류" value={values.category1} disabled type="main" />
+            <Input placeholder="소분류" value={values.category2} disabled type="main" />
             <Button title="변경" onClick={() => router.back()} />
           </div>
         </div>
@@ -140,7 +144,7 @@ const CreateContainer = ({ category1, category2 }: { category1: string; category
         />
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">일시</div>
-          <div className="flex gap-2 w_sm:flex-col">
+          <div className="flex gap-2 w_lg:flex-col">
             <div className="input-datepicker flex-1 focus-within:border-primary">
               <DatePicker
                 locale={ko}
@@ -216,29 +220,29 @@ const CreateContainer = ({ category1, category2 }: { category1: string; category
           <div className="text-lg font-bold">입장 조건</div>
           <div className="flex gap-2">
             <Button
-              value={values.conditions.onlyMan}
+              on={values.conditions.onlyMan}
               title="남자만"
-              type="label"
+              custom="label"
               onClick={() => handleChange("conditions", "onlyMan")}
             />
             <Button
-              value={values.conditions.onlyWoman}
+              on={values.conditions.onlyWoman}
               title="여자만"
-              type="label"
+              custom="label"
               onClick={() => handleChange("conditions", "onlyWoman")}
             />
             <Button
-              value={values.conditions.withoutBlack}
+              on={values.conditions.withoutBlack}
               title="블랙 제한"
-              type="label"
+              custom="label"
               onClick={() => handleChange("conditions", "withoutBlack")}
             />
           </div>
         </div>
         <div className="mt-8">
           <Button
-            type="full"
-            onClick={() => router.push("/")}
+            custom="full"
+            onClick={() => router.push("/create/category")}
             disabled={
               !values.title ||
               !values.area ||
