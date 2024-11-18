@@ -2,7 +2,7 @@ import axios from "axios";
 import { getCookie } from "cookies-next";
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+axios.defaults.withCredentials = true; // 쿠키를 포함한 요청을 보내도록 설정
 axios.interceptors.request.use(
   async (config) => {
     if (typeof window !== "undefined") {

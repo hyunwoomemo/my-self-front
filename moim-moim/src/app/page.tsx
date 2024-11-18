@@ -1,14 +1,16 @@
 import MeetingListContainer from "@/components/home/MeetingListContainer";
 import { LoginContainer } from "@/components/login/LoginContainer";
-import { getCookie } from "cookies-next";
+import { getCookie } from "@/utils/cookie";
+import { redirect } from "next/navigation";
 
-const Home = () => {
-  const token = getCookie("accessToken");
-  console.log("토큰?", token);
+const Home = async () => {
+  const token = await getCookie("accessToken");
+
+  console.log("token", token);
   if (token) {
-    return <MeetingListContainer />;
+    redirect("/list");
   } else {
-    return <LoginContainer />;
+    redirect("/login");
   }
 };
 
