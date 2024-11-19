@@ -35,11 +35,9 @@ export function LoginForm({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log("나는 로그인 버튼");
     e.preventDefault();
     onLoginClick(formData); // 로그인 클릭 핸들러 호출
   };
-  console.log("ddd", formData);
   return (
     <form
       className="flex w-2/3 min-w-[300px] flex-col gap-6 rounded-xl bg-white p-10 shadow-lg"

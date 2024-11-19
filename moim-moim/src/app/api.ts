@@ -20,4 +20,7 @@ export const accountApi = {
   login: (data: { email: string; password: string }) => {
     return request.post("/auth/login", data);
   },
+  myInfo: () => {
+    return request.get("/user/myInfo");
+  },
 };
