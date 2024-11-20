@@ -13,14 +13,13 @@ import Empty from "@/components/common/Empty";
 moment.locale("ko");
 
 const MeetingList = () => {
-  const router = useRouter();
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(listAtom) as getListProps[];
   const { enterMeeting } = useSocket();
 
-  const handleEnterMeeting = (id: number) => {
-    enterMeeting({ region_code: "A02", meetings_id: id, users_id: "99" });
-    router.push(`/moim/${id}`);
+  const handleEnterMeeting = (data) => {
+    console.log("data???", data);
+    enterMeeting({ region_code: "A02", meetings_id: data.id, users_id: 125, type: data.type });
   };
 
   if (loading) {
@@ -36,7 +35,7 @@ const MeetingList = () => {
         <div
           key={v.id}
           className="flex cursor-pointer items-center gap-4 border-b border-solid border-surface pb-5"
-          onClick={() => handleEnterMeeting(v.id)}
+          onClick={() => handleEnterMeeting(v)}
         >
           {/* <Image src={} alt={} /> */}
           <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-xl bg-[var(--point)] text-7xl text-white">
@@ -53,7 +52,10 @@ const MeetingList = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex items-center justify-center gap-2">
-                <div className="rounded-3xl bg-[var(--darkSurface)] px-3 py-[0.15rem] text-xs">카테고리1/카테고리2</div>
+                <div className="rounded-3xl bg-[var(--darkSurface)] px-3 py-[0.15rem] text-xs">
+                  {" "}
+                  {v.category1_name}/{v.category2_name}
+                </div>
                 <div className="font-thin text-[var(--textGray)]">·</div>
                 <span className="text-xs text-[var(--point)]">{moment(v.created_at).fromNow()}</span>
               </div>

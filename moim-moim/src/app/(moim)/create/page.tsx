@@ -1,3 +1,4 @@
+import Loader from "@/components/common/Loader";
 import PageHeader from "@/components/common/PageHeader";
 import Category from "@/components/meeting/create/Category";
 import CreateContainer from "@/components/meeting/create/CreateContainer";
@@ -7,11 +8,13 @@ export default async function Page() {
   const categories = await res.json();
 
   console.log("category", categories.DATA.category2);
+  if (!categories) {
+    return <Loader />;
+  }
 
   return (
     <>
       <PageHeader title="모임 만들기" />
-      {/* <CreateContainer category1="맛집 탐방" category2="미슐랭" /> */}
       <Category />
     </>
   );

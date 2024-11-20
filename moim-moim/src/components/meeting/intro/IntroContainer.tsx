@@ -14,7 +14,7 @@ import Loader from "@/components/common/Loader";
 import { useAtomValue } from "jotai";
 import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
-import { getMeetingData } from "@/hooks/useSocket";
+import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import moment from "moment";
 import Empty from "@/components/common/Empty";
 
@@ -23,6 +23,7 @@ const IntroContainer = () => {
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(meetingDataAtom) as getMeetingData;
   const router = useRouter();
+  const { joinMeeting } = useSocket();
 
   useEffect(() => {
     const num = Math.floor(Math.random() * 10 + 1);
@@ -30,6 +31,16 @@ const IntroContainer = () => {
     console.log(formattedNum);
     setImgNum(formattedNum);
   }, []);
+
+  const handleClick = () => {
+    joinMeeting({
+      meetings_id: data.id,
+      region_code: "A02",
+      users_id: 125,
+      type: data.type,
+    });
+    console.log("meetingData", data);
+  };
 
   if (loading) {
     return <Loader />;
@@ -55,7 +66,7 @@ const IntroContainer = () => {
               <div className="flex flex-col items-center gap-6 pt-20">
                 <div className="flex flex-col items-center gap-2">
                   <span className="w-fit rounded-full bg-semiPrimary px-4 py-2 text-xs font-bold">
-                    {/* {data.category1_name}/{data.category2_name} */}
+                    {data.category1_name}/{data.category2_name}
                   </span>
                   <h1 className="text-3xl font-bold text-bg">{data.name}</h1>
                 </div>
@@ -98,7 +109,7 @@ const IntroContainer = () => {
               <div className="rounded-lg bg-white p-5 text-3xl text-textGray">
                 <GoHeartFill />
               </div>
-              <Button title="입장하기" flex onClick={() => router.push("/")} />
+              <Button title="입장하기" flex onClick={handleClick} />
             </div>
           </div>
 
