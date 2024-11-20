@@ -35,10 +35,10 @@ export function LoginContainer() {
       //       setCookie("refreshToken", res.data.refreshToken);
       //       router.push("/");
 
-      const { data } = res;
-      setCookie("accessToken", data.data.accessToken);
-      setCookie("refreshToken", data.data.refreshToken);
-      router.push("/list");
+      // const { data } = res;
+      // setCookie("accessToken", data.data.accessToken);
+      // setCookie("refreshToken", data.data.refreshToken);
+      router.push("/");
     } else {
       return;
     }

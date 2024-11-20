@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import MeetingList from "../meeting/list/MeetingList";
 import Tabs from "../common/Tabs";
 import MainFilter from "./MainFilter";
 import { useRouter } from "next/navigation";
 import CreateButton from "./AddButton";
 import Header from "./Header";
 import Hr from "../common/Hr";
-import { accountApi } from "@/app/api";
+import MeetingList from "../meeting/list/MeetingList";
 
 const tabList = [
   {
@@ -29,11 +28,10 @@ const tabList = [
   },
 ];
 
-
 const MeetingListContainer = () => {
   const [value, setValue] = useState(tabList[0]);
   const router = useRouter();
-  accountApi.myInfo();
+
   return (
     <>
       <div className="flex flex-col">
