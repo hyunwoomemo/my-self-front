@@ -15,9 +15,10 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Textarea from "@/components/common/Textarea";
 import { useAtomValue } from "jotai";
 import { selectedCategoryAtom } from "@/store/meeting/category/atom";
+import Region, { Address } from "@/components/common/Region";
+import { useSocket } from "@/hooks/useSocket";
 
 interface Values {
-  area: string;
   category1: string | undefined;
   category2: string | undefined;
   title: string;
@@ -36,10 +37,12 @@ interface Values {
 const CreateContainer = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
+  const [selectedArea, setSelectedArea] = useState<string>(""); // 선택한 지역
+  const [addressKeyword, setAddressKeyword] = useState<string>(""); // 입력한 키워드
 
   const selectedCategory = useAtomValue(selectedCategoryAtom);
   const [values, setValues] = useState<Values>({
-    area: "",
     category1: selectedCategory?.c1_name,
     category2: selectedCategory?.c2_name,
     title: "",
@@ -58,19 +61,70 @@ const CreateContainer = () => {
     title: "",
     details: "",
   });
+  const { generateMeeting } = useSocket();
+
+  useEffect(() => {
+    window.addEventListener("click", () => {
+      setAddress([]);
+    });
+  }, []);
 
   useEffect(() => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+    })();
+    return () => {
+      window.removeEventListener("beforeunload", preventClose);
+    };
+  }, []);
+
+  const preventClose = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
+  // const validate = () => {
+  //   const min =
+  // }
+
+  const handleClick = () => {
+    generateMeeting({
+      name: values.title,
+      region_code: "A02",
+      maxMembers: Number(values.members),
+      description: values.details,
+      users_id: 125,
+      type: 3,
+      category1: selectedCategory?.c1_id,
+      category2: selectedCategory?.c2_id,
+    });
+    router.push("/");
+  };
+
   const handleChange = (type: string, v?: string | number | boolean | Date | null) => {
     if (type === "details" && typeof v === "string") {
+      setValues((prev) => {
+        return {
+          ...prev,
+          [type]: v,
+        };
+      });
       setErrorMsg((prev) => ({
         ...prev,
         [type]:
           v.length < 20 ? "최소 20자 이상을 권하고 있어요." : v.length > 500 ? "500자 미만으로 제한하고 있어요." : "",
       }));
     } else if (type === "title" && typeof v === "string") {
+      setValues((prev) => {
+        return {
+          ...prev,
+          [type]: v,
+        };
+      });
       setErrorMsg((prev) => {
         return {
           ...prev,
@@ -92,7 +146,7 @@ const CreateContainer = () => {
         },
       }));
     } else if (type === "members" && typeof v === "string") {
-      const regex = /^[1-9]*$/; // 숫자만 체크
+      const regex = /^(?:[1-9][0-9]*)?$/; // 숫자만 체크
       if (regex.test(v)) {
         setValues((prev) => ({
           ...prev,
@@ -117,15 +171,19 @@ const CreateContainer = () => {
     return <Loader />;
   }
 
+  console.log("🔔🔔🔔", selectedArea, values);
   return (
     <div className="p-6">
       <div className="flex flex-col gap-5">
-        <Input
-          label="지역"
-          placeholder="동/읍/면으로 찾기"
-          type="main"
-          onChange={(v) => handleChange("area", v.target.value)}
+        <Region
+          address={address}
+          setAddress={setAddress}
+          addressKeyword={addressKeyword}
+          setAddressKeyword={setAddressKeyword}
+          // selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
         />
+
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">주제</div>
           <div className="flex gap-2">
@@ -144,7 +202,7 @@ const CreateContainer = () => {
         />
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">일시</div>
-          <div className="flex gap-2 w_lg:flex-col">
+          <div className="flex gap-2 w_sm:flex-col">
             <div className="input-datepicker flex-1 focus-within:border-primary">
               <DatePicker
                 locale={ko}
@@ -242,10 +300,10 @@ const CreateContainer = () => {
         <div className="mt-8">
           <Button
             custom="full"
-            onClick={() => router.push("/create/category")}
+            onClick={handleClick}
             disabled={
               !values.title ||
-              !values.area ||
+              !selectedArea ||
               !values.date ||
               !values.time ||
               !values.details ||

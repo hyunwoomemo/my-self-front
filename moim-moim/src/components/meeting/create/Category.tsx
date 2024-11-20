@@ -57,7 +57,7 @@ const Category = ({ dataCategory1, dataCategory2 }: CategoryProps) => {
           })}
       </div>
       <div className="pt-9">
-        <Button onClick={() => router.push("/create/write")} title="다음" custom="full" />
+        <Button onClick={() => router.push("/create/write")} title="다음" disabled={!selectedCategory} custom="full" />
       </div>
     </div>
   );
