@@ -2,6 +2,7 @@ import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { useAtom, useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -30,12 +31,18 @@ export interface getMeetingData {
   name: string;
   region_code: string;
   userCount: number;
+  category1_name: string;
+  category1_id: number;
+  category2_name: string;
+  category2_id: number;
+  type: number;
 }
 
 export const useSocket = () => {
   const setList = useSetAtom(listAtom);
   const setLoading = useSetAtom(loadingAtom);
   const setMeetingData = useSetAtom(meetingDataAtom);
+  const router = useRouter();
 
   if (!socket) {
     //socket이 여러개 연결되는 걸 방지, 없을 때만 연결하기!!!
@@ -45,6 +52,8 @@ export const useSocket = () => {
   }
 
   const handleGetList = (data: getListProps) => {
+    console.log("list data", data);
+
     setLoading(true);
     setList(data);
     setLoading(false);
@@ -54,8 +63,41 @@ export const useSocket = () => {
     socket.emit("join", { region_code });
   };
 
-  const enterMeeting = ({ region_code, meetings_id, users_id }) => {
-    socket.emit("enterMeeting", { region_code, meetings_id, users_id });
+  const enterMeeting = ({ region_code, meetings_id, users_id, type }) => {
+    socket.emit("enterMeeting", { region_code, meetings_id, users_id, type });
+
+    socket.on("enterRes", (data) => {
+      console.log("datadata", data);
+      if (data.CODE === "EM000") {
+        router.push(`/moim/${meetings_id}/chat`);
+      } else if (data.CODE === "EM001") {
+        router.push(`/moim/${meetings_id}/intro`);
+      } else {
+        console.log("enter error");
+      }
+    });
+  };
+
+  const generateMeeting = ({ name, region_code, maxMembers, description, users_id, type, category1, category2 }) => {
+    socket.emit("generateMeeting", {
+      name,
+      region_code,
+      maxMembers,
+      description,
+      users_id,
+      type,
+      category1,
+      category2,
+    });
+  };
+
+  const joinMeeting = ({ meetings_id, region_code, users_id, type }) => {
+    socket.emit("joinMeeting", {
+      meetings_id,
+      region_code,
+      users_id,
+      type,
+    });
   };
 
   const handleGetMeetingData = (data: getMeetingData) => {
@@ -73,5 +115,5 @@ export const useSocket = () => {
     socket.on("meetingData", handleGetMeetingData);
   }, []);
 
-  return { socket, joinArea, enterMeeting };
+  return { socket, joinArea, enterMeeting, generateMeeting, joinMeeting };
 };
