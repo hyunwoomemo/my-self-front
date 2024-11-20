@@ -33,7 +33,7 @@ export function LoginContainer() {
     if (res.status === 200) {
       setCookie("accessToken", res.data.accessToken);
       setCookie("refreshToken", res.data.refreshToken);
-      // router.push("/");
+      router.push("/");
     } else {
       return;
     }
