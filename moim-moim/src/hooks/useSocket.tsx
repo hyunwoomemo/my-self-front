@@ -52,7 +52,7 @@ export const useSocket = () => {
   }
 
   const handleGetList = (data: getListProps) => {
-    console.log("list data", data);
+    // console.log("list data", data);
 
     setLoading(true);
     setList(data);
