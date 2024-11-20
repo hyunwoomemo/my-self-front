@@ -9,6 +9,10 @@ import { io, Socket } from "socket.io-client";
 let socket: Socket;
 
 export interface getListProps {
+  category1_name: string;
+  category1_id: number;
+  category2_name: string;
+  category2_id: number;
   created_at: string;
   creator_id: number;
   description: string;
@@ -18,9 +22,12 @@ export interface getListProps {
   name: string;
   region_code: string;
   userCount: number;
+  type: number;
 }
 
 export interface getMeetingData {
+  category1_name: string;
+  category2_name: string;
   created_at: string;
   creator_id: number;
   creator_name: string;
@@ -31,10 +38,6 @@ export interface getMeetingData {
   name: string;
   region_code: string;
   userCount: number;
-  category1_name: string;
-  category1_id: number;
-  category2_name: string;
-  category2_id: number;
   type: number;
 }
 
@@ -62,7 +65,6 @@ export const useSocket = () => {
   const joinArea = (region_code: string) => {
     socket.emit("join", { region_code });
   };
-
   const enterMeeting = ({ region_code, meetings_id, users_id, type }) => {
     socket.emit("enterMeeting", { region_code, meetings_id, users_id, type });
 

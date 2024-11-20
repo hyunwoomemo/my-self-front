@@ -53,6 +53,7 @@ const MeetingList = () => {
             <div className="flex justify-between">
               <div className="flex items-center justify-center gap-2">
                 <div className="rounded-3xl bg-[var(--darkSurface)] px-3 py-[0.15rem] text-xs">
+                  {" "}
                   {v.category1_name}/{v.category2_name}
                 </div>
                 <div className="font-thin text-[var(--textGray)]">·</div>
