@@ -69,7 +69,7 @@ export const useSocket = () => {
     socket.emit("enterMeeting", { region_code, meetings_id, users_id, type });
 
     socket.on("enterRes", (data) => {
-      console.log("datadata", data);
+      console.log("datadata??", data);
       if (data.CODE === "EM000") {
         router.push(`/moim/${meetings_id}/chat`);
       } else if (data.CODE === "EM001") {

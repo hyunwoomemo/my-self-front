@@ -32,7 +32,7 @@ export function LoginContainer() {
       const { data } = res;
       setCookie("accessToken", data.data.accessToken);
       setCookie("refreshToken", data.data.refreshToken);
-      router.push("/list");
+      router.push("/");
     } else {
       return;
     }
