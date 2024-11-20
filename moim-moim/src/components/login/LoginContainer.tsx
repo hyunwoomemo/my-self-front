@@ -27,14 +27,8 @@ export function LoginContainer() {
   };
 
   const handleLoginClick = async (data: { email: string; password: string }) => {
-    // console.log("로그인 시도:", data);
     const res = await accountApi.login(data);
-    console.log("resres", res);
     if (res.status === 200) {
-      //       setCookie("accessToken", res.data.accessToken);
-      //       setCookie("refreshToken", res.data.refreshToken);
-      //       router.push("/");
-
       const { data } = res;
       setCookie("accessToken", data.data.accessToken);
       setCookie("refreshToken", data.data.refreshToken);
@@ -42,11 +36,6 @@ export function LoginContainer() {
     } else {
       return;
     }
-  };
-  const test = async () => {
-    console.log("test");
-    const res = await accountApi.myInfo();
-    console.log("res", res);
   };
   return (
     <div className="login-container">
@@ -57,7 +46,6 @@ export function LoginContainer() {
         onLoginWithNaver={handleLoginWithNaver}
         onLoginWithApple={handleLoginWithApple}
       />
-      <button onClick={test}>test</button>
     </div>
   );
 }

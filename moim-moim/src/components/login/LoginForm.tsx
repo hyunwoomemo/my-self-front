@@ -7,6 +7,7 @@ import { SocialLoginButtons } from "./SocialLoginButtons";
 import "@/app/(auth)/styles/login.scss";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import { useRouter } from "next/navigation";
 interface LoginFormProps {
   onLoginClick: (data: FormData) => void;
   onLoginWithGoogle: () => void;
@@ -26,6 +27,7 @@ export function LoginForm({
   onLoginWithNaver,
   onLoginWithApple,
 }: LoginFormProps) {
+  const router = useRouter();
   const [formData, setFormData] = React.useState<FormData>({ email: "", password: "" });
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
@@ -38,6 +40,10 @@ export function LoginForm({
     e.preventDefault();
     onLoginClick(formData); // 로그인 클릭 핸들러 호출
   };
+
+  const signUpHandler = () => {
+    router.push('/sign')
+  }
   return (
     <form
       className="flex w-2/3 min-w-[300px] flex-col gap-6 rounded-xl bg-white p-10 shadow-lg"
@@ -64,7 +70,7 @@ export function LoginForm({
       </div>
       <div className="flex w-fit flex-col gap-2">
         <button className="text-left underline">Forgot password?</button>
-        <button>
+        <button onClick={signUpHandler}>
           Don't have an account? <span className="font-bold text-primary underline">Sign up!</span>
         </button>
       </div>

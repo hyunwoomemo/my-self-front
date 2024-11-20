@@ -2,7 +2,7 @@
 
 import React from "react";
 import { SignForm } from "@/components/sign/SignForm";
-import { signUpWithProvider } from "@/acctions/sign/SignAction";
+import { signUpWithProvider } from "@/actions/sign/SignAction";
 import { FormData } from "./types"; // FormData 타입을 import
 import "@/app/(auth)/styles/sign.scss";
 
