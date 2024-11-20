@@ -5,10 +5,12 @@ export default async function Page({ params }: { params: { moim_id: string } }) 
 
   const entered = false;
 
-  console.log(params);
-  if (!entered) {
-    redirect(`/moim/${moim_id}/intro`);
-  }
+  // console.log(params);
+  // if (!entered) {
+  //   redirect(`/moim/${moim_id}/chat`);
+  // } else {
+  //   redirect(`/moim/${moim_id}`);
+  // }
 
   return <></>;
 }
