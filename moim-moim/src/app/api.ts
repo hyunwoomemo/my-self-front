@@ -23,4 +23,13 @@ export const accountApi = {
   myInfo: () => {
     return request.get("/user/myInfo");
   },
+  interests: () => {
+    return request.get("/auth/interests");
+  },
+  requestEmail: (data: {email: string}) => {
+    return request.post("/auth/requestEmail", data);
+  },
+  confirmEmail: (data: {email: string, code: string}) => {
+    return request.post("/auth/confirmEmail", data);
+  },
 };
