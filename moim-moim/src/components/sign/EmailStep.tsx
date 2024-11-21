@@ -21,15 +21,6 @@ const EmailStep = ({
 
   const popularDomains = ["naver.com", "gmail.com", "daum.net", "yahoo.com", "hotmail.com"];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log("name,value", name, value);
-  };
-
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   // 인증 요청
@@ -165,7 +156,7 @@ const EmailStep = ({
         {isVerified && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Input label="인증번호" type="main" placeholder="인증번호 입력" onChange={handleVerifyCodeChange} />
+              <Input label="인증번호" type="main" maxLength={6} placeholder="인증번호 입력" onChange={handleVerifyCodeChange} />
               <div style={{ margin: "10px 0", marginTop: "auto", fontSize: "14px" }}>
                 남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}
               </div>

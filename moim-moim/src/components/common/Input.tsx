@@ -10,6 +10,7 @@ interface InputProps {
   error?: boolean;
   errorText?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
+  maxLength?: number;
 }
 
 const Input = ({
@@ -24,6 +25,7 @@ const Input = ({
   error,
   errorText,
   onChange,
+  maxLength,
   ...rest
 }: InputProps) => {
   const typeClass = () => {
@@ -50,6 +52,7 @@ const Input = ({
             onChange={onChange}
             disabled={disabled}
             value={value}
+            maxLength={maxLength}
             {...rest}
           />
         </div>
@@ -68,6 +71,9 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         disabled={disabled}
+        onChange={onChange}
+        maxLength={maxLength}
+        {...rest}
       />
       {error && <span className="text-sm text-red-600">{errorText}</span>}
     </div>
