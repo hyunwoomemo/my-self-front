@@ -23,7 +23,9 @@ const IntroContainer = () => {
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(meetingDataAtom) as getMeetingData;
   const router = useRouter();
-  const { joinMeeting } = useSocket();
+  const { joinMeeting, socket } = useSocket();
+
+  console.log("ss", socket.connected);
 
   useEffect(() => {
     const num = Math.floor(Math.random() * 10 + 1);

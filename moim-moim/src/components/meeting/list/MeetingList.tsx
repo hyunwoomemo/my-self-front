@@ -8,6 +8,7 @@ import { getListProps, useSocket } from "@/hooks/useSocket";
 import { loadingAtom } from "@/store/common/atom";
 import Loader from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 moment.locale("ko");
 
@@ -15,7 +16,6 @@ const MeetingList = () => {
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(listAtom) as getListProps[];
   const { enterMeeting } = useSocket();
-  const router = useRouter();
 
   const handleEnterMeeting = (data) => {
     console.log("data???", data);

@@ -1,12 +1,16 @@
+"use client";
+
 import { loadingAtom } from "@/store/common/atom";
+import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
+import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-let socket: Socket;
+export let socket: Socket;
 
 export interface getListProps {
   category1_name: string;
@@ -41,34 +45,119 @@ export interface getMeetingData {
   type: number;
 }
 
+export interface SendMessageProps {
+  contents: string;
+  meetings_id: number;
+  region_code: string;
+  users_id: number;
+}
+
+export interface JoinMeetingProps {
+  meetings_id: number;
+  region_code: string;
+  users_id: number;
+  type: number;
+}
+
+export interface GenerateMeeting {
+  name: string;
+  region_code: string;
+  maxMembers: number;
+  description: string;
+  users_id: number;
+  type: number;
+  category1: number;
+  category2: number;
+}
+
+export interface EnterMeeting {
+  region_code: string;
+  meetings_id: number;
+  users_id: number;
+  type: number;
+}
+
+export interface MessagesValue {
+  contents: string;
+  created_at: string;
+  id: number;
+  meetings_id: number;
+  unReadCount: number;
+  users_id: number;
+}
+
 export const useSocket = () => {
   const setList = useSetAtom(listAtom);
   const setLoading = useSetAtom(loadingAtom);
   const setMeetingData = useSetAtom(meetingDataAtom);
+  const setMessages = useSetAtom(messagesAtom);
+  const setCurrentMeeting = useSetAtom(currentMeetingAtom);
   const router = useRouter();
 
-  if (!socket) {
-    //socket이 여러개 연결되는 걸 방지, 없을 때만 연결하기!!!
-    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-      transports: ["websocket"],
+  useEffect(() => {
+    //소켓 연결
+    if (!socket) {
+      //socket이 여러개 연결되는 걸 방지, 없을 때만 연결하기!!!
+      socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+        transports: ["websocket"],
+      });
+    } else {
+      // 이미 등록되어있는 on 이벤트 제거
+      socket?.removeAllListeners();
+    }
+
+    const handleConnect = () => console.log("connected!");
+
+    socket?.on("connect", handleConnect);
+    socket?.on("list", handleGetList);
+    socket?.on("meetingData", handleGetMeetingData);
+    socket?.on("messages", handleMessagesData);
+    socket?.on("receiveMessage", handleReceiveMessage);
+    socket?.on("disconnect", (e) => {
+      console.log("disconnect e", e);
     });
-  }
+  }, []);
 
   const handleGetList = (data: getListProps) => {
-    // console.log("list data", data);
-
     setLoading(true);
     setList(data);
     setLoading(false);
   };
 
-  const joinArea = (region_code: string) => {
-    socket.emit("join", { region_code });
+  const handleGetMeetingData = (data: getMeetingData) => {
+    setLoading(true);
+    setMeetingData(data);
+    setLoading(false);
   };
-  const enterMeeting = ({ region_code, meetings_id, users_id, type }) => {
-    socket.emit("enterMeeting", { region_code, meetings_id, users_id, type });
 
-    socket.on("enterRes", (data) => {
+  const handleMessagesData = (data: MessagesValue) => {
+    setLoading(true);
+    setMessages(data);
+    setLoading(false);
+  };
+
+  const handleReceiveMessage = (data: MessagesValue) => {
+    console.log("????");
+    setLoading(true);
+    setMessages((prev: MessagesValue) => {
+      return {
+        ...prev,
+        list: [...prev.list, data],
+      };
+    });
+    setLoading(false);
+  };
+
+  const joinArea = (region_code: string) => {
+    socket?.emit("join", { region_code });
+  };
+
+  const enterMeeting = ({ region_code, meetings_id, users_id, type }: EnterMeeting) => {
+    console.log("enterMeetingenterMeeting");
+    setCurrentMeeting(meetings_id);
+
+    socket?.emit("enterMeeting", { region_code, meetings_id, users_id, type });
+    socket?.on("enterRes", (data) => {
       console.log("datadata??", data);
       if (data.CODE === "EM000") {
         router.push(`/moim/${meetings_id}/chat`);
@@ -78,44 +167,24 @@ export const useSocket = () => {
         console.log("enter error");
       }
     });
+    console.log("ok?");
   };
 
-  const generateMeeting = ({ name, region_code, maxMembers, description, users_id, type, category1, category2 }) => {
-    socket.emit("generateMeeting", {
-      name,
-      region_code,
-      maxMembers,
-      description,
-      users_id,
-      type,
-      category1,
-      category2,
-    });
+  const leaveMeeting = () => {
+    setCurrentMeeting(-1);
   };
 
-  const joinMeeting = ({ meetings_id, region_code, users_id, type }) => {
-    socket.emit("joinMeeting", {
-      meetings_id,
-      region_code,
-      users_id,
-      type,
-    });
+  const generateMeeting = (params: GenerateMeeting) => {
+    socket?.emit("generateMeeting", params);
   };
 
-  const handleGetMeetingData = (data: getMeetingData) => {
-    setLoading(true);
-    setMeetingData(data);
-    setLoading(false);
+  const joinMeeting = (params: JoinMeetingProps) => {
+    socket?.emit("joinMeeting", params);
   };
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected");
-    });
+  const sendMessage = (params: SendMessageProps) => {
+    socket?.emit("sendMessage", params);
+  };
 
-    socket.on("list", handleGetList);
-    socket.on("meetingData", handleGetMeetingData);
-  }, []);
-
-  return { socket, joinArea, enterMeeting, generateMeeting, joinMeeting };
+  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, socket };
 };

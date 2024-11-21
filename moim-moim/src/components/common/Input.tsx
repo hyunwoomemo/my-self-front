@@ -68,6 +68,7 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         disabled={disabled}
+        onChange={onChange}
       />
       {error && <span className="text-sm text-red-600">{errorText}</span>}
     </div>
