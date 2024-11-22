@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tabs from "../common/Tabs";
 import MainFilter from "./MainFilter";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,8 @@ import Header from "./Header";
 import Hr from "../common/Hr";
 import MeetingList from "../meeting/list/MeetingList";
 import { accountApi } from "@/app/api";
+import { useSetAtom } from "jotai";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
 
 const tabList = [
   {
@@ -48,7 +50,7 @@ const MeetingListContainer = () => {
           <MeetingList />
         </div>
       </div>
-      <div className="fixed bottom-32 w_sm:right-4 w_lg:right-24" onClick={() => router.push("/create")}>
+      <div className="fixed bottom-32 right-24 w_sm:right-4" onClick={() => router.push("/create")}>
         <CreateButton />
       </div>
     </>

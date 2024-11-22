@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         gamtan: ["var(--font-gamtan)"],
+        tantan: ["var(--font-tantan)"],
       },
       colors: {
         primary: "#0da0c5",
@@ -19,6 +20,7 @@ const config: Config = {
         text: "#333",
         bg: "#fff",
         semiPrimary: "#bbdaed",
+        lightPrimary: "#EBF4FA",
         textGray: "#929292",
         hover: "#215c75",
         disabled: "#eee",
@@ -89,7 +91,7 @@ const config: Config = {
             borderRadius: 50,
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: theme("colors.primary"),
+            backgroundColor: theme("colors.border"),
             borderRadius: 10,
             border: `2px solid ${theme("colors.surface")}`,
           },

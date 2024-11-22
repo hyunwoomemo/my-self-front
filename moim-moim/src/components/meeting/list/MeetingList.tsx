@@ -38,10 +38,10 @@ const MeetingList = () => {
           onClick={() => handleEnterMeeting(v)}
         >
           {/* <Image src={} alt={} /> */}
-          <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-xl bg-[var(--point)] text-7xl text-white">
+          <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-xl bg-[var(--point)] text-7xl text-white w_sm:h-20 w_sm:w-20 w_sm:text-6xl">
             <PiUsersThree />
           </div>
-          <div className="flex max-w-[calc(100%-6rem)] flex-1 flex-col justify-between gap-3">
+          <div className="flex max-w-[calc(100%-7rem)] flex-1 flex-col justify-between gap-3 w_sm:max-w-[calc(100%-6rem)]">
             <div className="flex flex-col">
               <h3 className="w-full truncate text-[1.1rem] font-bold" title={v.name}>
                 {v.name}

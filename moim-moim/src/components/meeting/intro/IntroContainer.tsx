@@ -51,7 +51,8 @@ const IntroContainer = () => {
   return (
     <>
       {data ? (
-        <div className="relative" style={{ height: "calc(100vh - (21px + 4.625rem))" }}>
+        // <div className="relative" style={{ height: "calc(100vh - (21px + 4.625rem))" }}>
+        <div className="relative h-screen">
           <div className="absolute left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-5">
             <button className="text-2xl text-white">
               <SlSettings />
@@ -68,7 +69,7 @@ const IntroContainer = () => {
                   <span className="w-fit rounded-full bg-semiPrimary px-4 py-2 text-xs font-bold">
                     {data.category1_name}/{data.category2_name}
                   </span>
-                  <h1 className="text-3xl font-bold text-bg">{data.name}</h1>
+                  <h1 className="text-center text-3xl font-bold text-bg">{data.name}</h1>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-col items-center gap-1">
