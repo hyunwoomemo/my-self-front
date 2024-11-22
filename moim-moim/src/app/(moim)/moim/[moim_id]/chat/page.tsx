@@ -1,18 +1,17 @@
-import Contents from "@/components/meeting/chat/Contents";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import { accountApi } from "@/app/api";
+import ChatContainer from "@/components/meeting/chat/ChatContainer";
 import InputBar from "@/components/meeting/chat/InputBar";
-import { useSocket } from "@/hooks/useSocket";
 
 const Chat = async ({ params }: { params: { moim_id: string } }) => {
   const { moim_id } = await params;
-
-  console.log("sdf");
+  // const userInfo = await getUserInfo();
+  // console.log("🔔🔔🔔", userInfo);
 
   return (
-    <>
-      <div>{moim_id} 채팅방 입장!!!!</div>
-      <Contents id={moim_id} />
-      <InputBar id={moim_id} />
-    </>
+    <div className="flex h-screen flex-col">
+      <ChatContainer id={moim_id} />
+    </div>
   );
 };
 
