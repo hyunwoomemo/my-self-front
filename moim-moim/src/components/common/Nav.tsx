@@ -31,13 +31,14 @@ const NavLink = [
 
 const Nav = () => {
   const [active, setActive] = useState(NavLink[0].href);
-  const { pathname } = usePathname();
+  const pathname = usePathname();
+  console.log("pathname", pathname);
 
   const handleClick = (url: string) => {
     setActive(url);
   };
 
-  if (pathname?.includes("/moim/") && pathname?.endsWith("/intro")) {
+  if ((pathname?.includes("/moim/") && pathname?.endsWith("/intro")) || pathname?.endsWith("/chat")) {
     return null;
   }
   return (

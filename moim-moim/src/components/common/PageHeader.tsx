@@ -6,17 +6,29 @@ import Hr from "./Hr";
 
 interface PageHeaderProps {
   title: string;
+  icon?: JSX.Element;
+  link?: string;
+  hr?: boolean;
 }
 
-const PageHeader = ({ title }: PageHeaderProps) => {
+const PageHeader = ({ title, icon, link, hr }: PageHeaderProps) => {
   const router = useRouter();
   return (
     <>
-      <button className="flex items-center gap-3 p-6 text-xl" onClick={() => router.back()}>
-        <FaAngleLeft />
-        <span className="text-xl font-bold">{title}</span>
-      </button>
-      <Hr />
+      <div className="flex justify-between gap-2 p-6 w_sm:p-4">
+        <button
+          className="flex items-center gap-3 text-xl"
+          onClick={() => router.back()}
+          style={{ width: "calc(100% - 2.5rem)" }}
+        >
+          <FaAngleLeft />
+          <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left font-bold w_lg:text-xl">
+            {title}
+          </span>
+        </button>
+        {icon && link && <button onClick={() => router.push(link)}>{icon}</button>}
+      </div>
+      {hr && <Hr />}
     </>
   );
 };

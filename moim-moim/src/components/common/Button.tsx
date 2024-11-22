@@ -19,7 +19,9 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: 
       case "label":
         return `bg-layOutBg border-solid border border-border px-3 py-1 rounded-[6px] ${on ? "bg-semiPrimary border-semiPrimary" : "bg-white"}  w-fit`;
       case "full":
-        return `w-full`;
+        return `min-w-20 rounded-xl px-5 py-3 w-full`;
+      default:
+        return `min-w-20 rounded-xl px-5 py-3`;
     }
   };
 
@@ -37,7 +39,7 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: 
   return (
     <button
       type={type}
-      className={`min-w-20 rounded-xl p-5 ${disabled ? "bg-disabled" : "bg-primary"} ${flex ? "flex-1" : undefined} ${btnClassType()} `}
+      className={` ${disabled ? "bg-disabled" : "bg-primary"} ${flex ? "flex-1" : undefined} ${btnClassType()} `}
       onClick={onClick}
       disabled={disabled}
     >

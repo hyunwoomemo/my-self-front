@@ -11,7 +11,7 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader title="모임 만들기" />
+      <PageHeader title="모임 만들기" hr />
       <Category dataCategory1={categories.data.category1} dataCategory2={categories.data.category2} />
     </>
   );
