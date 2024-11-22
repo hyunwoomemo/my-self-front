@@ -170,10 +170,6 @@ export const useSocket = () => {
     console.log("ok?");
   };
 
-  const leaveMeeting = () => {
-    setCurrentMeeting(-1);
-  };
-
   const generateMeeting = (params: GenerateMeeting) => {
     socket?.emit("generateMeeting", params);
   };
