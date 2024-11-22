@@ -11,6 +11,8 @@ interface InputProps {
   errorText?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
   maxLength?: number;
+  name?: string;
+  style?: React.CSSProperties;
 }
 
 const Input = ({
@@ -26,7 +28,8 @@ const Input = ({
   errorText,
   onChange,
   maxLength,
-  ...rest
+  name,
+  ...res
 }: InputProps) => {
   const typeClass = () => {
     switch (custom) {
@@ -40,7 +43,7 @@ const Input = ({
   if (label) {
     return (
       <div className="flex flex-col gap-1">
-        <div className="text-lg font-bold">{label}</div>
+        <div className={`${disabled ? "text-disabledText" : undefined}`}>{label}</div>
         <div
           className={`rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-2" : undefined} focus-within:border-primary`}
         >
@@ -53,7 +56,7 @@ const Input = ({
             disabled={disabled}
             value={value}
             maxLength={maxLength}
-            {...rest}
+            {...res}
           />
         </div>
         {error && <span className="text-sm text-red-600">{errorText}</span>}
@@ -63,6 +66,7 @@ const Input = ({
   return (
     <div
       className={`flex-1 rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
+      {...res}
     >
       {icon && <div className={`p-5 pr-0 text-2xl ${align ? `text-${align}` : undefined}`}>{icon}</div>}
       <input
@@ -73,7 +77,6 @@ const Input = ({
         disabled={disabled}
         onChange={onChange}
         maxLength={maxLength}
-        {...rest}
       />
       {error && <span className="text-sm text-red-600">{errorText}</span>}
     </div>

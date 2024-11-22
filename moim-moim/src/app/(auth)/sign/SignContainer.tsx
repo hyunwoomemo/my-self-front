@@ -1,7 +1,7 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
 import React, { useEffect, useState } from "react";
-import "@/app/(auth)/styles/sign.scss";
+// import "@/app/(auth)/styles/sign.scss";
 import EmailStep from "@/components/sign/EmailStep";
 import InfoStep from "@/components/sign/InfoStep";
 import InterestsStep from "@/components/sign/InterestsStep";
@@ -56,5 +56,5 @@ export function SignContainer() {
     }
   };
 
-  return <div className="sign-container">{renderStep()}</div>;
+  return <div className="px-5 pb-5 pt-20">{renderStep()}</div>;
 }
