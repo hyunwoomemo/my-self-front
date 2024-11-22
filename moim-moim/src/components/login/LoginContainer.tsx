@@ -27,14 +27,19 @@ export function LoginContainer() {
   };
 
   const handleLoginClick = async (data: { email: string; password: string }) => {
-    const res = await accountApi.login(data);
-    if (res.status === 200) {
-      const { data } = res;
-      setCookie("accessToken", data.data.accessToken);
-      setCookie("refreshToken", data.data.refreshToken);
-      router.push("/");
-    } else {
-      return;
+    try {
+      const res = await accountApi.login(data);
+      if (res.status === 200) {
+        const { data } = res;
+        setCookie("accessToken", data.data.accessToken);
+        setCookie("refreshToken", data.data.refreshToken);
+        router.push("/");
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error("로그인 중 에러 발생", error);
+      alert("로그인 중 문제가 발생하였습니다. 다시 시도해주세요.");
     }
   };
   return (
