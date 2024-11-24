@@ -69,10 +69,10 @@ const EmailStep = ({
       alert("인증시간 초과");
     } else {
       try {
-				console.log('verifyCode', verifyCode)
+        console.log("verifyCode", verifyCode);
         const { data, status } = await accountApi.confirmEmail({ email: formData.email, code: verifyCode.value });
         if (status === 200) {
-					alert(data.message);
+          alert(data.message);
           nextStep(e); // 다음 단계로 이동
         } else {
           alert(data.message);
@@ -125,47 +125,62 @@ const EmailStep = ({
   };
 
   return (
-    <form className="sign-form">
-      <h1>
+    <>
+      <h1 className="text-2xl font-bold">
         안전한 모임을 위해
-        <br /> 간단한 본인 인증이 필요해요.
+        <br />
+        간단한 본인 인증이 필요해요.
       </h1>
-      <div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <Input
-            type="email"
-            name="email"
-            label="이메일 주소"
-            placeholder="moimmoim@domain.com"
-            value={formData.email}
-            onChange={handleEmailChange}
-          />
-          <Button type="button" title="인증 요청" flex={true} onClick={handleVerifyRequest}></Button>
+      <form className="mt-10 flex flex-col gap-5">
+        <div>
+          <span className="text-lg font-bold">이메일 주소</span>
+          <div className="mt-2 flex flex-row items-center gap-2">
+            <div className="basis-3/4">
+              <Input
+                type="email"
+                name="email"
+                placeholder="moimmoim@domain.com"
+                value={formData.email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            <Button
+              type="button"
+              className="basis-1/4"
+              title="인증 요청"
+              flex={true}
+              onClick={handleVerifyRequest}
+            ></Button>
+          </div>
+          {suggestions.length > 0 && (
+            <ul>
+              {suggestions.map((suggestion, idx) => (
+                <li key={idx} onClick={() => handleSuggestionClick(suggestion)}>
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        {suggestions.length > 0 && (
-          <ul>
-            {suggestions.map((suggestion, idx) => (
-              <li key={idx} onClick={() => handleSuggestionClick(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div>
         {isVerified && (
           <>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Input label="인증번호" type="main" maxLength={6} placeholder="인증번호 입력" onChange={handleVerifyCodeChange} />
-              <div style={{ margin: "10px 0", marginTop: "auto", fontSize: "14px" }}>
-                남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}
-              </div>
+            <div className="flex items-end gap-2">
+              <Input
+                label="인증번호"
+                type="main"
+                maxLength={6}
+                placeholder="인증번호 입력"
+                onChange={handleVerifyCodeChange}
+              />
+              <div className="mb-2 text-2xl">남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}</div>
             </div>
-            <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
+            <div>
+              <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
+            </div>
           </>
         )}
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 
