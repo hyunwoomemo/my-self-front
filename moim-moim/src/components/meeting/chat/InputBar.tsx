@@ -50,7 +50,7 @@ const InputBar = ({ id }) => {
           <button className="flex h-12 w-12 items-center justify-center rounded-lg bg-white p-2 shadow-md">
             <TbPhoto size={20} />
           </button>
-          <Button title="전송" disabled={currentMsg.length === 0} onClick={handleClick} />
+          <Button title="전송" onClick={handleClick} />
         </div>
       </div>
     </div>
