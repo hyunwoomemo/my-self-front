@@ -54,5 +54,5 @@ export function SignContainer() {
     }
   };
 
-  return <div className="px-5 pb-5 pt-20">{renderStep()}</div>;
+  return <div className="px-5 pb-5 pt-20 h-full">{renderStep()}</div>;
 }

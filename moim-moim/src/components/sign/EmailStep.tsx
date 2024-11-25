@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { accountApi } from "@/app/api";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const EmailStep = ({
   formData,
@@ -16,7 +17,7 @@ const EmailStep = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [timer, setTimer] = useState(180); // 타이머 (초 단위)
   const [isTimerActive, setIsTimerActive] = useState(false); // 타이머 활성화 여부
-
+  const [isLoading, setIsLoading] = useState(false);
   const [verifyCode, setVerifyCode] = useState(""); // 인증코드 값
 
   const popularDomains = ["naver.com", "gmail.com", "daum.net", "yahoo.com", "hotmail.com"];
@@ -26,6 +27,7 @@ const EmailStep = ({
   // 인증 요청
   const handleVerifyRequest = async () => {
     if (isValidEmail(formData.email)) {
+      setIsLoading(true);
       try {
         const { data, status } = await accountApi.requestEmail({ email: formData.email });
         if (status === 200) {
@@ -38,6 +40,8 @@ const EmailStep = ({
         }
       } catch (error) {
         console.log("error", error);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("올바른 이메일 형식을 입력해주세요.");
@@ -125,14 +129,14 @@ const EmailStep = ({
   };
 
   return (
-    <>
+    <div className="h-full">
       <h1 className="text-2xl font-bold">
         안전한 모임을 위해
         <br />
         간단한 본인 인증이 필요해요.
       </h1>
       <form className="mt-10 flex flex-col gap-5">
-        <div>
+        <div className="flex-1">
           <span className="text-lg font-bold">이메일 주소</span>
           <div className="mt-2 flex flex-row items-center gap-2">
             <div className="basis-3/4">
@@ -146,11 +150,13 @@ const EmailStep = ({
             </div>
             <Button
               type="button"
-              className="basis-1/4"
-              title="인증 요청"
+              className="basis-1/4 bg-indigo-500"
               flex={true}
               onClick={handleVerifyRequest}
-            ></Button>
+              isLoading={isLoading}
+            >
+              인증 요청
+            </Button>
           </div>
           {suggestions.length > 0 && (
             <ul>
@@ -162,9 +168,10 @@ const EmailStep = ({
             </ul>
           )}
         </div>
+
         {isVerified && (
           <>
-            <div className="flex items-end gap-2">
+            <div className="flex-1 items-end gap-2">
               <Input
                 label="인증번호"
                 type="main"
@@ -174,13 +181,13 @@ const EmailStep = ({
               />
               <div className="mb-2 text-2xl">남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}</div>
             </div>
-            <div>
+            <div className="mt-auto">
               <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
             </div>
           </>
         )}
       </form>
-    </>
+    </div>
   );
 };
 
