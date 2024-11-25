@@ -31,18 +31,8 @@ const tantan = localFont({
   variable: "--font-tantan",
 });
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hempack.vercel.app/"),
   title: "모임모임 | 더이상 혼자가 아니다",
   description: "맛집, 취미, 여행 이젠 함께하세요.",
-
-  openGraph: {
-    images: [
-      {
-        url: "/opengraph-image.png",
-        alt: "김혜미 포트폴리오",
-      },
-    ],
-  },
 };
 
 export default function RootLayout({
