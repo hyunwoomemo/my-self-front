@@ -135,42 +135,42 @@ const EmailStep = ({
         <br />
         간단한 본인 인증이 필요해요.
       </h1>
-      <form className="mt-10 flex flex-col gap-5">
+      <form className="mt-10 flex h-[calc(100vh-20rem)] flex-col gap-5">
         <div className="flex-1">
-          <span className="text-lg font-bold">이메일 주소</span>
-          <div className="mt-2 flex flex-row items-center gap-2">
-            <div className="basis-3/4">
-              <Input
-                type="email"
-                name="email"
-                placeholder="moimmoim@domain.com"
-                value={formData.email}
-                onChange={handleEmailChange}
-              />
+          <div>
+            <span className="text-lg font-bold">이메일 주소</span>
+            <div className="mt-2 flex flex-row items-center gap-2">
+              <div className="basis-3/4">
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="moimmoim@domain.com"
+                  value={formData.email}
+                  onChange={handleEmailChange}
+                />
+              </div>
+              <Button
+                type="button"
+                className="basis-1/4 bg-indigo-500"
+                flex={true}
+                onClick={handleVerifyRequest}
+                isLoading={isLoading}
+              >
+                인증 요청
+              </Button>
             </div>
-            <Button
-              type="button"
-              className="basis-1/4 bg-indigo-500"
-              flex={true}
-              onClick={handleVerifyRequest}
-              isLoading={isLoading}
-            >
-              인증 요청
-            </Button>
+            {suggestions.length > 0 && (
+              <ul>
+                {suggestions.map((suggestion, idx) => (
+                  <li key={idx} onClick={() => handleSuggestionClick(suggestion)}>
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          {suggestions.length > 0 && (
-            <ul>
-              {suggestions.map((suggestion, idx) => (
-                <li key={idx} onClick={() => handleSuggestionClick(suggestion)}>
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
 
-        {isVerified && (
-          <>
+          {isVerified && (
             <div className="flex-1 items-end gap-2">
               <Input
                 label="인증번호"
@@ -181,10 +181,12 @@ const EmailStep = ({
               />
               <div className="mb-2 text-2xl">남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}</div>
             </div>
-            <div className="mt-auto">
-              <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
-            </div>
-          </>
+          )}
+        </div>
+        {isVerified && (
+          <div className="mt-auto">
+            <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
+          </div>
         )}
       </form>
     </div>
