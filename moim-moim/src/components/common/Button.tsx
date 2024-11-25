@@ -1,5 +1,6 @@
 "use client";
 import { de } from "date-fns/locale";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdCheck } from "react-icons/md";
 
 interface ButtonProps {
@@ -11,9 +12,10 @@ interface ButtonProps {
   flex?: boolean;
   disabled?: boolean;
   textSize?: string;
+  isLoading?: boolean;
 }
 
-const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: ButtonProps) => {
+const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on, children, isLoading }: ButtonProps) => {
   const btnClassType = () => {
     switch (custom) {
       case "label":
@@ -35,7 +37,7 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: 
         return `text-white`;
     }
   };
-
+  
   return (
     <button
       type={type}
@@ -43,6 +45,14 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on }: 
       onClick={onClick}
       disabled={disabled}
     >
+      {children && (
+        <div className="flex items-center justify-center gap-2">
+          {isLoading && <AiOutlineLoading3Quarters className={`mr-3 h-5 w-5 animate-spin ${btnTextClassType()}`}></AiOutlineLoading3Quarters>}
+          <span className={` ${disabled ? "text-disabledText" : undefined} text-${textSize} ${btnTextClassType()} `}>
+            {children}
+          </span>
+        </div>
+      )}
       {on ? (
         <div className="flex items-center gap-2">
           <MdCheck />
