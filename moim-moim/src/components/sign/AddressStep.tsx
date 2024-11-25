@@ -7,13 +7,17 @@ const EmailStep = ({
   setFormData: any;
   nextStep: () => void;
 }) => {
-
-    console.log('formData', formData);
+  console.log("formData", formData);
   return (
-    <div>
-      <h1>주소</h1>
+    <>
+      <img src="/account/mingcute_location-line.png" />
+      <h1 className="text-2xl font-bold">
+        자주 방문하는 지역을 선택하면
+        <br />
+        가까운 사람들과 연결돼요.
+      </h1>
       <button onClick={nextStep}>회원가입</button>
-    </div>
+    </>
   );
 };
 
