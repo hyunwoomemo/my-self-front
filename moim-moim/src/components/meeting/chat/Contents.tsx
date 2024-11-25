@@ -34,7 +34,6 @@ const Contents = ({ id, isVisible }) => {
     // 새로고침 했을 때만 !!
     if (data) {
       const target = data.find((v) => {
-        // console.log(typeof id, typeof v.id);
         return v.id === Number(id);
       });
       const type = target?.type;
@@ -74,17 +73,19 @@ const Contents = ({ id, isVisible }) => {
       <div className="flex flex-col-reverse gap-2 p-4">
         {sortMsgs.map((v) => {
           return (
-            <div
-              key={v.id}
-              className={`flex max-w-[70%] items-end gap-2 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
-            >
+            <div key={v.id} className={`flex flex-col gap-2`}>
+              {myInfo?.id !== v.users_id && <div>{v.users_id}</div>}
               <div
-                className={`w-fit whitespace-pre-wrap rounded-lg p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-lightPrimary" : "rounded-bl-none bg-surface"}`}
+                className={`flex max-w-[70%] items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
               >
-                {v.contents}
+                <div
+                  className={`w-fit whitespace-pre-wrap rounded-lg p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-lightPrimary" : "rounded-bl-none bg-surface"}`}
+                >
+                  {v.contents}
+                </div>
+                <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
+                {!(v.unReadCount === 0) && <span className="pb-1 text-[9px] text-point">{v.unReadCount}</span>}
               </div>
-              <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
-              {!(v.unReadCount === 0) && <span className="pb-1 text-[9px] text-point">{v.unReadCount}</span>}
             </div>
           );
         })}
