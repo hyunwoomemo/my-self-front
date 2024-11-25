@@ -1,35 +1,47 @@
 "use client";
 
-import { throttle } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import MeetingHeader from "./MeetingHeader";
 import Contents from "./Contents";
 import InputBar from "./InputBar";
+import { accountApi } from "@/app/api";
+import { useSetAtom } from "jotai";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
 
 const ChatContainer = ({ id }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const scrollRef = useRef();
+  const setMyInfo = useSetAtom(myInfoAtom);
 
-  const THROTTLE_WAIT = 300;
-
-  //   const handleScroll = throttle(() => {
-  //     const { scrollY, innerHeight } = window;
-  //     console.log("scrollY", scrollY, "innerHeight", innerHeight);
-  //     setIsVisible(scrollY > 499);
-  //   }, THROTTLE_WAIT);
-  const handleScroll = () => {
-    console.log("scrollY", window.scrollY);
-  };
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    accountApi.myInfo().then((res) => {
+      setMyInfo(res.data.data);
+    });
+  }, []); //이건 어디에서 써줘야 하나?
+
+  const handleScroll = useCallback(() => {
+    const scrollbar = scrollRef.current;
+    if (scrollbar) {
+      console.log("scrollY", scrollbar.scrollTop);
+    }
+  }, []);
+
+  useEffect(() => {
+    const scrollbar = scrollRef.current;
+    if (scrollbar) {
+      scrollbar.addEventListener("scroll", handleScroll);
+    }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (scrollbar) {
+        scrollbar.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [handleScroll]);
 
   return (
     <>
-      <div className="scrollbar flex-1 overflow-y-auto">
+      <div ref={scrollRef} className="scrollbar flex-1 overflow-y-auto">
         <MeetingHeader />
         <Contents id={id} isVisible={isVisible} />
       </div>

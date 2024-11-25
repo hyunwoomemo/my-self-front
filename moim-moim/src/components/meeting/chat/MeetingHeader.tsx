@@ -15,7 +15,7 @@ const MeetingHeader = () => {
   const data = useAtomValue(meetingDataAtom) as getMeetingData;
   const loading = useAtomValue(loadingAtom);
 
-  console.log("data", data);
+  // console.log("data", data);
 
   if (loading) {
     return <Loader />;

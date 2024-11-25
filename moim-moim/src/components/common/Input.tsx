@@ -9,7 +9,6 @@ interface InputProps {
   align?: string;
   error?: boolean;
   errorText?: string;
-  name?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
 }
 
@@ -24,9 +23,8 @@ const Input = ({
   align,
   error,
   errorText,
-  name,
   onChange,
-  ...rest
+  ...res
 }: InputProps) => {
   const typeClass = () => {
     switch (custom) {
@@ -52,8 +50,7 @@ const Input = ({
             onChange={onChange}
             disabled={disabled}
             value={value}
-            name={name}
-            {...rest}
+            {...res}
           />
         </div>
         {error && <span className="text-sm text-red-600">{errorText}</span>}
