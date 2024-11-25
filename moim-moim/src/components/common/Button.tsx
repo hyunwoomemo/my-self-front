@@ -7,7 +7,7 @@ interface ButtonProps {
   custom?: "label" | "full";
   title: string;
   on?: boolean;
-  onClick: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
+  onClick?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
   flex?: boolean;
   disabled?: boolean;
   textSize?: string;

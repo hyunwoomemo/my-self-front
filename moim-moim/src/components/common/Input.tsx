@@ -9,6 +9,7 @@ interface InputProps {
   align?: string;
   error?: boolean;
   errorText?: string;
+  name?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
 }
 
@@ -23,6 +24,7 @@ const Input = ({
   align,
   error,
   errorText,
+  name,
   onChange,
   ...rest
 }: InputProps) => {
@@ -50,6 +52,7 @@ const Input = ({
             onChange={onChange}
             disabled={disabled}
             value={value}
+            name={name}
             {...rest}
           />
         </div>
