@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import Button from "../common/Button";
 import Region, { Address } from "../common/Region";
 import { accountApi } from "@/app/api";
+import { useRouter } from "next/navigation";
 
 const EmailStep = ({ formData, setFormData, nextStep }: { formData: any; setFormData: any; nextStep: () => void }) => {
+  const router = useRouter();
+
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
   const [selectedArea, setSelectedArea] = useState<string>(""); // 선택한 지역
   const [addressKeyword, setAddressKeyword] = useState<string>(""); // 입력한 키워드
@@ -21,7 +24,9 @@ const EmailStep = ({ formData, setFormData, nextStep }: { formData: any; setForm
 		const updatedFormData = { ...formData, addresses, birthdate };
 		
 		// API 호출
-		accountApi.register(updatedFormData).catch((error) => {
+		accountApi.register(updatedFormData).then(() => {
+      router.push("/login");
+    }).catch((error) => {
 			console.error("API 호출 중 오류:", error);
 		});
 
