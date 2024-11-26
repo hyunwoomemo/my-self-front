@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { accountApi } from "@/app/api";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const EmailStep = ({
   formData,

@@ -10,16 +10,16 @@ const InfoStep = ({
   formData: {
     email: string;
     password: string;
-    confirmPassword: string;
-    nickName: string;
-    birthDate: string;
+    passwordCheck: string;
+    nickname: string;
+    birthdate: string;
     gender: string;
   };
   setFormData: any;
   nextStep: () => void;
 }) => {
   const [validationState, setValidationState] = useState({
-    nickName: {
+    nickname: {
       valid: false,
       msg: "",
     },
@@ -27,11 +27,11 @@ const InfoStep = ({
       valid: false,
       msg: "",
     },
-    confirmPassword: {
+    passwordCheck: {
       valid: false,
       msg: "",
     },
-    birthDate: {
+    birthdate: {
       valid: false,
       msg: "",
     },
@@ -44,7 +44,7 @@ const InfoStep = ({
   // 유효성 검사 함수
   const handleValidate = (name: string, value: string) => {
     switch (name) {
-      case "nickName":
+      case "nickname":
         const regexNickName = /^[a-zA-Z0-9가-힣]{2,}$/;
         return {
           valid: regexNickName.test(value),
@@ -56,12 +56,12 @@ const InfoStep = ({
           valid: regexPassword.test(value),
           msg: "영문/숫자/특수문자 혼합 8자 이상",
         };
-      case "confirmPassword":
+      case "passwordCheck":
         return {
           valid: formData.password === value,
           msg: "패스워드가 일치하지 않습니다.",
         };
-      case "birthDate":
+      case "birthdate":
         const regexBirthDate = /^\d{6}$/;
         return {
           valid: regexBirthDate.test(value),
@@ -96,7 +96,6 @@ const InfoStep = ({
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    console.log(e);
 
     // 유효성 검사
     let isInvalid = false;
@@ -129,10 +128,10 @@ const InfoStep = ({
           <Input
             type="text"
             label="닉네임"
-            name="nickName"
+            name="nickname"
             placeholder="한글/영문/숫자 혼합 2자 이상"
-            error={!validationState.nickName.valid}
-            errorText={validationState.nickName.msg}
+            error={!validationState.nickname.valid}
+            errorText={validationState.nickname.msg}
             onChange={handleChange}
           />
         </div>
@@ -150,12 +149,12 @@ const InfoStep = ({
         <div>
           <Input
             type="password"
-            name="confirmPassword"
+            name="passwordCheck"
             label="비밀번호 확인"
             placeholder="영문/숫자/특수문자 혼합 8자 이상"
             onChange={handleChange}
-            error={!validationState.confirmPassword.valid}
-            errorText={validationState.confirmPassword.msg}
+            error={!validationState.passwordCheck.valid}
+            errorText={validationState.passwordCheck.msg}
           />
         </div>
         <div className="flex flex-1 flex-col gap-2">
@@ -164,12 +163,12 @@ const InfoStep = ({
           <div className="flex items-center gap-2">
             <Input
               type="text"
-              name="birthDate"
+              name="birthdate"
               maxLength={6}
               onChange={handleChange}
               style={{ letterSpacing: "0.7rem" }}
-              error={!validationState.birthDate.valid}
-              errorText={validationState.birthDate.msg}
+              error={!validationState.birthdate.valid}
+              errorText={validationState.birthdate.msg}
             />
             <span style={{ alignContent: "center" }}>-</span>
             <Input

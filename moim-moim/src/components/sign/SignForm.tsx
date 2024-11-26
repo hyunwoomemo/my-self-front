@@ -10,9 +10,9 @@ export function SignForm({ onSignUpClick }: SignFormProps) {
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
     password: "",
-    confirmPassword: "",
-    nickName: "",
-    birthDate: "",
+    passwordCheck: "",
+    nickname: "",
+    birthdate: "",
     gender: "",
   });
 
@@ -37,16 +37,16 @@ export function SignForm({ onSignUpClick }: SignFormProps) {
       newErrors.password = "비밀번호는 최소 8자 이상이어야 합니다.";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+    if (formData.password !== formData.passwordCheck) {
+      newErrors.passwordCheck = "비밀번호가 일치하지 않습니다.";
     }
 
-    if (!formData.nickName) {
-      newErrors.nickName = "닉네임을 입력해주세요.";
+    if (!formData.nickname) {
+      newErrors.nickname = "닉네임을 입력해주세요.";
     }
 
-    if (!formData.birthDate) {
-      newErrors.birthDate = "생년월일을 입력해주세요.";
+    if (!formData.birthdate) {
+      newErrors.birthdate = "생년월일을 입력해주세요.";
     }
 
     if (!formData.gender) {
@@ -83,20 +83,20 @@ export function SignForm({ onSignUpClick }: SignFormProps) {
       <div className="form-group">
         <input
           type="password"
-          name="confirmPassword"
+          name="passwordCheck"
           placeholder="비밀번호 확인"
-          value={formData.confirmPassword}
+          value={formData.passwordCheck}
           onChange={handleChange}
         />
-        {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
+        {errors.passwordCheck && <div className="error">{errors.passwordCheck}</div>}
       </div>
       <div className="form-group">
-        <input type="text" name="nickName" placeholder="닉네임" value={formData.nickName} onChange={handleChange} />
-        {errors.nickName && <div className="error">{errors.nickName}</div>}
+        <input type="text" name="nickname" placeholder="닉네임" value={formData.nickname} onChange={handleChange} />
+        {errors.nickname && <div className="error">{errors.nickname}</div>}
       </div>
       <div className="form-group">
-        <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} />
-        {errors.birthDate && <div className="error">{errors.birthDate}</div>}
+        <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} />
+        {errors.birthdate && <div className="error">{errors.birthdate}</div>}
       </div>
       <div className="form-group">
         <select name="gender" value={formData.gender} onChange={handleChange}>

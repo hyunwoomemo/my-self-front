@@ -7,6 +7,7 @@ export const accountApi = {
     password: string;
     passwordCheck: string;
     birthdate: string;
+    gender: string;
     interestes: [];
     addresses: [
       {

@@ -5,7 +5,6 @@ import EmailStep from "@/components/sign/EmailStep";
 import InfoStep from "@/components/sign/InfoStep";
 import InterestsStep from "@/components/sign/InterestsStep";
 import AddressStep from "@/components/sign/AddressStep";
-import { accountApi } from "@/app/api";
 
 interface Addresses {
   address: string;
@@ -15,9 +14,9 @@ interface Addresses {
 type FormDataType = {
   email: string;
   password: string;
-  confirmPassword: string;
-  nickName: string;
-  birthDate: string;
+  passwordCheck: string;
+  nickname: string;
+  birthdate: string;
   gender: string;
   interests: [];
   addresses: Addresses[];
@@ -28,9 +27,9 @@ export function SignContainer() {
   const [formData, setFormData] = React.useState<FormDataType>({
     email: "",
     password: "",
-    confirmPassword: "",
-    nickName: "",
-    birthDate: "",
+    passwordCheck: "",
+    nickname: "",
+    birthdate: "",
     gender: "",
     interests: [],
     addresses: [],

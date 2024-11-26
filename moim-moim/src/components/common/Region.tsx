@@ -59,7 +59,7 @@ const Region = ({
         },
       });
       // res => setAdress
-
+      console.log('res', res)
       const result = res.data.documents;
 
       setAddress(result || []);
