@@ -22,7 +22,7 @@ const MainFilter = () => {
   }
 
   return (
-    <div id="mainFilter" className="flex items-center gap-1 bg-bg p-5 pb-0">
+    <div id="mainFilter" className="flex items-center gap-1 bg-bg p-5 pb-1">
       <Button
         title="추천"
         custom="label"

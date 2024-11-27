@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Tabs from "../common/Tabs";
 import MainFilter from "./MainFilter";
 import { useRouter } from "next/navigation";
@@ -8,9 +8,6 @@ import CreateButton from "./AddButton";
 import Header from "./Header";
 import Hr from "../common/Hr";
 import MeetingList from "../meeting/list/MeetingList";
-import { accountApi } from "@/app/api";
-import { useSetAtom } from "jotai";
-import { myInfoAtom } from "@/store/account/myInfo/atom";
 
 const tabList = [
   {
@@ -35,8 +32,6 @@ const MeetingListContainer = () => {
   const [value, setValue] = useState(tabList[0]);
   const router = useRouter();
 
-  accountApi.myInfo();
-
   return (
     <>
       <div className="flex flex-col">
@@ -46,7 +41,7 @@ const MeetingListContainer = () => {
           <Tabs data={tabList} type="default" tabValue={value} setTabValue={setValue} />
           <MainFilter />
         </div>
-        <div id="meetingList" className="flex flex-1 flex-col gap-5 p-5">
+        <div id="meetingList" className="flex flex-1 flex-col gap-5 p-5 pt-4">
           <MeetingList />
         </div>
       </div>
