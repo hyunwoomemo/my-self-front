@@ -25,7 +25,7 @@ const EmailStep = ({
 
   // 인증 요청
   const handleVerifyRequest = async (e) => {
-		e.preventDefault();
+    e.preventDefault();
     if (isValidEmail(formData.email)) {
       setIsLoading(true);
       try {
@@ -39,7 +39,10 @@ const EmailStep = ({
           alert(data.message);
         }
       } catch (error) {
-        console.log("error", error);
+        const {
+          response: { data },
+        } = error;
+        alert(data.message);
       } finally {
         setIsLoading(false);
       }
@@ -130,8 +133,8 @@ const EmailStep = ({
 
   return (
     <>
-			<img src="/account/line-md_circle.png" />
-      <h1 className="text-2xl font-bold mt-2">
+      <img src="/account/line-md_circle.png" />
+      <h1 className="mt-2 text-2xl font-bold">
         안전한 모임을 위해
         <br />
         간단한 본인 인증이 필요해요.
@@ -147,12 +150,12 @@ const EmailStep = ({
                 placeholder="moimmoim@domain.com"
                 value={formData.email}
                 onChange={handleEmailChange}
-								disabled={isVerified}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										handleVerifyRequest(e); // 엔터키 눌렀을 때 기본 동작 방지
-									}
-								}}
+                disabled={isVerified}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleVerifyRequest(e); // 엔터키 눌렀을 때 기본 동작 방지
+                  }
+                }}
               />
             </div>
             <Button
@@ -189,11 +192,11 @@ const EmailStep = ({
                 maxLength={6}
                 placeholder="인증번호 입력"
                 onChange={handleVerifyCodeChange}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										handleVerifyResponse(e); // 엔터키 눌렀을 때 기본 동작 방지
-									}
-								}}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleVerifyResponse(e); // 엔터키 눌렀을 때 기본 동작 방지
+                  }
+                }}
               />
 
               <div className="mb-2 mt-2 text-sm">

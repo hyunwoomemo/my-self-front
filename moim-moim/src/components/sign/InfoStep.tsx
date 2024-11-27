@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../common/Button";
 import Input from "../common/Input";
+import { accountApi } from "@/app/api";
 
 const InfoStep = ({
   formData,
@@ -94,21 +95,32 @@ const InfoStep = ({
     }));
   };
 
-  const handleNextStep = (e) => {
+  const handleNextStep = async (e) => {
     e.preventDefault();
-
-    // 유효성 검사
-    let isInvalid = false;
-    for (const key in validationState) {
-      if (!validationState[key].valid) {
-        isInvalid = true;
+    try {
+      const {status} = await accountApi.confirmNickname(formData.nickname);
+      if(status !== 200) return
+      // 유효성 검사
+      let isInvalid = false;
+      for (const key in validationState) {
+        if (!validationState[key].valid) {
+          isInvalid = true;
+        }
       }
-    }
-    // 유효성 검사 결과 처리
-    if (!isInvalid) {
-      nextStep();
-    } else {
-      alert("유효성검사 실패");
+      // 유효성 검사 결과 처리
+      if (!isInvalid) {
+        nextStep();
+      } else {
+        alert("유효성검사 실패");
+      }
+    } catch (error) {
+      const {
+        response: { data },
+      } = error;
+      setValidationState((prev) => ({
+        ...prev,
+        nickname: { valid: false, msg: data.message },
+      }));
     }
   };
 

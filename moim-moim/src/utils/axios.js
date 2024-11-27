@@ -48,7 +48,7 @@ apiClient.interceptors.response.use(
           // 원하는 경로로 리다이렉트 (예: 로그인 페이지)
           if (typeof window !== "undefined") {
             // window.location.href = "/login";
-            redirect("/list");
+            redirect("/");
           }
         }
       } else {
@@ -57,11 +57,10 @@ apiClient.interceptors.response.use(
         deleteCookie("refreshToken");
         if (typeof window !== "undefined") {
           // window.location.href = "/login";
-          redirect("/list");
+          redirect("/");
         }
       }
     }
-
     return Promise.reject(error);
   },
 );

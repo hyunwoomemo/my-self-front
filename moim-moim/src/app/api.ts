@@ -33,4 +33,7 @@ export const accountApi = {
   confirmEmail: (data: {email: string, code: string}) => {
     return request.post("/auth/confirmEmail", data);
   },
+  confirmNickname: (nickname: string) => {
+    return request.get(`/auth/confirmNickname?nickname=${nickname}`);
+  },
 };
