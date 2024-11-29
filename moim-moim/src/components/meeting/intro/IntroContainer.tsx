@@ -25,7 +25,8 @@ const IntroContainer = () => {
   const router = useRouter();
   const { joinMeeting, socket } = useSocket();
 
-  console.log("ss", socket.connected);
+  // console.log("ss", socket?.connected);
+  console.log("meetingData", data);
 
   useEffect(() => {
     const num = Math.floor(Math.random() * 10 + 1);
@@ -41,7 +42,6 @@ const IntroContainer = () => {
       users_id: 125,
       type: data.type,
     });
-    console.log("meetingData", data);
   };
 
   if (loading) {
@@ -110,7 +110,7 @@ const IntroContainer = () => {
               <div className="rounded-lg bg-white p-5 text-3xl text-textGray">
                 <GoHeartFill />
               </div>
-              <Button title="입장하기" flex textSize="lg" onClick={handleClick} />
+              <Button title={data.type === 3 ? "입장하기" : "입장 신청하기"} flex textSize="lg" onClick={handleClick} />
             </div>
           </div>
 

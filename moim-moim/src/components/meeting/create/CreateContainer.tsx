@@ -28,9 +28,8 @@ interface Values {
   nolimitMembers: boolean;
   details: string;
   conditions: {
-    onlyMan: boolean;
-    onlyWoman: boolean;
-    withoutBlack: boolean;
+    direct: boolean;
+    request: boolean;
   };
 }
 
@@ -52,9 +51,8 @@ const CreateContainer = () => {
     nolimitMembers: false,
     details: "",
     conditions: {
-      onlyMan: false,
-      onlyWoman: false,
-      withoutBlack: true,
+      direct: true,
+      request: false,
     },
   });
   const [errorMsg, setErrorMsg] = useState({
@@ -86,11 +84,6 @@ const CreateContainer = () => {
     e.preventDefault();
     e.returnValue = "";
   };
-
-  // const validate = () => {
-  //   const min =
-  // }
-
   const handleClick = () => {
     generateMeeting({
       name: values.title,
@@ -98,7 +91,7 @@ const CreateContainer = () => {
       maxMembers: Number(values.members),
       description: values.details,
       users_id: 125,
-      type: 3,
+      type: values.conditions.direct ? 3 : 4,
       category1: selectedCategory?.c1_id,
       category2: selectedCategory?.c2_id,
     });
@@ -132,16 +125,10 @@ const CreateContainer = () => {
             v.length < 5 ? "최소 5자 이상을 권하고 있어요." : v.length > 40 ? "40자 미만으로 제한하고 있어요." : "",
         };
       });
-    } else if (
-      type === "conditions" &&
-      v &&
-      typeof v === "string" &&
-      (v === "onlyMan" || v === "onlyWoman" || v === "withoutBlack")
-    ) {
+    } else if (type === "conditions" && v && typeof v === "string" && (v === "direct" || v === "request")) {
       setValues((prev) => ({
         ...prev,
         [type]: {
-          ...prev.conditions,
           [v]: !prev.conditions[v],
         },
       }));
@@ -171,7 +158,6 @@ const CreateContainer = () => {
     return <Loader />;
   }
 
-  console.log("🔔🔔🔔", selectedArea, values);
   return (
     <div className="p-6">
       <div className="flex flex-col gap-5">
@@ -275,25 +261,19 @@ const CreateContainer = () => {
         />
 
         <div className="flex flex-col gap-2">
-          <div className="text-lg font-bold">입장 조건</div>
+          <div className="text-lg font-bold">가입 조건</div>
           <div className="flex gap-2">
             <Button
-              on={values.conditions.onlyMan}
-              title="남자만"
+              on={values.conditions.direct}
+              title="모두 가입"
               custom="label"
-              onClick={() => handleChange("conditions", "onlyMan")}
+              onClick={() => handleChange("conditions", "direct")}
             />
             <Button
-              on={values.conditions.onlyWoman}
-              title="여자만"
+              on={values.conditions.request}
+              title="심사 후 가입"
               custom="label"
-              onClick={() => handleChange("conditions", "onlyWoman")}
-            />
-            <Button
-              on={values.conditions.withoutBlack}
-              title="블랙 제한"
-              custom="label"
-              onClick={() => handleChange("conditions", "withoutBlack")}
+              onClick={() => handleChange("conditions", "request")}
             />
           </div>
         </div>
