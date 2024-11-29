@@ -9,8 +9,17 @@ import { TbPhoto } from "react-icons/tb";
 const InputBar = ({ id }) => {
   const [contents, setContents] = useState<string>("");
   const [currentMsg, setCurrentMsg] = useState("");
-
   const { sendMessage } = useSocket();
+  const [rows, setrows] = useState<number>(() => (window.innerWidth > 480 ? 3 : 1));
+
+  useEffect(() => {
+    const handleResize = () => {
+      setrows(window.innerWidth > 480 ? 3 : 1);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleClick = () => {
     sendMessage({
@@ -40,7 +49,7 @@ const InputBar = ({ id }) => {
         <textarea
           className="scrollbar w-full flex-1 resize-none whitespace-pre-wrap rounded-lg bg-surface p-4 pb-0"
           placeholder="내용을 입력해 주세요..."
-          rows={screen.width > 599 ? 3 : 1}
+          rows={rows}
           onChange={(e) => handleChangeContents(e.target.value)}
           onSubmit={() => setContents("")}
           onKeyDown={handleKeyDown}

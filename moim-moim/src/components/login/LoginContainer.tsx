@@ -29,10 +29,11 @@ export function LoginContainer() {
   const handleLoginClick = async (data: { email: string; password: string }) => {
     try {
       const res = await accountApi.login(data);
-      if (res.status === 200) {
+      if (res.statusCode === 200) {
         const { data } = res;
-        setCookie("accessToken", data.data.accessToken);
-        setCookie("refreshToken", data.data.refreshToken);
+        console.log("datatata", res);
+        setCookie("accessToken", data.accessToken);
+        setCookie("refreshToken", data.refreshToken);
         router.push("/");
       } else {
         return;

@@ -9,6 +9,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     if (typeof window !== "undefined") {
+      //클라이언트 컴포넌트에서만 사용(서버 컴포넌트에서 사용하려면 fetch 이용하시길)
       const accessToken = getCookie("accessToken");
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -67,7 +68,7 @@ apiClient.interceptors.response.use(
 );
 
 const responseBody = (response) => {
-  return response;
+  return response.data;
 };
 
 const request = {

@@ -1,14 +1,18 @@
 "use client";
 
 import { loadingAtom } from "@/store/common/atom";
+import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useSetAtom } from "jotai";
+import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { GroupedData } from "@/utils/group";
+import next from "next";
 
 export let socket: Socket;
 
@@ -92,6 +96,7 @@ export const useSocket = () => {
   const setMeetingData = useSetAtom(meetingDataAtom);
   const setMessages = useSetAtom(messagesAtom);
   const setCurrentMeeting = useSetAtom(currentMeetingAtom);
+  const setActive = useSetAtom(activeAtom);
   const router = useRouter();
 
   useEffect(() => {
@@ -108,7 +113,14 @@ export const useSocket = () => {
 
     const handleConnect = () => console.log("connected!");
 
+    const handleMeetingActive = (data) => {
+      setLoading(true);
+      setActive(data);
+      setLoading(false);
+    };
+
     socket?.on("connect", handleConnect);
+    socket?.on("meetingActive", handleMeetingActive);
     socket?.on("list", handleGetList);
     socket?.on("meetingData", handleGetMeetingData);
     socket?.on("messages", handleMessagesData);
@@ -132,18 +144,46 @@ export const useSocket = () => {
 
   const handleMessagesData = (data: MessagesValue) => {
     setLoading(true);
-    setMessages(data);
+
+    // data 가공 그룹 등등
+    console.log("data", data);
+
+    const formattedData = data.list.map((v) => {
+      return { ...v, formattedDate: moment(v.created_at).format("YY-MM-DD HH:mm") };
+    });
+
+    const arr = formattedData.reverse().map((v, i, arr) => {
+      const prev = arr[i - 1];
+      const next = arr[i + 1];
+
+      const isSameTime = (a, b) => {
+        console.log("a,b", a, b);
+        return a?.formattedDate === b?.formattedDate;
+      };
+
+      const isSameUser = (a, b) => {
+        return a?.users_id === b?.users_id;
+      };
+
+      console.log("⭐");
+
+      const nick = !isSameTime(v, prev) || !isSameUser(v, prev);
+      const time = !isSameTime(v, next) || !isSameUser(v, next);
+
+      return { ...v, nick, time };
+    });
+
+    setMessages({ ...data, list: arr.reverse() });
+    // setMessages(data);
     setLoading(false);
   };
 
   const handleReceiveMessage = (data: MessagesValue) => {
-    // console.log("????");
+    console.log("handleReceiveMessage", data);
     setLoading(true);
     setMessages((prev: MessagesValue) => {
-      return {
-        ...prev,
-        list: [...prev.list, data],
-      };
+      console.log("prev", prev, data);
+      return { ...prev, list: GroupedData([data, ...prev.list]) };
     });
     setLoading(false);
   };
@@ -153,12 +193,14 @@ export const useSocket = () => {
   };
 
   const enterMeeting = ({ region_code, meetings_id, users_id, type }: EnterMeeting) => {
+    setLoading(true);
     console.log("enterMeetingenterMeeting");
     setCurrentMeeting(meetings_id);
+    setLoading(false);
 
     socket?.emit("enterMeeting", { region_code, meetings_id, users_id, type });
     socket?.on("enterRes", (data) => {
-      console.log("datadata??", data);
+      console.log("enterRes", data);
       if (data.CODE === "EM000") {
         router.push(`/moim/${meetings_id}/chat`);
       } else if (data.CODE === "EM001") {
@@ -167,7 +209,6 @@ export const useSocket = () => {
         console.log("enter error");
       }
     });
-    console.log("ok?");
   };
 
   const generateMeeting = (params: GenerateMeeting) => {
@@ -176,6 +217,16 @@ export const useSocket = () => {
 
   const joinMeeting = (params: JoinMeetingProps) => {
     socket?.emit("joinMeeting", params);
+    socket?.on("enterRes", (data) => {
+      console.log("enterRes", data);
+      if (data.CODE === "EM000") {
+        router.push(`/moim/${params.meetings_id}/chat`);
+      } else if (data.CODE === "EM001") {
+        router.push(`/moim/${params.meetings_id}/intro`);
+      } else {
+        console.log("enter error");
+      }
+    });
   };
 
   const sendMessage = (params: SendMessageProps) => {
