@@ -1,8 +1,8 @@
 export interface FormData {
   email: string;
   password: string;
-  confirmPassword: string;
-  birthDate: string;
-  nickName: string;
+  passwordCheck: string;
+  birthdate: string;
+  nickname: string;
   gender: string;
 }

@@ -16,25 +16,18 @@ const EmailStep = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [timer, setTimer] = useState(180); // 타이머 (초 단위)
   const [isTimerActive, setIsTimerActive] = useState(false); // 타이머 활성화 여부
-
+  const [isLoading, setIsLoading] = useState(false);
   const [verifyCode, setVerifyCode] = useState(""); // 인증코드 값
 
   const popularDomains = ["naver.com", "gmail.com", "daum.net", "yahoo.com", "hotmail.com"];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log("name,value", name, value);
-  };
-
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   // 인증 요청
-  const handleVerifyRequest = async () => {
+  const handleVerifyRequest = async (e) => {
+    e.preventDefault();
     if (isValidEmail(formData.email)) {
+      setIsLoading(true);
       try {
         const { data, status } = await accountApi.requestEmail({ email: formData.email });
         if (status === 200) {
@@ -46,7 +39,12 @@ const EmailStep = ({
           alert(data.message);
         }
       } catch (error) {
-        console.log("error", error);
+        const {
+          response: { data },
+        } = error;
+        alert(data.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("올바른 이메일 형식을 입력해주세요.");
@@ -78,10 +76,10 @@ const EmailStep = ({
       alert("인증시간 초과");
     } else {
       try {
-				console.log('verifyCode', verifyCode)
+        console.log("verifyCode", verifyCode);
         const { data, status } = await accountApi.confirmEmail({ email: formData.email, code: verifyCode.value });
         if (status === 200) {
-					alert(data.message);
+          alert(data.message);
           nextStep(e); // 다음 단계로 이동
         } else {
           alert(data.message);
@@ -134,47 +132,84 @@ const EmailStep = ({
   };
 
   return (
-    <form className="sign-form">
-      <h1>
+    <>
+      <img src="/account/line-md_circle.png" />
+      <h1 className="mt-2 text-2xl font-bold">
         안전한 모임을 위해
-        <br /> 간단한 본인 인증이 필요해요.
+        <br />
+        간단한 본인 인증이 필요해요.
       </h1>
-      <div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <Input
-            type="email"
-            name="email"
-            label="이메일 주소"
-            placeholder="moimmoim@domain.com"
-            value={formData.email}
-            onChange={handleEmailChange}
-          />
-          <Button type="button" title="인증 요청" flex={true} onClick={handleVerifyRequest}></Button>
+      <form className="mt-10 flex h-[calc(100vh-24rem)] flex-col gap-5">
+        <div>
+          <span className="text-lg font-bold">이메일 주소</span>
+          <div className="mt-2 flex flex-row items-center gap-2">
+            <div className="basis-3/5">
+              <Input
+                type="email"
+                name="email"
+                placeholder="moimmoim@domain.com"
+                value={formData.email}
+                onChange={handleEmailChange}
+                disabled={isVerified}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleVerifyRequest(e); // 엔터키 눌렀을 때 기본 동작 방지
+                  }
+                }}
+              />
+            </div>
+            <Button
+              type="button"
+              className="basis-2/5 bg-indigo-500"
+              flex={true}
+              onClick={handleVerifyRequest}
+              isLoading={isLoading}
+            >
+              인증 요청
+            </Button>
+          </div>
+          {!isVerified && suggestions.length > 0 && (
+            <ul className="absolute z-10 mt-2 w-11/12 rounded-lg bg-white shadow-lg">
+              {suggestions.map((suggestion, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="cursor-pointer px-4 py-2 hover:bg-indigo-100"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        {suggestions.length > 0 && (
-          <ul>
-            {suggestions.map((suggestion, idx) => (
-              <li key={idx} onClick={() => handleSuggestionClick(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div>
+
         {isVerified && (
           <>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Input label="인증번호" type="main" placeholder="인증번호 입력" onChange={handleVerifyCodeChange} />
-              <div style={{ margin: "10px 0", marginTop: "auto", fontSize: "14px" }}>
-                남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}
+            <div className="flex-1 items-end gap-2">
+              <Input
+                label="인증번호"
+                type="main"
+                maxLength={6}
+                placeholder="인증번호 입력"
+                onChange={handleVerifyCodeChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleVerifyResponse(e); // 엔터키 눌렀을 때 기본 동작 방지
+                  }
+                }}
+              />
+
+              <div className="mb-2 mt-2 text-sm">
+                <span className="text-[#d71e1e]">남은 시간: {timer > 0 ? formatTime(timer) : "시간 초과"}</span>
               </div>
             </div>
-            <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
+            <div>
+              <Button type="button" custom="full" title="인증 확인" onClick={handleVerifyResponse}></Button>
+            </div>
           </>
         )}
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 

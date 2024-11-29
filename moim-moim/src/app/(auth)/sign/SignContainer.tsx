@@ -1,20 +1,25 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useState } from "react";
-import "@/app/(auth)/styles/sign.scss";
+import React, { useEffect, useState } from "react";
 import EmailStep from "@/components/sign/EmailStep";
 import InfoStep from "@/components/sign/InfoStep";
 import InterestsStep from "@/components/sign/InterestsStep";
 import AddressStep from "@/components/sign/AddressStep";
-import { SignForm } from "@/components/sign/SignForm";
+
+interface Addresses {
+  address: string;
+  address_code: string;
+}
 
 type FormDataType = {
   email: string;
   password: string;
-  confirmPassword: string;
-  nickName: string;
-  birthDate: string;
+  passwordCheck: string;
+  nickname: string;
+  birthdate: string;
   gender: string;
+  interests: [];
+  addresses: Addresses[];
 };
 
 export function SignContainer() {
@@ -22,15 +27,14 @@ export function SignContainer() {
   const [formData, setFormData] = React.useState<FormDataType>({
     email: "",
     password: "",
-    confirmPassword: "",
-    nickName: "",
-    birthDate: "",
+    passwordCheck: "",
+    nickname: "",
+    birthdate: "",
     gender: "",
+    interests: [],
+    addresses: [],
   });
-
-  const nextStep = (e) => {
-    console.log("다음다음");
-    e.preventDefault();
+  const nextStep = () => {
     setStep((prev) => prev + 1);
   };
 
@@ -47,5 +51,5 @@ export function SignContainer() {
     }
   };
 
-  return <div className="sign-container">{renderStep()}</div>;
+  return <div className="px-5 pb-5 pt-20">{renderStep()}</div>;
 }

@@ -10,6 +10,10 @@ interface InputProps {
   error?: boolean;
   errorText?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
+  minLength?: number;
+  maxLength?: number;
+  name?: string;
+  style?: React.CSSProperties;
 }
 
 const Input = ({
@@ -24,6 +28,9 @@ const Input = ({
   error,
   errorText,
   onChange,
+  minLength,
+  maxLength,
+  name,
   ...res
 }: InputProps) => {
   const typeClass = () => {
@@ -38,18 +45,21 @@ const Input = ({
   if (label) {
     return (
       <div className="flex flex-col gap-1">
-        <div className="text-lg font-bold">{label}</div>
+        <div className={`${disabled ? "text-disabledText" : undefined}`}>{label}</div>
         <div
           className={`rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-2" : undefined} focus-within:border-primary`}
         >
           {icon && <div className="p-5 pr-0 text-2xl">{icon}</div>}
           <input
             type={type}
+            name={name}
             className={`w-full rounded-xl p-5 ${icon ? "pl-0" : undefined} ${align ? `text-${align}` : undefined} ${disabled ? "text-disabledText" : undefined}`}
             placeholder={placeholder}
             onChange={onChange}
             disabled={disabled}
             value={value}
+            minLength={minLength}
+            maxLength={maxLength}
             {...res}
           />
         </div>
@@ -58,19 +68,25 @@ const Input = ({
     );
   }
   return (
+<div className={` ${error ? "flex flex-col gap-1" : ""}`}>
     <div
       className={`flex-1 rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
     >
       {icon && <div className={`p-5 pr-0 text-2xl ${align ? `text-${align}` : undefined}`}>{icon}</div>}
       <input
         type={type}
+        name={name}
         className="w-full rounded-xl p-5 disabled:text-textGray"
         placeholder={placeholder}
         value={value}
         disabled={disabled}
         onChange={onChange}
+        minLength={minLength}
+        maxLength={maxLength}
+        {...res}
       />
       {error && <span className="text-sm text-red-600">{errorText}</span>}
+    </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ export const accountApi = {
     password: string;
     passwordCheck: string;
     birthdate: string;
+    gender: string;
     interestes: [];
     addresses: [
       {
@@ -31,5 +32,8 @@ export const accountApi = {
   },
   confirmEmail: (data: {email: string, code: string}) => {
     return request.post("/auth/confirmEmail", data);
+  },
+  confirmNickname: (nickname: string) => {
+    return request.get(`/auth/confirmNickname?nickname=${nickname}`);
   },
 };
