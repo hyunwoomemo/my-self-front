@@ -26,6 +26,7 @@ apiClient.interceptors.response.use(
   (response) => response, // 성공 응답 그대로 반환
   async (error) => {
     const originalRequest = error.config;
+    
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 재시도 플래그 설정
 
@@ -48,7 +49,7 @@ apiClient.interceptors.response.use(
           // 원하는 경로로 리다이렉트 (예: 로그인 페이지)
           if (typeof window !== "undefined") {
             // window.location.href = "/login";
-            redirect("/");
+            redirect("/login");
           }
         }
       } else {
@@ -57,7 +58,7 @@ apiClient.interceptors.response.use(
         deleteCookie("refreshToken");
         if (typeof window !== "undefined") {
           // window.location.href = "/login";
-          redirect("/");
+          redirect("/login");
         }
       }
     }
