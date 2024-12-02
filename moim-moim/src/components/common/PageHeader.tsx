@@ -9,13 +9,15 @@ interface PageHeaderProps {
   icon?: JSX.Element;
   link?: string;
   hr?: boolean;
+  onClick?: () => void;
+  style?: React.CSSProperties;
 }
 
-const PageHeader = ({ title, icon, link, hr }: PageHeaderProps) => {
+const PageHeader = ({ title, icon, link, hr, onClick, style }: PageHeaderProps) => {
   const router = useRouter();
   return (
     <>
-      <div className="flex justify-between gap-2 p-6 w_sm:p-4">
+      <div className="flex justify-between gap-2 p-6 w_sm:p-4" style={style}>
         <button
           className="flex items-center gap-3 text-xl"
           onClick={() => router.back()}
@@ -27,6 +29,7 @@ const PageHeader = ({ title, icon, link, hr }: PageHeaderProps) => {
           </span>
         </button>
         {icon && link && <button onClick={() => router.push(link)}>{icon}</button>}
+        {icon && onClick && <button onClick={onClick}>{icon}</button>}
       </div>
       {hr && <Hr />}
     </>
