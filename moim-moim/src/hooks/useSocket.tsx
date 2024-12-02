@@ -147,33 +147,28 @@ export const useSocket = () => {
 
     // data 가공 그룹 등등
     console.log("data", data);
-
     const formattedData = data.list.map((v) => {
       return { ...v, formattedDate: moment(v.created_at).format("YY-MM-DD HH:mm") };
     });
-
-    const arr = formattedData.reverse().map((v, i, arr) => {
+    console.log("formattedData", formattedData);
+    const newArr = formattedData.reverse().map((v, i, arr) => {
       const prev = arr[i - 1];
       const next = arr[i + 1];
 
       const isSameTime = (a, b) => {
-        console.log("a,b", a, b);
         return a?.formattedDate === b?.formattedDate;
       };
-
       const isSameUser = (a, b) => {
         return a?.users_id === b?.users_id;
       };
 
-      console.log("⭐");
-
-      const nick = !isSameTime(v, prev) || !isSameUser(v, prev);
+      const nick = !isSameTime(prev, v) || !isSameUser(prev, v);
       const time = !isSameTime(v, next) || !isSameUser(v, next);
 
       return { ...v, nick, time };
     });
-
-    setMessages({ ...data, list: arr.reverse() });
+    console.log("newArra", newArr);
+    setMessages({ ...data, list: Object.values(newArr).reverse() });
     // setMessages(data);
     setLoading(false);
   };
