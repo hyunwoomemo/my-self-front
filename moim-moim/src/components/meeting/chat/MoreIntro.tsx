@@ -19,16 +19,12 @@ const MoreIntro = () => {
     setImgNum(formattedNum);
   }, []);
   return (
-    <SlideBar>
-      123123213
-      <div className="relative h-[calc(100%-6.8rem)]">
-        <IntroData data={data} />
-        {imgNum && (
-          <Image src={`/moim_bg_default/moim_bg_default${imgNum}.jpg`} alt="background_default_image" fill priority />
-        )}
-      </div>
-      123
-    </SlideBar>
+    <div className="relative h-[calc(100%-6.8rem)]">
+      <IntroData data={data} />
+      {imgNum && (
+        <Image src={`/moim_bg_default/moim_bg_default${imgNum}.jpg`} alt="background_default_image" fill priority />
+      )}
+    </div>
   );
 };
 

@@ -1,13 +1,7 @@
 "use client";
 
-import SlideBar from "./SlideBar";
-
 const Members = () => {
-  return (
-    <SlideBar>
-      <div>members!!!</div>
-    </SlideBar>
-  );
+  return <div>members!!!</div>;
 };
 
 export default Members;

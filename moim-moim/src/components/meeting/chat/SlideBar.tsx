@@ -17,11 +17,8 @@ const tabData = [
     value: "Members",
   },
 ];
-
-const SlideBar = (props) => {
+const SlideBar = () => {
   const [tabValue, setTabValue] = useState(tabData[0]);
-
-  // tabValue {laberl}
 
   return (
     <>
