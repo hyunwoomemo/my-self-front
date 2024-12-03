@@ -37,8 +37,10 @@ const Tabs = ({ data, type, link, tabValue, setTabValue }: TabsProps) => {
     return (
       <ul className="flex">
         {data.map((v, i) => (
-          <li key={i}>
-            <Link href={v.value}>{v.label}</Link>
+          <li key={i} className={`${tabTypeClass(v.value)} cursor-pointer`} onClick={() => handleTabActive(v)}>
+            <Link href={v.value} className={tabTextTypeClass(v.value)}>
+              {v.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -49,7 +51,7 @@ const Tabs = ({ data, type, link, tabValue, setTabValue }: TabsProps) => {
       <ul className="flex">
         {data.map((v, i) => (
           <li key={i} className={`${tabTypeClass(v.value)} cursor-pointer`} onClick={() => handleTabActive(v)}>
-            <span className={tabTextTypeClass(v.value)}>{v.label}</span>
+            <span className={`${tabTextTypeClass(v.value)} cursor-pointer`}>{v.label}</span>
           </li>
         ))}
       </ul>
