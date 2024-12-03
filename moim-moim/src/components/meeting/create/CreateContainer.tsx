@@ -103,26 +103,34 @@ const CreateContainer = () => {
       setValues((prev) => {
         return {
           ...prev,
-          [type]: v,
+          [type]: v.trim(),
         };
       });
       setErrorMsg((prev) => ({
         ...prev,
         [type]:
-          v.length < 20 ? "최소 20자 이상을 권하고 있어요." : v.length > 500 ? "500자 미만으로 제한하고 있어요." : "",
+          v.trim().length < 20
+            ? "최소 20자 이상을 권하고 있어요."
+            : v.trim().length > 500
+              ? "500자 미만으로 제한하고 있어요."
+              : "",
       }));
     } else if (type === "title" && typeof v === "string") {
       setValues((prev) => {
         return {
           ...prev,
-          [type]: v,
+          [type]: v.trim(),
         };
       });
       setErrorMsg((prev) => {
         return {
           ...prev,
           [type]:
-            v.length < 5 ? "최소 5자 이상을 권하고 있어요." : v.length > 40 ? "40자 미만으로 제한하고 있어요." : "",
+            v.trim().length < 5
+              ? "최소 5자 이상을 권하고 있어요."
+              : v.trim().length > 40
+                ? "40자 미만으로 제한하고 있어요."
+                : "",
         };
       });
     } else if (type === "conditions" && v && typeof v === "string" && (v === "direct" || v === "request")) {
