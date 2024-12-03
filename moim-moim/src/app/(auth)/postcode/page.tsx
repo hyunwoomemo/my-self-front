@@ -1,13 +1,12 @@
 "use client";
 
-import { getUserInfo } from "@/actions/user/getUserInfo";
 import Button from "@/components/common/Button";
 import Region from "@/components/common/Region";
 import { Address } from "@/components/postcode";
 import { useSocket } from "@/hooks/useSocket";
 import { currentAreaAtom } from "@/store/area/atom";
 import { useSetAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function Page() {
   const [address, setAddress] = useState<Address[]>([]);
