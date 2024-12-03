@@ -98,8 +98,8 @@ const InfoStep = ({
   const handleNextStep = async (e) => {
     e.preventDefault();
     try {
-      const {status} = await accountApi.confirmNickname(formData.nickname);
-      if(status !== 200) return
+      const { statusCode } = await accountApi.confirmNickname(formData.nickname);
+      if (statusCode !== 200) return;
       // 유효성 검사
       let isInvalid = false;
       for (const key in validationState) {

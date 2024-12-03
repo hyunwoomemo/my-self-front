@@ -29,20 +29,20 @@ const EmailStep = ({
     if (isValidEmail(formData.email)) {
       setIsLoading(true);
       try {
-        const { data, status } = await accountApi.requestEmail({ email: formData.email });
-        if (status === 200) {
+        const { message, statusCode } = await accountApi.requestEmail({ email: formData.email });
+        if (statusCode === 200) {
           setIsVerified(true); // 인증 상태 업데이트
           setIsTimerActive(true); // 타이머 활성화
           setTimer(180); // 타이머 초기화
           alert("인증 요청이 완료되었습니다.");
         } else {
-          alert(data.message);
+          alert(message);
         }
       } catch (error) {
         const {
-          response: { data },
+          response: { message },
         } = error;
-        alert(data.message);
+        alert(message);
       } finally {
         setIsLoading(false);
       }
@@ -77,12 +77,16 @@ const EmailStep = ({
     } else {
       try {
         console.log("verifyCode", verifyCode);
-        const { data, status } = await accountApi.confirmEmail({ email: formData.email, code: verifyCode.value });
-        if (status === 200) {
-          alert(data.message);
+        const { message, statusCode } = await accountApi.confirmEmail({
+          email: formData.email,
+          code: verifyCode.value,
+        });
+        if (statusCode === 200) {
+          console.log("data.message", message);
+          alert(message);
           nextStep(e); // 다음 단계로 이동
         } else {
-          alert(data.message);
+          alert(message);
         }
       } catch (error) {
         console.log("error", error);

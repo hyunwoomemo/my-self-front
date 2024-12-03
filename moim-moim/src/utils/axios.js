@@ -47,19 +47,21 @@ apiClient.interceptors.response.use(
           deleteCookie("accessToken");
           deleteCookie("refreshToken");
           // 원하는 경로로 리다이렉트 (예: 로그인 페이지)
-          if (typeof window !== "undefined") {
-            // window.location.href = "/login";
-            redirect("/");
-          }
+          // if (typeof window !== "undefined") {
+          //   window.location.href = "/login";
+          //   redirect("/");
+          // }
+          redirect("/login");
         }
       } else {
         console.log("❌ No refresh token found. Logging out...");
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
-        if (typeof window !== "undefined") {
-          // window.location.href = "/login";
-          redirect("/");
-        }
+        // if (typeof window !== "undefined") {
+        //   window.location.href = "/login";
+        //   redirect("/");
+        // }
+        redirect("/login");
       }
     }
     return Promise.reject(error);
