@@ -114,12 +114,9 @@ const InfoStep = ({
         alert("유효성검사 실패");
       }
     } catch (error) {
-      const {
-        response: { data },
-      } = error;
       setValidationState((prev) => ({
         ...prev,
-        nickname: { valid: false, msg: data.message },
+        nickname: { valid: false, msg: error.message },
       }));
     }
   };

@@ -23,9 +23,9 @@ type FormDataType = {
 };
 
 export function SignContainer() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [formData, setFormData] = React.useState<FormDataType>({
-    email: "",
+    email: "ounsy0612@gmail.com",
     password: "",
     passwordCheck: "",
     nickname: "",

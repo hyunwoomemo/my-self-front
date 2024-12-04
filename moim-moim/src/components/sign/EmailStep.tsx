@@ -39,10 +39,7 @@ const EmailStep = ({
           alert(message);
         }
       } catch (error) {
-        const {
-          response: { message },
-        } = error;
-        alert(message);
+        alert(error.message);
       } finally {
         setIsLoading(false);
       }

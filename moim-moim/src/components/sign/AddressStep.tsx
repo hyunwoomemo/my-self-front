@@ -24,10 +24,12 @@ const EmailStep = ({ formData, setFormData, nextStep }: { formData: any; setForm
 		const updatedFormData = { ...formData, addresses, birthdate };
 		
 		// API 호출
-		accountApi.register(updatedFormData).then(() => {
+		accountApi.register(updatedFormData).then(({data}) => {
+      console.log('data', data)
+      alert('회원가입 완료되었습니다.')
       router.push("/login");
     }).catch((error) => {
-			console.error("API 호출 중 오류:", error);
+      alert(error.message)
 		});
 
 		//값은 바껴있어야할것같아서..?
