@@ -65,7 +65,7 @@ apiClient.interceptors.response.use(
         redirect("/login");
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data);
   },
 );
 
