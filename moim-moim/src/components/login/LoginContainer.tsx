@@ -2,7 +2,6 @@
 
 import React from "react";
 import { LoginForm } from "@/components/login/LoginForm";
-import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
 import { accountApi } from "@/app/api";
 import { setCookie } from "cookies-next";
@@ -16,6 +15,8 @@ export function LoginContainer() {
 
   const handleLoginWithKakao = () => {
     // loginWithProvider("kakao");
+    window.location.href = 'http://localhost/auth/kakao'
+    // window.location.href = 'http://moimmoim.duckdns.org/auth/kakao'
   };
 
   const handleLoginWithNaver = () => {

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import { accountApi } from "@/app/api";
+import axios from "axios";
 
 const InfoStep = ({
   formData,
@@ -19,6 +20,7 @@ const InfoStep = ({
   setFormData: any;
   nextStep: () => void;
 }) => {
+  const [isSocial, setIsSocial] = useState(false);
   const [validationState, setValidationState] = useState({
     nickname: {
       valid: false,
@@ -41,6 +43,32 @@ const InfoStep = ({
       msg: "",
     },
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      console.log("정보입력란.");
+      try {
+        const json = new URLSearchParams(window.location.search);
+        if (json.size > 0) {
+          console.log("json", json);
+          json.forEach((value, key) => {
+            setFormData((prev) => ({
+              ...prev,
+              [key]: value,
+            }));
+          });
+          setIsSocial(true);
+        } else {
+          setIsSocial(false);
+        }
+      } catch (err) {
+        console.error("로그인 에러:", err);
+        // navigate("/error");
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // 유효성 검사 함수
   const handleValidate = (name: string, value: string) => {
@@ -138,34 +166,40 @@ const InfoStep = ({
             type="text"
             label="닉네임"
             name="nickname"
+            value={formData.nickname}
             placeholder="한글/영문/숫자 혼합 2자 이상"
             error={!validationState.nickname.valid}
             errorText={validationState.nickname.msg}
             onChange={handleChange}
           />
         </div>
-        <div>
-          <Input
-            type="password"
-            name="password"
-            label="비밀번호"
-            placeholder="영문/숫자/특수문자 혼합 8자 이상"
-            error={!validationState.password.valid}
-            errorText={validationState.password.msg}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Input
-            type="password"
-            name="passwordCheck"
-            label="비밀번호 확인"
-            placeholder="영문/숫자/특수문자 혼합 8자 이상"
-            onChange={handleChange}
-            error={!validationState.passwordCheck.valid}
-            errorText={validationState.passwordCheck.msg}
-          />
-        </div>
+        {isSocial ? "참" : "거짓"}
+        {!isSocial && (
+          <>
+            <div>
+              <Input
+                type="password"
+                name="password"
+                label="비밀번호"
+                placeholder="영문/숫자/특수문자 혼합 8자 이상"
+                error={!validationState.password.valid}
+                errorText={validationState.password.msg}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                name="passwordCheck"
+                label="비밀번호 확인"
+                placeholder="영문/숫자/특수문자 혼합 8자 이상"
+                onChange={handleChange}
+                error={!validationState.passwordCheck.valid}
+                errorText={validationState.passwordCheck.msg}
+              />
+            </div>
+          </>
+        )}
         <div className="flex flex-1 flex-col gap-2">
           <span className="text-lg font-bold">생년월일</span>
           {/* style로 되어있는 부분들 모두 tailwinds로 수정바람(참고: 위 className) */}
@@ -173,9 +207,11 @@ const InfoStep = ({
             <Input
               type="text"
               name="birthdate"
+              value={formData.birthdate}
               maxLength={6}
               onChange={handleChange}
               style={{ letterSpacing: "0.7rem" }}
+              disabled={isSocial}
               error={!validationState.birthdate.valid}
               errorText={validationState.birthdate.msg}
             />
