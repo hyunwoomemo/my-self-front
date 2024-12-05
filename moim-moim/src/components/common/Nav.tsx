@@ -38,7 +38,11 @@ const Nav = () => {
     setActive(url);
   };
 
-  if ((pathname?.includes("/moim/") && pathname?.endsWith("/intro")) || pathname?.endsWith("/chat")) {
+  if (
+    (pathname?.includes("/moim/") && pathname?.endsWith("/intro")) ||
+    pathname?.endsWith("/chat") ||
+    pathname?.includes("/sign")
+  ) {
     return null;
   }
   return (
