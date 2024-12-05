@@ -11,8 +11,8 @@ import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import { GroupedData } from "@/utils/group";
 import next from "next";
+import { GroupedData } from "@/utils/group";
 
 export let socket: Socket;
 
@@ -145,30 +145,7 @@ export const useSocket = () => {
   const handleMessagesData = (data: MessagesValue) => {
     setLoading(true);
 
-    // data 가공 그룹 등등
-    console.log("data", data);
-    const formattedData = data.list.map((v) => {
-      return { ...v, formattedDate: moment(v.created_at).format("YY-MM-DD HH:mm") };
-    });
-    console.log("formattedData", formattedData);
-    const newArr = formattedData.reverse().map((v, i, arr) => {
-      const prev = arr[i - 1];
-      const next = arr[i + 1];
-
-      const isSameTime = (a, b) => {
-        return a?.formattedDate === b?.formattedDate;
-      };
-      const isSameUser = (a, b) => {
-        return a?.users_id === b?.users_id;
-      };
-
-      const nick = !isSameTime(prev, v) || !isSameUser(prev, v);
-      const time = !isSameTime(v, next) || !isSameUser(v, next);
-
-      return { ...v, nick, time };
-    });
-    console.log("newArra", newArr);
-    setMessages({ ...data, list: Object.values(newArr).reverse() });
+    setMessages({ ...data, list: GroupedData(data.list).reverse() });
     // setMessages(data);
     setLoading(false);
   };
@@ -177,8 +154,7 @@ export const useSocket = () => {
     console.log("handleReceiveMessage", data);
     setLoading(true);
     setMessages((prev: MessagesValue) => {
-      console.log("prev", prev, data);
-      return { ...prev, list: GroupedData([data, ...prev.list]) };
+      return { ...prev, list: GroupedData([data, ...prev.list]).reverse() };
     });
     setLoading(false);
   };

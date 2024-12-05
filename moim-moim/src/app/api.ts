@@ -27,13 +27,19 @@ export const accountApi = {
   interests: () => {
     return request.get("/auth/interests");
   },
-  requestEmail: (data: {email: string}) => {
+  requestEmail: (data: { email: string }) => {
     return request.post("/auth/requestEmail", data);
   },
-  confirmEmail: (data: {email: string, code: string}) => {
+  confirmEmail: (data: { email: string; code: string }) => {
     return request.post("/auth/confirmEmail", data);
   },
   confirmNickname: (nickname: string) => {
     return request.get(`/auth/confirmNickname?nickname=${nickname}`);
+  },
+};
+
+export const msgApi = {
+  getMoreMessage: (id, total) => {
+    return request.post("/moim/getMoreMessage", { meetings_id: id, length: total });
   },
 };

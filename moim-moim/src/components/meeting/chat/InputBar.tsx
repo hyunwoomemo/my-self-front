@@ -1,16 +1,22 @@
 "use client";
 
+import { myInfoProps } from "@/app/client-layout";
 import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
 import { useSocket } from "@/hooks/useSocket";
-import { ReactElement, useEffect, useState } from "react";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { messagesAtom } from "@/store/meeting/messages/atom";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 import { TbPhoto } from "react-icons/tb";
 
-const InputBar = ({ id }) => {
+const InputBar = ({ id, msgRef }) => {
   const [contents, setContents] = useState<string>("");
   const [currentMsg, setCurrentMsg] = useState("");
   const { sendMessage } = useSocket();
   const [rows, setrows] = useState<number>(() => (window.innerWidth > 480 ? 3 : 1));
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const [isAfterClick, setIsAfterClick] = useState(false);
+  const messages = useAtomValue(messagesAtom);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,14 +27,24 @@ const InputBar = ({ id }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    //스크롤 위에 있을때, 내가 작성한 메세지가 보내지면 아래로 스크롤
+    if (isAfterClick && msgRef.current) {
+      console.log("msgRef.current", msgRef.current);
+      msgRef.current.scrollIntoView();
+      setIsAfterClick(false);
+    }
+  }, [messages]);
+
   const handleClick = () => {
     sendMessage({
       contents: contents,
       meetings_id: id,
       region_code: "A02",
-      users_id: 125,
+      users_id: myInfo.id,
     });
     setCurrentMsg("");
+    setIsAfterClick(true);
   };
 
   const handleKeyDown = (e) => {
@@ -42,7 +58,6 @@ const InputBar = ({ id }) => {
     setContents(text);
     setCurrentMsg(text);
   };
-  console.log(contents);
   return (
     <div className="p-4 pt-0">
       <div className="flex flex-col rounded-lg bg-surface">

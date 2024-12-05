@@ -17,14 +17,19 @@ const tabData = [
     value: "Members",
   },
 ];
-const SlideBar = () => {
+const SlideBar = ({ show, setShow }) => {
   const [tabValue, setTabValue] = useState(tabData[0]);
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    setShow(!show);
+  };
 
   return (
     <>
       <div className="fixed left-0 top-0 h-screen w-screen bg-white">
         <div className="flex items-center justify-between">
-          <PageHeader title="모아보기" style={{ flex: 1 }} />
+          <PageHeader title="모아보기" onPrevClick={handleClick} style={{ flex: 1 }} />
           <div className="flex gap-4 p-3">
             <GoHeartFill color="#ebebeb" size={24} />
             <GoShareAndroid size={24} />
