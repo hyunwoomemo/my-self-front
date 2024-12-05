@@ -8,7 +8,7 @@ import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { GroupedData } from "@/utils/group";
 

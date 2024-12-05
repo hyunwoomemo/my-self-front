@@ -6,15 +6,7 @@ interface Interests {
   interest: string;
   icon?: string;
 }
-const InterestsStep = ({
-  formData,
-  setFormData,
-  nextStep,
-}: {
-  formData: { interests: [] };
-  setFormData: any;
-  nextStep: () => void;
-}) => {
+const InterestsStep = ({ setFormData, nextStep }: { setFormData: any; nextStep: () => void }) => {
   const [interestsList, setInterestsList] = useState<Interests[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

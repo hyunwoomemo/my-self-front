@@ -74,7 +74,7 @@ export function SignContainer() {
       case 3:
         return <InterestsStep formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 4:
-        return <AddressStep formData={formData} setFormData={setFormData} nextStep={nextStep} />;
+        return <AddressStep formData={formData} setFormData={setFormData} />;
     }
   };
 

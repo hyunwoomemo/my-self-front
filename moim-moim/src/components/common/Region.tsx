@@ -1,9 +1,6 @@
 "use client";
 import axios from "axios";
 
-import Input from "./Input";
-import { useState } from "react";
-
 interface AddressValue {
   address_name: string;
   b_code: string;
@@ -59,7 +56,7 @@ const Region = ({
         },
       });
       // res => setAdress
-      console.log('res', res)
+      console.log("res", res);
       const result = res.data.documents;
 
       setAddress(result || []);

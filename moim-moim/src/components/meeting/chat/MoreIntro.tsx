@@ -6,7 +6,6 @@ import { getMeetingData } from "@/hooks/useSocket";
 import IntroData from "../intro/IntroData";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import SlideBar from "./SlideBar";
 
 const MoreIntro = () => {
   const data = useAtomValue(meetingDataAtom) as getMeetingData;

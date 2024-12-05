@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiHomeSmile, BiMap, BiUser } from "react-icons/bi";
 import { RiChatSmile2Line } from "react-icons/ri";
 

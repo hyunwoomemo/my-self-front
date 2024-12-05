@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { FormData } from "./types";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 
 // import "../../styles/login.scss";
@@ -29,7 +28,6 @@ export function LoginForm({
 }: LoginFormProps) {
   const router = useRouter();
   const [formData, setFormData] = React.useState<FormData>({ email: "", password: "" });
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,8 +40,8 @@ export function LoginForm({
   };
 
   const signUpHandler = () => {
-    router.push('/sign')
-  }
+    router.push("/sign");
+  };
   return (
     <form
       className="flex w-2/3 min-w-[300px] flex-col gap-6 rounded-xl bg-white p-10 shadow-lg"

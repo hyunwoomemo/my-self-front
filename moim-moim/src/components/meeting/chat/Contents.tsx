@@ -21,7 +21,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   const { enterMeeting, socket } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
-  const [messages, setMessages] = useAtom(messagesAtom);
+  const messages = useAtomValue(messagesAtom);
 
   const loading = useAtomValue(loadingAtom);
   const activeData = useAtomValue(activeAtom);
@@ -80,7 +80,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) {
         setIsVisible(!isVisible);
       }

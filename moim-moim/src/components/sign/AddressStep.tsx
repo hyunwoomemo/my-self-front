@@ -4,7 +4,7 @@ import Region, { Address } from "../common/Region";
 import { accountApi } from "@/app/api";
 import { useRouter } from "next/navigation";
 
-const EmailStep = ({ formData, setFormData, nextStep }: { formData: any; setFormData: any; nextStep: () => void }) => {
+const EmailStep = ({ formData, setFormData }: { formData: any; setFormData: any; nextStep: () => void }) => {
   const router = useRouter();
 
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
