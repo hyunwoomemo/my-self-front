@@ -9,18 +9,19 @@ interface PageHeaderProps {
   icon?: JSX.Element;
   link?: string;
   hr?: boolean;
-  onClick?: () => void;
+  onPrevClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onIconClick?: React.MouseEventHandler<HTMLButtonElement>;
   style?: React.CSSProperties;
 }
 
-const PageHeader = ({ title, icon, link, hr, onClick, style }: PageHeaderProps) => {
+const PageHeader = ({ title, icon, link, hr, onPrevClick, onIconClick, style }: PageHeaderProps) => {
   const router = useRouter();
   return (
     <>
       <div className="flex justify-between gap-2 p-6 w_sm:p-4" style={style}>
         <button
           className="flex items-center gap-3 text-xl"
-          onClick={() => router.back()}
+          onClick={onPrevClick ? onPrevClick : () => router.back()}
           style={{ width: "calc(100% - 2.5rem)" }}
         >
           <FaAngleLeft />
@@ -29,7 +30,7 @@ const PageHeader = ({ title, icon, link, hr, onClick, style }: PageHeaderProps) 
           </span>
         </button>
         {icon && link && <button onClick={() => router.push(link)}>{icon}</button>}
-        {icon && onClick && <button onClick={onClick}>{icon}</button>}
+        {icon && onIconClick && <button onClick={onIconClick}>{icon}</button>}
       </div>
       {hr && <Hr />}
     </>
