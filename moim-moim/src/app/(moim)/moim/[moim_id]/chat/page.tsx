@@ -7,7 +7,7 @@ const Chat = async ({ params }: { params: { moim_id: string } }) => {
   console.log("userInfo", userInfo);
   return (
     <div className="flex h-screen flex-col">
-      <ChatContainer id={moim_id} userInfo={userInfo.data} />
+      <ChatContainer id={moim_id} userInfo={userInfo?.data} />
     </div>
   );
 };

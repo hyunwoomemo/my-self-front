@@ -9,6 +9,10 @@ import { loadingAtom } from "@/store/common/atom";
 import Loader from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import { accountApi } from "@/app/api";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { myInfoProps } from "@/app/client-layout";
 
 moment.locale("ko");
 
@@ -16,10 +20,15 @@ const MeetingList = () => {
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(listAtom) as getListProps[];
   const { enterMeeting } = useSocket();
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+
+  // const activeStatus = (date) => {
+  //   console.log("🍻", date)
+  // }
 
   const handleEnterMeeting = (data) => {
     console.log("data???", data);
-    enterMeeting({ region_code: "A02", meetings_id: data.id, users_id: 125, type: data.type });
+    enterMeeting({ region_code: "A02", meetings_id: data.id, users_id: myInfo?.id, type: data.type });
   };
 
   if (loading) {
@@ -57,7 +66,7 @@ const MeetingList = () => {
                   {v.category1_name}/{v.category2_name}
                 </div>
                 <div className="font-thin text-[var(--textGray)]">·</div>
-                <span className="text-xs text-[var(--point)]">{moment(v.created_at).fromNow()}</span>
+                {/* <span className="text-xs text-[var(--point)]">{activeStatus(v.last_active_time)}</span> */}
               </div>
               <div className="flex gap-1">
                 <div className="flex items-center">

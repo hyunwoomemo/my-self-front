@@ -17,6 +17,8 @@ import { useAtomValue } from "jotai";
 import { selectedCategoryAtom } from "@/store/meeting/category/atom";
 import Region, { Address } from "@/components/common/Region";
 import { useSocket } from "@/hooks/useSocket";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { myInfoProps } from "@/app/client-layout";
 
 interface Values {
   category1: string | undefined;
@@ -34,6 +36,7 @@ interface Values {
 }
 
 const CreateContainer = () => {
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
@@ -90,7 +93,7 @@ const CreateContainer = () => {
       region_code: "A02",
       maxMembers: Number(values.members),
       description: values.details,
-      users_id: 125,
+      users_id: myInfo.id,
       type: values.conditions.direct ? 3 : 4,
       category1: selectedCategory?.c1_id,
       category2: selectedCategory?.c2_id,

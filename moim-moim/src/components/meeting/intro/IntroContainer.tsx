@@ -3,7 +3,6 @@
 import Button from "@/components/common/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { GoHeartFill } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 import { SlSettings } from "react-icons/sl";
 import { useEffect, useState } from "react";
@@ -11,7 +10,7 @@ import Loader from "@/components/common/Loader";
 import { useAtomValue } from "jotai";
 import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
-import { getMeetingData, useSocket } from "@/hooks/useSocket";
+import { getMeetingData } from "@/hooks/useSocket";
 import Empty from "@/components/common/Empty";
 import IntroData from "./IntroData";
 

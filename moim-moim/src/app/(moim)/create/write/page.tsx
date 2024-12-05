@@ -1,3 +1,4 @@
+import { getUserInfo } from "@/actions/user/getUserInfo";
 import PageHeader from "@/components/common/PageHeader";
 import CreateContainer from "@/components/meeting/create/CreateContainer";
 

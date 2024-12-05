@@ -5,6 +5,23 @@ import { accountApi } from "./api";
 import { useAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 
+export interface myInfoProps {
+  birthdate: string;
+  created_at: string;
+  deleted_at: string;
+  email: string;
+  gender: string;
+  id: number;
+  ip: string;
+  like: number;
+  nickname: string;
+  password: string;
+  profile_image_name: string;
+  profile_image_url: string;
+  provider: string;
+  provider_id: number;
+  updated_at: string;
+}
 const ClientLayout = ({ children }) => {
   const { joinArea } = useSocket();
   const [myInfo, setMyinfo] = useAtom(myInfoAtom);

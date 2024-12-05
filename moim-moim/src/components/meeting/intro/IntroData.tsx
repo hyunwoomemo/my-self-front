@@ -1,5 +1,8 @@
+import { myInfoProps } from "@/app/client-layout";
 import Button from "@/components/common/Button";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { useAtomValue } from "jotai";
 import moment from "moment";
 import { CiHeart } from "react-icons/ci";
 import { GoHeartFill } from "react-icons/go";
@@ -13,12 +16,13 @@ interface IntroDataProps {
 
 const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const { joinMeeting } = useSocket();
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
   const handleClick = () => {
     joinMeeting({
       meetings_id: data.id,
       region_code: "A02",
-      users_id: 125,
+      users_id: myInfo.id,
       type: data.type,
     });
   };

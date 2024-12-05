@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
 
 export const nextFetch = async (url, options) => {
-  const cookieStore = await cookies();
-  const token = await cookieStore.get("accessToken")?.value;
+  const token = await getCookie("accessToken");
+  // const token = await cookieStore.get("accessToken")?.value;
   console.log("token", token);
 
   const newOption = {
