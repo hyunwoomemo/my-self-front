@@ -24,7 +24,7 @@ const InterestsStep = ({
     const fetchInterests = async () => {
       try {
         const { data } = await accountApi.interests();
-        setInterestsList(data.data);
+        setInterestsList(data);
       } finally {
         setIsLoading(false);
       }

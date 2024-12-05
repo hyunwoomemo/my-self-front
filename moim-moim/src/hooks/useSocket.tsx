@@ -6,12 +6,10 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
-import { useAtom, useSetAtom } from "jotai";
-import moment from "moment";
+import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import next from "next";
 import { GroupedData } from "@/utils/group";
 
 export let socket: Socket;
