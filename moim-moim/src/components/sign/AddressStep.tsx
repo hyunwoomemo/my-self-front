@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../common/Button";
 import Region, { Address } from "../common/Region";
 import { accountApi } from "@/app/api";
@@ -21,23 +21,25 @@ const EmailStep = ({ formData, setFormData, nextStep }: { formData: any; setForm
     ];
 
     const birthdate = formData.birthdate + formData.gender;
-		const updatedFormData = { ...formData, addresses, birthdate };
-		
-		// API 호출
-		accountApi.register(updatedFormData).then(({data}) => {
-      console.log('data', data)
-      alert('회원가입 완료되었습니다.')
-      router.push("/login");
-    }).catch((error) => {
-      alert(error.message)
-		});
+    const updatedFormData = { ...formData, addresses, birthdate };
 
-		//값은 바껴있어야할것같아서..?
+    // API 호출
+    accountApi
+      .register(updatedFormData)
+      .then(({ message }) => {
+        alert(message);
+        router.push("/login");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+    //값은 바껴있어야할것같아서..?
     setFormData((prev) => {
-      return { ...prev, addresses};
+      return { ...prev, addresses };
     });
   };
-  
+
   return (
     <>
       <img src="/account/mingcute_location-line.png" />

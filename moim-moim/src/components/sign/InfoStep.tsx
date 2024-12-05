@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import { accountApi } from "@/app/api";
-import axios from "axios";
 
 const InfoStep = ({
   formData,
   setFormData,
+  isSocial,
   nextStep,
 }: {
   formData: {
@@ -17,61 +17,36 @@ const InfoStep = ({
     birthdate: string;
     gender: string;
   };
+  isSocial: any;
   setFormData: any;
   nextStep: () => void;
 }) => {
-  const [isSocial, setIsSocial] = useState(false);
   const [validationState, setValidationState] = useState({
     nickname: {
-      valid: false,
+      valid: true,
       msg: "",
     },
     password: {
-      valid: false,
+      valid: true,
       msg: "",
     },
     passwordCheck: {
-      valid: false,
+      valid: true,
       msg: "",
     },
     birthdate: {
-      valid: false,
+      valid: true,
       msg: "",
     },
     gender: {
-      valid: false,
+      valid: true,
       msg: "",
     },
   });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      console.log("정보입력란.");
-      try {
-        const json = new URLSearchParams(window.location.search);
-        if (json.size > 0) {
-          console.log("json", json);
-          json.forEach((value, key) => {
-            setFormData((prev) => ({
-              ...prev,
-              [key]: value,
-            }));
-          });
-          setIsSocial(true);
-        } else {
-          setIsSocial(false);
-        }
-      } catch (err) {
-        console.error("로그인 에러:", err);
-        // navigate("/error");
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   // 유효성 검사 함수
   const handleValidate = (name: string, value: string) => {
+    if (isSocial && (name == "password" || name === "passwordCheck")) return { valid: true, msg: "" };
     switch (name) {
       case "nickname":
         const regexNickName = /^[a-zA-Z0-9가-힣]{2,}$/;
@@ -173,7 +148,6 @@ const InfoStep = ({
             onChange={handleChange}
           />
         </div>
-        {isSocial ? "참" : "거짓"}
         {!isSocial && (
           <>
             <div>

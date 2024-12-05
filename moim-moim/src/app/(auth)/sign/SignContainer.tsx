@@ -23,9 +23,11 @@ type FormDataType = {
 };
 
 export function SignContainer() {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
+  const [isSocial, setIsSocial] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = React.useState<FormDataType>({
-    email: "ounsy0612@gmail.com",
+    email: "",
     password: "",
     passwordCheck: "",
     nickname: "",
@@ -38,12 +40,37 @@ export function SignContainer() {
     setStep((prev) => prev + 1);
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const json = new URLSearchParams(window.location.search);
+        if (json.size > 0) {
+          json.forEach((value, key) => {
+            setFormData((prev) => ({
+              ...prev,
+              [key]: value,
+            }));
+          });
+          setStep(2);
+          setIsSocial(true);
+          setIsLoading(true);
+        } else {
+          setIsSocial(false);
+          setIsLoading(true);
+        }
+      } catch (err) {
+        console.error("로그인 에러:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
+
   const renderStep = () => {
     switch (step) {
       case 1:
         return <EmailStep formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 2:
-        return <InfoStep formData={formData} setFormData={setFormData} nextStep={nextStep} />;
+        return <InfoStep formData={formData} setFormData={setFormData} isSocial={isSocial} nextStep={nextStep} />;
       case 3:
         return <InterestsStep formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 4:
@@ -51,5 +78,5 @@ export function SignContainer() {
     }
   };
 
-  return <div className="px-5 pb-5 pt-20">{renderStep()}</div>;
+  return <>{isLoading && <div className="px-5 pb-5 pt-20">{renderStep()}</div>}</>;
 }
