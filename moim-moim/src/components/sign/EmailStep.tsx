@@ -73,20 +73,18 @@ const EmailStep = ({
       alert("인증시간 초과");
     } else {
       try {
-        console.log("verifyCode", verifyCode);
         const { message, statusCode } = await accountApi.confirmEmail({
           email: formData.email,
           code: verifyCode.value,
         });
         if (statusCode === 200) {
-          console.log("data.message", message);
           alert(message);
           nextStep(e); // 다음 단계로 이동
         } else {
           alert(message);
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     }
   };

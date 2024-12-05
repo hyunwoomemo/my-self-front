@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // 백엔드 API URL
   // withCredentials: true,           // 쿠키 및 인증 정보 허용
@@ -27,7 +27,7 @@ apiClient.interceptors.response.use(
   (response) => response, // 성공 응답 그대로 반환
   async (error) => {
     const originalRequest = error.config;
-    
+
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 재시도 플래그 설정
 
@@ -62,7 +62,11 @@ apiClient.interceptors.response.use(
         //   window.location.href = "/login";
         //   redirect("/");
         // }
-        redirect("/login");
+        const pathname = usePathname();
+        console.log("pathname", pathname);
+        // if(!(pathname === '/sign' && pathname === '/login')){
+        //   redirect("/login");
+        // }
       }
     }
     return Promise.reject(error?.response?.data);
