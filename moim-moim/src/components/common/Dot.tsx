@@ -1,10 +1,9 @@
 interface DotProps {
-    color: string
+  color: string;
 }
 
-const Dot = ({color}: DotProps) => {
-    return 
-    <div className=`font-thin text-[${color}]`>·</div>
-}
+const Dot = ({ color }: DotProps) => {
+  return <div className={`font-thin text-[${color}]`}>·</div>;
+};
 
 export default Dot;

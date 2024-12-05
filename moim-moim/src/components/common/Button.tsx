@@ -1,5 +1,5 @@
 "use client";
-import { de } from "date-fns/locale";
+
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdCheck } from "react-icons/md";
 
@@ -37,7 +37,7 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on, ch
         return `text-white`;
     }
   };
-  
+
   return (
     <button
       type={type}
@@ -47,7 +47,11 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on, ch
     >
       {children && (
         <div className="flex items-center justify-center gap-2">
-          {isLoading && <AiOutlineLoading3Quarters className={`mr-3 h-5 w-5 animate-spin ${btnTextClassType()}`}></AiOutlineLoading3Quarters>}
+          {isLoading && (
+            <AiOutlineLoading3Quarters
+              className={`mr-3 h-5 w-5 animate-spin ${btnTextClassType()}`}
+            ></AiOutlineLoading3Quarters>
+          )}
           <span className={` ${disabled ? "text-disabledText" : undefined} text-${textSize} ${btnTextClassType()} `}>
             {children}
           </span>

@@ -5,7 +5,7 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useAtomValue } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import { HiArrowSmallDown } from "react-icons/hi2";
 import { loadingAtom } from "@/store/common/atom";

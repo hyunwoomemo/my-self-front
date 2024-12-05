@@ -4,7 +4,7 @@ import { FaChevronRight, FaBell, FaMagnifyingGlass, FaRegCalendar } from "react-
 const Header = () => {
   return (
     <div className="flex justify-between p-6 pb-4">
-      <Link href={"/postcode"} className="flex items-center gap-1">
+      <Link href={"/area"} className="flex items-center gap-1">
         <span className="text-xl font-bold">논현 1동</span>
         <FaChevronRight />
       </Link>

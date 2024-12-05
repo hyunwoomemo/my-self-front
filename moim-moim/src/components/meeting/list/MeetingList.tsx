@@ -7,10 +7,6 @@ import "moment/locale/ko";
 import { getListProps, useSocket } from "@/hooks/useSocket";
 import { loadingAtom } from "@/store/common/atom";
 import Loader from "@/components/common/Loader";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { getUserInfo } from "@/actions/user/getUserInfo";
-import { accountApi } from "@/app/api";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 

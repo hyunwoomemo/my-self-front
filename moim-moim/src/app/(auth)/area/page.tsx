@@ -2,14 +2,13 @@
 
 import Button from "@/components/common/Button";
 import Region from "@/components/common/Region";
-import { Address } from "@/components/postcode";
 import { useSocket } from "@/hooks/useSocket";
 import { currentAreaAtom } from "@/store/area/atom";
 import { useSetAtom } from "jotai";
 import React, { useState } from "react";
 
 export default function Page() {
-  const [address, setAddress] = useState<Address[]>([]);
+  const [address, setAddress] = useState([]);
   const [addressKeyword, setAddressKeyword] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState("");
   const { joinArea } = useSocket();

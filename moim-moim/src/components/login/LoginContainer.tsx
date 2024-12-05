@@ -2,7 +2,6 @@
 
 import React from "react";
 import { LoginForm } from "@/components/login/LoginForm";
-import { loginWithProvider } from "@/actions/login/LoginAction";
 import "@/app/(auth)/styles/login.scss";
 import { accountApi } from "@/app/api";
 import { setCookie } from "cookies-next";

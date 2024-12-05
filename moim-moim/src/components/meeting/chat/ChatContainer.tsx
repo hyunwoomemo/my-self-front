@@ -4,13 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import MeetingHeader from "./MeetingHeader";
 import Contents from "./Contents";
 import InputBar from "./InputBar";
-import Loader from "@/components/common/Loader";
 import { msgApi } from "@/app/api";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { messagesAtom } from "@/store/meeting/messages/atom";
-import { MessagesValue } from "@/hooks/useSocket";
 import { GroupedData } from "@/utils/group";
-import Empty from "@/components/common/Empty";
 
 const ChatContainer = ({ id }) => {
   const scrollRef = useRef(null);
