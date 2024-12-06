@@ -42,8 +42,11 @@ const ClientLayout = ({ children }) => {
           window.history.replaceState(null, "", newUrl); // 쿼리 파라미터 제거
         }
         // 토큰 저장 후 myInfo API 호출
-        const response = await accountApi.myInfo();
-        setMyinfo(response.data);
+        const currentPath = window.location.pathname;
+        if (!(currentPath === "/login" || currentPath === "/sign")) {
+          const response = await accountApi.myInfo();
+          setMyinfo(response.data);
+        }
       } catch (err) {
         console.error("에러:", err);
       }
