@@ -108,7 +108,7 @@ const CreateContainer = () => {
     generateMeeting({
       name: values.title,
       region_code: "A02",
-      maxMembers: Number(values.members),
+      maxMembers: values.nolimitMembers ? -1 : Number(values.members),
       description: values.details,
       users_id: myInfo.id,
       type: values.conditions.direct ? 3 : 4,
