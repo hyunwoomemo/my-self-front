@@ -3,7 +3,7 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Loader from "@/components/common/Loader";
-import { useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiCalendar, CiTimer } from "react-icons/ci";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,9 +16,10 @@ import Textarea from "@/components/common/Textarea";
 import { useAtomValue } from "jotai";
 import { selectedCategoryAtom } from "@/store/meeting/category/atom";
 import Region, { Address } from "@/components/common/Region";
-import { useSocket } from "@/hooks/useSocket";
+import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
+import { meetingDataAtom } from "@/store/meeting/data/atom";
 
 interface Values {
   category1: string | undefined;
@@ -37,6 +38,7 @@ interface Values {
 
 const CreateContainer = () => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
@@ -58,11 +60,25 @@ const CreateContainer = () => {
       request: false,
     },
   });
+
   const [errorMsg, setErrorMsg] = useState({
     title: "",
     details: "",
+    members: "",
   });
   const { generateMeeting } = useSocket();
+  const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
+  const searchParams = useSearchParams();
+  const type = searchParams?.get("type");
+
+  useEffect(() => {
+    console.log("values", pathname, values.category1, values.category2);
+    const { category1, category2 } = values;
+
+    // if (!category1 || !category2) {
+    //   router.push("/create");
+    // } 나중에 해제
+  }, [values.category1, values.category2]);
 
   useEffect(() => {
     window.addEventListener("click", () => {
@@ -86,6 +102,7 @@ const CreateContainer = () => {
   const preventClose = (e: BeforeUnloadEvent) => {
     e.preventDefault();
     e.returnValue = "";
+    router.push("/create");
   };
   const handleClick = () => {
     generateMeeting({
@@ -150,6 +167,12 @@ const CreateContainer = () => {
           ...prev,
           [type]: v,
         }));
+        setErrorMsg((prev) => {
+          return {
+            ...prev,
+            [type]: v === "1" ? "모임 인원은 2명 이상 가능해요. " : "",
+          };
+        });
       }
     } else if (type === "nolimitMembers") {
       setValues((prev) => ({
@@ -169,13 +192,14 @@ const CreateContainer = () => {
     return <Loader />;
   }
 
+  console.log("🔔", meetingData);
   return (
     <div className="p-6">
       <div className="flex flex-col gap-5">
         <Region
           address={address}
           setAddress={setAddress}
-          addressKeyword={addressKeyword}
+          addressKeyword={type === "edit" ? meetingData.region_code : addressKeyword}
           setAddressKeyword={setAddressKeyword}
           // selectedArea={selectedArea}
           setSelectedArea={setSelectedArea}
@@ -184,7 +208,12 @@ const CreateContainer = () => {
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">주제</div>
           <div className="flex gap-2">
-            <Input placeholder="대분류" value={values.category1} disabled type="main" />
+            <Input
+              placeholder="대분류"
+              value={type === "edit" ? meetingData?.category1_name : values.category1}
+              disabled
+              type="main"
+            />
             <Input placeholder="소분류" value={values.category2} disabled type="main" />
             <Button title="변경" onClick={() => router.back()} />
           </div>
@@ -196,6 +225,7 @@ const CreateContainer = () => {
           onChange={(v) => handleChange("title", v.target.value)}
           error={values.title.length > 40 || values.title.length < 5}
           errorText={errorMsg.title}
+          value={type === "edit" ? meetingData.name : ""}
         />
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">일시</div>
@@ -206,7 +236,7 @@ const CreateContainer = () => {
                 dateFormat="yyyy년 MM월 dd일"
                 showIcon
                 icon={<CiCalendar />}
-                selected={values.date}
+                selected={type === "edit" ? meetingData.event_date : values.date}
                 onChange={(date) => handleChange("date", date)}
                 placeholderText="날짜 선택"
                 calendarClassName="custom-calendar"
@@ -254,7 +284,9 @@ const CreateContainer = () => {
               align="center"
               onChange={(v) => handleChange("members", v.target.value)}
               disabled={values.nolimitMembers}
-              value={values.members}
+              value={type === "edit" ? meetingData.max_members : values.members}
+              error={values.members === "1"}
+              errorText={errorMsg.members}
             />
           </div>
           <Checkbox
@@ -265,6 +297,7 @@ const CreateContainer = () => {
         </div>
         <Textarea
           label="모집 내용"
+          value={type === "edit" ? meetingData.description : ""}
           placeholder="모집하는 모임에 대한 설명이나 조건 등을 자유롭게 적어봐요."
           onChange={(v) => handleChange("details", v.target.value)}
           error={values.details.length < 20 || values.details.length > 500}
@@ -275,13 +308,13 @@ const CreateContainer = () => {
           <div className="text-lg font-bold">가입 조건</div>
           <div className="flex gap-2">
             <Button
-              on={values.conditions.direct}
+              on={type === "edit" ? meetingData.type === 3 : values.conditions.direct}
               title="모두 가입"
               custom="label"
               onClick={() => handleChange("conditions", "direct")}
             />
             <Button
-              on={values.conditions.request}
+              on={type === "edit" ? meetingData.type === 4 : values.conditions.request}
               title="심사 후 가입"
               custom="label"
               onClick={() => handleChange("conditions", "request")}
@@ -294,10 +327,13 @@ const CreateContainer = () => {
             onClick={handleClick}
             disabled={
               !values.title ||
+              errorMsg.title.length > 0 ||
               !selectedArea ||
               !values.date ||
               !values.time ||
-              !values.details ||
+              !values.title ||
+              errorMsg.details.length > 0 ||
+              errorMsg.members.length > 0 ||
               (Number(values.members) === 0 && !values.nolimitMembers)
             }
             title="방 만들기"
