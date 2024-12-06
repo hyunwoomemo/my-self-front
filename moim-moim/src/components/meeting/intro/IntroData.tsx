@@ -2,12 +2,16 @@ import { myInfoProps } from "@/app/client-layout";
 import Button from "@/components/common/Button";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { useAtomValue } from "jotai";
 import moment from "moment";
 import { CiHeart } from "react-icons/ci";
 import { GoHeartFill } from "react-icons/go";
 import { PiUsersLight } from "react-icons/pi";
 import { TbCrown } from "react-icons/tb";
+import { MdOutlineEdit } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import { TbPhotoEdit } from "react-icons/tb";
 
 interface IntroDataProps {
   data: getMeetingData;
@@ -17,8 +21,11 @@ interface IntroDataProps {
 const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const { joinMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
+  const router = useRouter();
 
-  const handleClick = () => {
+  const handleEnterClick = () => {
+    //입장하기 or 입장 신청하기 버튼 클릭
     joinMeeting({
       meetings_id: data.id,
       region_code: "A02",
@@ -26,6 +33,12 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
       type: data.type,
     });
   };
+
+  const handleSettingClick = () => {
+    //방장이 방 수정하기 버튼 클릭
+    router.push(`/create/write?type=edit`);
+  };
+
   return (
     <div className={`absolute bottom-0 left-0 z-10 flex h-full w-full flex-col gap-5 bg-black bg-opacity-60 px-5 py-5`}>
       <div className="flex flex-1 flex-col justify-between">
@@ -61,6 +74,16 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
               <span className="text-sm font-bold text-semiPrimary">
                 {data.region_code} · {moment(data.event_date).format("LL")} · {moment(data.event_date).format("LT")}
               </span>
+              {!enterIntro && myInfo.id === meetingData.creator_id && (
+                <div className="mt-2 flex w-full items-center justify-center gap-3">
+                  <button className="text-2xl" onClick={handleSettingClick} title="수정하기">
+                    <TbPhotoEdit size={22} color="#fff" />
+                  </button>
+                  <button className="text-2xl" onClick={handleSettingClick} title="수정하기">
+                    <MdOutlineEdit size={22} color="#fff" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -74,7 +97,12 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
           <div className="rounded-lg bg-white p-5 text-3xl text-textGray">
             <GoHeartFill />
           </div>
-          <Button title={data.type === 3 ? "입장하기" : "입장 신청하기"} flex textSize="lg" onClick={handleClick} />
+          <Button
+            title={data.type === 3 ? "입장하기" : "입장 신청하기"}
+            flex
+            textSize="lg"
+            onClick={handleEnterClick}
+          />
         </div>
       )}
     </div>

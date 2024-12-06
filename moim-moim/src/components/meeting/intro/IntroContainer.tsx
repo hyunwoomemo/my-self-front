@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { IoCloseOutline } from "react-icons/io5";
-import { SlSettings } from "react-icons/sl";
 import { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import { useAtomValue } from "jotai";
@@ -38,10 +37,7 @@ const IntroContainer = () => {
       {data ? (
         // <div className="relative" style={{ height: "calc(100vh - (21px + 4.625rem))" }}>
         <div className="relative h-screen">
-          <div className="absolute left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-5">
-            <button className="text-2xl text-white">
-              <SlSettings />
-            </button>
+          <div className="absolute left-0 right-0 top-0 z-20 flex w-full items-center justify-end p-5">
             <button className="text-4xl text-white" onClick={() => router.back()}>
               <IoCloseOutline />
             </button>
