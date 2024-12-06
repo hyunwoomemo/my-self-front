@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(
         console.log("config.url", config.url);
         if (config.url && config.url.includes("myInfo")) {
           console.warn("myinfo API 호출이 차단되었습니다.");
-          return Promise.reject(new Error("myinfo API 호출이 차단되었습니다."));
+          return null
         }
       }
 
