@@ -15,8 +15,8 @@ export function LoginContainer() {
 
   const handleLoginWithKakao = () => {
     // loginWithProvider("kakao");
-    window.location.href = 'http://localhost/auth/kakao'
-    // window.location.href = 'http://moimmoim.duckdns.org/auth/kakao'
+    // window.location.href = 'http://localhost/auth/kakao'
+    window.location.href = 'http://moimmoim.duckdns.org/auth/kakao'
   };
 
   const handleLoginWithNaver = () => {
