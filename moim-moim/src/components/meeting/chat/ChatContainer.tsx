@@ -60,7 +60,7 @@ const ChatContainer = ({ id }) => {
 
   return (
     <>
-      <div className="scrollbar flex-1 overflow-y-auto" ref={contentsRef}>
+      <div className="scrollbar flex-1 overflow-y-auto bg-[rgba(13,160,197,0.1)]" ref={contentsRef}>
         <MeetingHeader />
         <Contents msgRef={msgRef} scrollRef={scrollRef} id={id} contentsRef={contentsRef} />
       </div>

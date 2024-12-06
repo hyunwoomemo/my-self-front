@@ -150,14 +150,20 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
               {myInfo?.id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
               {/* {myInfo?.id !== v.users_id && <div>{v.users_nickname}</div>} */}
               <div
-                className={`flex max-w-[70%] items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
+                className={`flex items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
               >
-                <div
-                  className={`w-fit whitespace-pre-wrap rounded-lg p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-lightPrimary" : "rounded-bl-none bg-surface"}`}
-                >
-                  {v.contents}
-                </div>
-                {v.time && (
+                {v.admin === 1 ? (
+                  <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+                    {v.contents}
+                  </div>
+                ) : (
+                  <div
+                    className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-semiPrimary" : "rounded-bl-none bg-white"}`}
+                  >
+                    {v.contents}
+                  </div>
+                )}
+                {v.time && v.admin !== 1 && (
                   <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
                 )}
                 {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}

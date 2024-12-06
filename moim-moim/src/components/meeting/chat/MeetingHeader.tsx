@@ -11,15 +11,21 @@ import moment from "moment";
 import { FaBars } from "react-icons/fa6";
 import { useState } from "react";
 import SlideBar from "./SlideBar";
+import { useRouter } from "next/navigation";
 
 const MeetingHeader = () => {
   const data = useAtomValue(meetingDataAtom) as getMeetingData;
   const loading = useAtomValue(loadingAtom);
   const [show, setShow] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleClickSideBar = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShow(!show);
+  };
+
+  const handlePrevClick = () => {
+    router.push("/");
   };
 
   if (loading) {
@@ -31,7 +37,12 @@ const MeetingHeader = () => {
   return (
     <>
       <div className="sticky top-0 w-full border-b border-solid border-border bg-[rgba(255,255,255,0.5)] backdrop-blur-[2px]">
-        <PageHeader title={data.name} icon={<FaBars size={22} color="#333" />} onIconClick={handleClickSideBar} />
+        <PageHeader
+          title={data.name}
+          icon={<FaBars size={22} color="#333" />}
+          onPrevClick={handlePrevClick}
+          onIconClick={handleClickSideBar}
+        />
         <div className="flex justify-between bg-opacity-80 pb-5 pl-10 pr-5 w_sm:pb-3">
           <div className="flex flex-col">
             <h3 className="font-tantan text-3xl">{moment(data.event_date).format("YYYY.MM.DD")}</h3>

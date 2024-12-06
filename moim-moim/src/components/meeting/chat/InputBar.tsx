@@ -59,10 +59,10 @@ const InputBar = ({ id, msgRef }) => {
     setCurrentMsg(text);
   };
   return (
-    <div className="p-4 pt-0">
-      <div className="flex flex-col rounded-lg bg-surface">
+    <div className="bg-[rgba(13,160,197,0.1)] p-4 pt-0">
+      <div className="flex flex-col rounded-lg bg-white">
         <textarea
-          className="scrollbar w-full flex-1 resize-none whitespace-pre-wrap rounded-lg bg-surface p-4 pb-0"
+          className="scrollbar w-full flex-1 resize-none whitespace-pre-wrap rounded-lg bg-white p-4 pb-0"
           placeholder="내용을 입력해 주세요..."
           rows={rows}
           onChange={(e) => handleChangeContents(e.target.value)}
