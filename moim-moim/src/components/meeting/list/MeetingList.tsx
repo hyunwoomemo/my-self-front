@@ -18,13 +18,11 @@ const MeetingList = () => {
   const { enterMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
-  // const activeStatus = (date) => {
-  //   console.log("🍻", date)
-  // }
+  console.log("myinfooooo", myInfo);
 
   const handleEnterMeeting = (data) => {
     console.log("data???", data);
-    enterMeeting({ region_code: "A02", meetings_id: data.id, users_id: myInfo?.id, type: data.type });
+    enterMeeting({ region_code: "RC003", meetings_id: data.id, users_id: myInfo.user_id, type: data.type });
   };
 
   if (loading) {

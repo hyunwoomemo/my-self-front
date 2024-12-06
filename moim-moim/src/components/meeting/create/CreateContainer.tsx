@@ -107,10 +107,10 @@ const CreateContainer = () => {
   const handleClick = () => {
     generateMeeting({
       name: values.title,
-      region_code: "A02",
+      region_code: "RC003",
       maxMembers: values.nolimitMembers ? -1 : Number(values.members),
       description: values.details,
-      users_id: myInfo.id,
+      users_id: myInfo.user_id,
       type: values.conditions.direct ? 3 : 4,
       category1: selectedCategory?.c1_id,
       category2: selectedCategory?.c2_id,
@@ -225,7 +225,7 @@ const CreateContainer = () => {
           onChange={(v) => handleChange("title", v.target.value)}
           error={values.title.length > 40 || values.title.length < 5}
           errorText={errorMsg.title}
-          value={type === "edit" ? meetingData.name : ""}
+          value={type === "edit" ? meetingData.name : undefined}
         />
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">일시</div>
@@ -297,7 +297,7 @@ const CreateContainer = () => {
         </div>
         <Textarea
           label="모집 내용"
-          value={type === "edit" ? meetingData.description : ""}
+          value={type === "edit" ? meetingData.description : undefined}
           placeholder="모집하는 모임에 대한 설명이나 조건 등을 자유롭게 적어봐요."
           onChange={(v) => handleChange("details", v.target.value)}
           error={values.details.length < 20 || values.details.length > 500}

@@ -28,8 +28,8 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
     //입장하기 or 입장 신청하기 버튼 클릭
     joinMeeting({
       meetings_id: data.id,
-      region_code: "A02",
-      users_id: myInfo.id,
+      region_code: "RC003",
+      users_id: myInfo.user_id,
       type: data.type,
     });
   };
@@ -67,14 +67,15 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
                 <div className="flex items-center gap-1">
                   <PiUsersLight className="text-2xl text-white" />
                   <span className="text-white">
-                    {data.userCount}/{data.max_members}
+                    {data.userCount}
+                    {data.max_members !== -1 ? `/${data.max_members}` : undefined}
                   </span>
                 </div>
               </div>
               <span className="text-sm font-bold text-semiPrimary">
                 {data.region_code} · {moment(data.event_date).format("LL")} · {moment(data.event_date).format("LT")}
               </span>
-              {!enterIntro && myInfo.id === meetingData.creator_id && (
+              {!enterIntro && myInfo.user_id === meetingData.creator_id && (
                 <div className="mt-2 flex w-full items-center justify-center gap-3">
                   <button className="text-2xl" onClick={handleSettingClick} title="수정하기">
                     <TbPhotoEdit size={22} color="#fff" />

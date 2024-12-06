@@ -40,8 +40,8 @@ const InputBar = ({ id, msgRef }) => {
     sendMessage({
       contents: contents,
       meetings_id: id,
-      region_code: "A02",
-      users_id: myInfo.id,
+      region_code: "RC003",
+      users_id: myInfo.user_id,
     });
     setCurrentMsg("");
     setIsAfterClick(true);
