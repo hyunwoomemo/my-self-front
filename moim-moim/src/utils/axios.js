@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import { redirect, usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // 백엔드 API URL
   // withCredentials: true,           // 쿠키 및 인증 정보 허용
@@ -9,6 +9,17 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+
+      // /login 경로에서는 API 호출 막기
+      if (currentPath === "/login" || currentPath === "/sign") {
+        console.log("config.url", config.url);
+        if (config.url && config.url.includes("myInfo")) {
+          console.warn("myinfo API 호출이 차단되었습니다.");
+          return Promise.reject(new Error("myinfo API 호출이 차단되었습니다."));
+        }
+      }
+
       //클라이언트 컴포넌트에서만 사용(서버 컴포넌트에서 사용하려면 fetch 이용하시길)
       const accessToken = getCookie("accessToken");
       if (accessToken) {
@@ -48,25 +59,15 @@ apiClient.interceptors.response.use(
           deleteCookie("accessToken");
           deleteCookie("refreshToken");
           // 원하는 경로로 리다이렉트 (예: 로그인 페이지)
-          // if (typeof window !== "undefined") {
-          //   window.location.href = "/login";
-          //   redirect("/");
-          // }
-          redirect("/login");
+          // redirect("/login");
+          window.location.href = "/login";
         }
       } else {
         console.log("❌ No refresh token found. Logging out...");
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
-        // if (typeof window !== "undefined") {
-        //   window.location.href = "/login";
-        //   redirect("/");
-        // }
-        const pathname = usePathname();
-        console.log("pathname", pathname);
-        // if(!(pathname === '/sign' && pathname === '/login')){
-        //   redirect("/login");
-        // }
+        // redirect("/login");
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error?.response?.data);

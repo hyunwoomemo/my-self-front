@@ -18,6 +18,7 @@ type FormDataType = {
   nickname: string;
   birthdate: string;
   gender: string;
+  provider: string;
   interests: [];
   addresses: Addresses[];
 };
@@ -33,6 +34,7 @@ export function SignContainer() {
     nickname: "",
     birthdate: "",
     gender: "",
+    provider: "",
     interests: [],
     addresses: [],
   });
