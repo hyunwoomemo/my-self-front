@@ -6,7 +6,7 @@ interface TextareaProps {
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void | React.ChangeEventHandler<HTMLTextAreaElement>;
 }
 
-const Textarea = ({ label, placeholder, error, errorText, onChange }: TextareaProps) => {
+const Textarea = ({ label, placeholder, error, errorText, onChange, ...res }: TextareaProps) => {
   return (
     <div className="flex flex-col gap-2">
       <div className="text-lg font-bold">{label}</div>
@@ -15,6 +15,7 @@ const Textarea = ({ label, placeholder, error, errorText, onChange }: TextareaPr
           placeholder={placeholder}
           className="scrollbar min-h-36 w-full resize-none rounded-xl p-5"
           onChange={onChange}
+          {...res}
         ></textarea>
       </div>
       {error && <span className="text-sm text-red-600">{errorText}</span>}
