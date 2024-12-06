@@ -45,7 +45,7 @@ const MeetingListContainer = () => {
           <MeetingList />
         </div>
       </div>
-      <div className="fixed bottom-32 right-24 w_sm:right-4" onClick={() => router.push("/create")}>
+      <div className="fixed bottom-32 right-24 -translate-x-1/2 w_sm:right-0" onClick={() => router.push("/create")}>
         <CreateButton />
       </div>
     </>

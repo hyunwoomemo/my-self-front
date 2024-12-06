@@ -60,7 +60,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
       const type = target?.type;
       //   console.log("!!", target);
       if (type && myInfo) {
-        enterMeeting({ region_code: "A02", meetings_id: Number(id), users_id: myInfo.id, type: type });
+        enterMeeting({ region_code: "RC003", meetings_id: Number(id), users_id: myInfo.user_id, type: type });
       }
     }
 
@@ -74,7 +74,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
       if (currentMeeting) {
         setCurrentMeeting(-1);
         console.log("방 떠남");
-        socket?.emit("leaveMeeting", { region_code: "A02", meetings_id: Number(id) });
+        socket?.emit("leaveMeeting", { region_code: "RC003", meetings_id: Number(id) });
       }
     };
   }, []);
@@ -115,7 +115,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
     const users = (data.users || "")
       .split(",") //string을 ","로 구분하여 배열로 만들어서
       .map((v) => Number(v)) //string을 Number로 바꾸고,
-      .filter((v) => v !== myInfo.id); // 나 아닌 것들만 추출
+      .filter((v) => v !== myInfo.user_id); // 나 아닌 것들만 추출
 
     const unReadCount = users.reduce((result, cur) => {
       // console.log("activeData", activeData, cur, data); // 내가 활용할 수 있는 데이터들
@@ -140,51 +140,59 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   if (!messages) return <Empty text="불러올 메시지가 없습니다." />;
   return (
     <>
-      <div className="flex flex-col-reverse gap-2 p-4">
-        {/* {Object.entries(messages).map(([key, msg]) => {
-          return ( */}
-        {/* <div key={key} className={`flex flex-col gap-2`}> */}
-        {messages?.list?.map((v) => {
-          return (
-            <div key={v.id} className={`flex flex-col gap-2`}>
-              {myInfo?.id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
-              {/* {myInfo?.id !== v.users_id && <div>{v.users_nickname}</div>} */}
-              <div
-                className={`flex items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
-              >
-                {v.admin === 1 ? (
-                  <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
-                    {v.contents}
-                  </div>
-                ) : (
-                  <div
-                    className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-semiPrimary" : "rounded-bl-none bg-white"}`}
-                  >
-                    {v.contents}
-                  </div>
-                )}
-                {v.time && v.admin !== 1 && (
-                  <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
-                )}
-                {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}
-
-                {getUnReadCount(v) !== 0 && <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>}
-              </div>
-            </div>
-          );
-        })}
-
-        <div ref={scrollRef}></div>
-      </div>
-      <div ref={msgRef}></div>
-      {isVisible && (
-        <div
-          className="fixed bottom-56 left-1/2 z-40 flex h-10 w-10 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md shadow-gray-300"
-          onClick={handleToBottom}
-        >
-          <HiArrowSmallDown size={20} />
+      <div className="p-4">
+        <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+          모임 방이 개설되었어요.
         </div>
-      )}
+        <div className="flex flex-col-reverse gap-2">
+          {/* {Object.entries(messages).map(([key, msg]) => {
+          return ( */}
+          {/* <div key={key} className={`flex flex-col gap-2`}> */}
+
+          {messages?.list?.map((v) => {
+            return (
+              <div key={v.id} className={`flex flex-col gap-2`}>
+                {myInfo?.id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
+                {/* {myInfo?.id !== v.users_id && <div>{v.users_nickname}</div>} */}
+                <div
+                  className={`flex items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
+                >
+                  {v.admin === 1 ? (
+                    <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+                      {v.contents}
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-semiPrimary" : "rounded-bl-none bg-white"}`}
+                    >
+                      {v.contents}
+                    </div>
+                  )}
+                  {v.time && v.admin !== 1 && (
+                    <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
+                  )}
+                  {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}
+
+                  {v.admin !== 1 && getUnReadCount(v) !== 0 && (
+                    <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          <div ref={scrollRef}></div>
+        </div>
+        <div ref={msgRef}></div>
+        {isVisible && (
+          <div
+            className="fixed bottom-56 left-1/2 z-40 flex h-10 w-10 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md shadow-gray-300"
+            onClick={handleToBottom}
+          >
+            <HiArrowSmallDown size={20} />
+          </div>
+        )}
+      </div>
     </>
   );
 };
