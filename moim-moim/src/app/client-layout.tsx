@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { accountApi } from "./api";
 import { useAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { setCookie } from "cookies-next";
 
 export interface myInfoProps {
   birthdate: string;
@@ -27,8 +28,32 @@ const ClientLayout = ({ children }) => {
   const [myInfo, setMyinfo] = useAtom(myInfoAtom);
 
   useEffect(() => {
-    accountApi.myInfo().then((res) => setMyinfo(res.data));
-  }, [setMyinfo]);
+    const fetchTokenData = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("accessToken") && urlParams.has("refreshToken")) {
+          const accessToken = urlParams.get("accessToken");
+          const refreshToken = urlParams.get("refreshToken");
+          // 쿠키에 토큰 저장
+          setCookie("accessToken", accessToken);
+          setCookie("refreshToken", refreshToken);
+          // URL에서 토큰 제거
+          const newUrl = window.location.pathname; // 현재 경로만 가져옴
+          window.history.replaceState(null, "", newUrl); // 쿼리 파라미터 제거
+        }
+        // 토큰 저장 후 myInfo API 호출
+        const response = await accountApi.myInfo();
+        setMyinfo(response.data);
+      } catch (err) {
+        console.error("에러:", err);
+      }
+    };
+    fetchTokenData();
+  }, []);
+
+  // useEffect(() => {
+  //   accountApi.myInfo().then((res) => setMyinfo(res.data));
+  // }, []);
 
   console.log("myInfo", myInfo);
   useEffect(() => {

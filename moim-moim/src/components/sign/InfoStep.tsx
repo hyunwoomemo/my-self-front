@@ -133,9 +133,11 @@ const InfoStep = ({
         회원가입 후 모임을 찾아봐요.
       </h1>
       <form className="mt-10 flex h-[calc(100vh-24rem)] flex-col gap-5 scroll-smooth">
-        <div>
-          <Input type="email" label="이메일 주소" disabled value={formData.email} />
-        </div>
+        {!isSocial && (
+          <div>
+            <Input type="email" label="이메일 주소" disabled value={formData.email} />
+          </div>
+        )}
         <div>
           <Input
             type="text"
@@ -174,33 +176,36 @@ const InfoStep = ({
             </div>
           </>
         )}
-        <div className="flex flex-1 flex-col gap-2">
-          <span className="text-lg font-bold">생년월일</span>
-          {/* style로 되어있는 부분들 모두 tailwinds로 수정바람(참고: 위 className) */}
-          <div className="flex items-center gap-2">
-            <Input
-              type="text"
-              name="birthdate"
-              value={formData.birthdate}
-              maxLength={6}
-              onChange={handleChange}
-              style={{ letterSpacing: "0.7rem" }}
-              disabled={isSocial}
-              error={!validationState.birthdate.valid}
-              errorText={validationState.birthdate.msg}
-            />
-            <span style={{ alignContent: "center" }}>-</span>
-            <Input
-              type="text"
-              name="gender"
-              maxLength={1}
-              onChange={handleChange}
-              error={!validationState.gender.valid}
-              errorText={validationState.gender.msg}
-            />
-            <span className="text-lg tracking-[1rem]">******</span>
+        {!isSocial && (
+          <div className="flex flex-1 flex-col gap-2">
+            <span className="text-lg font-bold">생년월일</span>
+            {/* style로 되어있는 부분들 모두 tailwinds로 수정바람(참고: 위 className) */}
+            <div className="flex items-center gap-2">
+              <Input
+                type="text"
+                name="birthdate"
+                value={formData.birthdate}
+                maxLength={6}
+                onChange={handleChange}
+                style={{ letterSpacing: "0.7rem" }}
+                disabled={isSocial}
+                error={!validationState.birthdate.valid}
+                errorText={validationState.birthdate.msg}
+              />
+              <span style={{ alignContent: "center" }}>-</span>
+              <Input
+                type="text"
+                name="gender"
+                value={formData.gender}
+                maxLength={1}
+                onChange={handleChange}
+                error={!validationState.gender.valid}
+                errorText={validationState.gender.msg}
+              />
+              <span className="text-lg tracking-[1rem]">******</span>
+            </div>
           </div>
-        </div>
+        )}
         <Button custom="full" title="다음" onClick={handleNextStep}></Button>
       </form>
     </>
