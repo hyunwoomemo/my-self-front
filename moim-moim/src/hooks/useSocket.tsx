@@ -103,6 +103,7 @@ export const useSocket = () => {
       //socket이 여러개 연결되는 걸 방지, 없을 때만 연결하기!!!
       socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
         transports: ["websocket"],
+        reconnectionAttempts: 10,
       });
     } else {
       // 이미 등록되어있는 on 이벤트 제거
@@ -141,6 +142,7 @@ export const useSocket = () => {
   };
 
   const handleMessagesData = (data: MessagesValue) => {
+    console.log("???????", data);
     setLoading(true);
 
     setMessages({ ...data, list: GroupedData(data.list).reverse() });
