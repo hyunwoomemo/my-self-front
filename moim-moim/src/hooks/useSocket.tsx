@@ -1,6 +1,6 @@
 "use client";
 
-import { loadingAtom } from "@/store/common/atom";
+import { errorAtom, loadingAtom } from "@/store/common/atom";
 import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
@@ -95,6 +95,7 @@ export const useSocket = () => {
   const setMessages = useSetAtom(messagesAtom);
   const setCurrentMeeting = useSetAtom(currentMeetingAtom);
   const setActive = useSetAtom(activeAtom);
+  const setError = useSetAtom(errorAtom);
   const router = useRouter();
 
   useEffect(() => {
@@ -118,6 +119,10 @@ export const useSocket = () => {
       setLoading(false);
     };
 
+    const handleError = (error) => {
+      setError(error);
+    };
+
     socket?.on("connect", handleConnect);
     socket?.on("meetingActive", handleMeetingActive);
     socket?.on("list", handleGetList);
@@ -127,6 +132,7 @@ export const useSocket = () => {
     socket?.on("disconnect", (e) => {
       console.log("disconnect e", e);
     });
+    socket?.on("error", handleError);
   }, []);
 
   const handleGetList = (data: getListProps) => {
