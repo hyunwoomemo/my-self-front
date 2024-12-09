@@ -75,9 +75,9 @@ const CreateContainer = () => {
     console.log("values", pathname, values.category1, values.category2);
     const { category1, category2 } = values;
 
-    // if (!category1 || !category2) {
-    //   router.push("/create");
-    // } 나중에 해제
+    if (!category1 || !category2) {
+      router.push("/create");
+    }
   }, [values.category1, values.category2]);
 
   useEffect(() => {
@@ -192,7 +192,7 @@ const CreateContainer = () => {
     return <Loader />;
   }
 
-  console.log("🔔", meetingData);
+  console.log("🔔", selectedCategory?.c1_id);
   return (
     <div className="p-6">
       <div className="flex flex-col gap-5">
