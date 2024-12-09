@@ -14,6 +14,7 @@ import { activeAtom } from "@/store/meeting/active/atom";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Empty from "@/components/common/Empty";
+import { meetingDataAtom } from "@/store/meeting/data/atom";
 
 const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   const data = useAtomValue(listAtom) as getListProps[];
@@ -70,7 +71,6 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   useEffect(() => {
     console.log("방 입장");
     return () => {
-      // alert(Date.now());
       if (currentMeeting) {
         setCurrentMeeting(-1);
         console.log("방 떠남");
@@ -152,10 +152,10 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
           {messages?.list?.map((v) => {
             return (
               <div key={v.id} className={`flex flex-col gap-2`}>
-                {myInfo?.id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
-                {/* {myInfo?.id !== v.users_id && <div>{v.users_nickname}</div>} */}
+                {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
+                {/* {myInfo.user_id !== v.users_id && <div>{v.users_nickname}</div>} */}
                 <div
-                  className={`flex items-end gap-1 ${myInfo?.id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
+                  className={`flex w-full items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
                 >
                   {v.admin === 1 ? (
                     <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
@@ -163,7 +163,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
                     </div>
                   ) : (
                     <div
-                      className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo?.id === v.users_id ? "self-end rounded-br-none bg-semiPrimary" : "rounded-bl-none bg-white"}`}
+                      className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo.user_id === v.users_id ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
                     >
                       {v.contents}
                     </div>
