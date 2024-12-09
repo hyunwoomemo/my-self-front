@@ -27,6 +27,8 @@ const config: Config = {
         disabledText: "#929292",
         disabledBorder: "#b2b2b2",
         error: "#b81515",
+        red: "#da2d2d",
+        blue: "#165bb4",
       },
       backgroundImage: {
         main: "linear-gradient(to right, #24C76D, #0da0c5)",
