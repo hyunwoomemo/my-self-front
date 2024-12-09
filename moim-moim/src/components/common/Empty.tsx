@@ -4,7 +4,7 @@ const Empty = ({ text }: { text: string }) => {
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-center gap-4 py-16">
       <IoChatbubbleEllipsesOutline className="text-5xl text-textGray" />
-      <span className="whitespace-pre-line text-center">{text}</span>
+      <span className="whitespace-pre-line text-center" dangerouslySetInnerHTML={{ __html: text }}></span>
     </div>
   );
 };
