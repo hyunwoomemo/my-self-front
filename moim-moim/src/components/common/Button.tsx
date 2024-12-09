@@ -34,7 +34,7 @@ const Button = ({ type, custom, title, onClick, flex, disabled, textSize, on, ch
       case "full":
         return `text-lg ${disabled ? "text-disabledText" : "text-white"}`;
       default:
-        return `text-white`;
+        return `${disabled ? "text-disabledText" : "text-white"}`;
     }
   };
 
