@@ -45,6 +45,7 @@ export interface getMeetingData {
   region_code: string;
   userCount: number;
   type: number;
+  likeCount: number;
 }
 
 export interface SendMessageProps {
@@ -68,8 +69,8 @@ export interface GenerateMeeting {
   description: string;
   users_id: number;
   type: number;
-  category1: number;
-  category2: number;
+  category1: number | undefined;
+  category2: number | undefined;
 }
 
 export interface EnterMeeting {
@@ -210,5 +211,9 @@ export const useSocket = () => {
     socket?.emit("sendMessage", params);
   };
 
-  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, socket };
+  const likeMoim = ({ users_id, meetings_id, region_code }) => {
+    socket?.emit("likeMoim", { users_id, meetings_id, region_code });
+  };
+
+  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, socket };
 };

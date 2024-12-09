@@ -9,6 +9,8 @@ import { loadingAtom } from "@/store/common/atom";
 import Loader from "@/components/common/Loader";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
+import Dot from "@/components/common/Dot";
+import Empty from "@/components/common/Empty";
 
 moment.locale("ko");
 
@@ -18,8 +20,18 @@ const MeetingList = () => {
   const { enterMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
-  console.log("myinfooooo", myInfo);
+  console.log("myinfooooo", data);
 
+  const activeStatus = (time) => {
+    console.log("👀", time, moment().subtract(10, "minutes").format("LLLL"), moment(time).format("LLLL"));
+    if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {
+      return "방금 대화";
+    } else if (moment().subtract(30, "minutes").format("LLLL") < moment(time).format("LLLL")) {
+      return "30분 전";
+    } else {
+      return "1시간 전";
+    }
+  };
   const handleEnterMeeting = (data) => {
     console.log("data???", data);
     enterMeeting({ region_code: "RC003", meetings_id: data.id, users_id: myInfo.user_id, type: data.type });
@@ -28,12 +40,14 @@ const MeetingList = () => {
   if (loading) {
     return <Loader />;
   }
+  if (data.length === 0) {
+    return <Empty text="<span>개설된 모임방이 없어요. <br />관심있는 모임방을 만들어 볼까요?</span>" />;
+  }
 
-  // console.log("lodaing", loading, data);
+  console.log("lodaing", loading, data);
 
   return (
     <>
-      {/* {data ? ( */}
       {data?.map((v) => (
         <div
           key={v.id}
@@ -59,30 +73,30 @@ const MeetingList = () => {
                   {" "}
                   {v.category1_name}/{v.category2_name}
                 </div>
-                <div className="font-thin text-[var(--textGray)]">·</div>
-                {/* <span className="text-xs text-[var(--point)]">{activeStatus(v.last_active_time)}</span> */}
+                {v.last_active_time && (
+                  <>
+                    <Dot />
+                    <span className="text-xs text-[var(--point)]">{activeStatus(v.last_active_time)}</span>
+                  </>
+                )}
               </div>
               <div className="flex gap-1">
                 <div className="flex items-center">
                   <CiHeart className="text-2xl" />
                   <span>7</span>
                 </div>
-                <div className="font-thin text-[var(--textGray)]">·</div>
+                <Dot />
                 <div className="flex items-center gap-1">
                   <PiUsersLight className="text-2xl" />
-                  <span>{v.userCount}</span>
+                  <span className={`${v.userCount === v.max_members ? "text-red" : "text-text"}`}>
+                    {v.userCount}/{v.max_members}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       ))}
-      {/* ) : (
-        <Empty
-          text={`현재 개설된 모임방이 없습니다.
-          관심사를 함께 할 수 있는 모임방을 만들어볼까요?`}
-        />
-      )} */}
     </>
   );
 };

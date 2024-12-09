@@ -12,6 +12,7 @@ import { TbCrown } from "react-icons/tb";
 import { MdOutlineEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { TbPhotoEdit } from "react-icons/tb";
+import { useState } from "react";
 
 interface IntroDataProps {
   data: getMeetingData;
@@ -23,6 +24,7 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
   const router = useRouter();
+  const { likeMoim } = useSocket();
 
   const handleEnterClick = () => {
     //입장하기 or 입장 신청하기 버튼 클릭
@@ -37,6 +39,12 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const handleSettingClick = () => {
     //방장이 방 수정하기 버튼 클릭
     router.push(`/create/write?type=edit`);
+  };
+
+  const handleClickHeart = () => {
+    console.log("heart clicked!!!");
+    likeMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: "RC003" });
+    setIsLike(!isLike);
   };
 
   return (
@@ -61,12 +69,12 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
               <div className="flex gap-1">
                 <div className="flex items-center">
                   <CiHeart className="text-2xl text-white" />
-                  <span className="text-white">7</span>
+                  <span className="text-white">{data.likeCount}</span>
                 </div>
                 <div className="font-thin text-white">·</div>
                 <div className="flex items-center gap-1">
                   <PiUsersLight className="text-2xl text-white" />
-                  <span className="text-white">
+                  <span className={`${data.userCount === data.max_members ? "text-error" : "text-white"}`}>
                     {data.userCount}
                     {data.max_members !== -1 ? `/${data.max_members}` : undefined}
                   </span>
@@ -95,14 +103,17 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
       {/* 하단 버튼 */}
       {enterIntro && (
         <div className="flex gap-2">
-          <div className="rounded-lg bg-white p-5 text-3xl text-textGray">
-            <GoHeartFill />
+          <div className="cursor-pointer rounded-lg bg-white p-5 text-3xl text-textGray" onClick={handleClickHeart}>
+            <GoHeartFill color={meetingData.likeCount ? "#ff0000" : "#e5e7eb"} />
           </div>
           <Button
-            title={data.type === 3 ? "입장하기" : "입장 신청하기"}
+            title={
+              data.userCount === data.max_members ? "방이 꽉 찼어요." : data.type === 3 ? "입장하기" : "입장 신청하기"
+            }
             flex
             textSize="lg"
             onClick={handleEnterClick}
+            disabled={data.userCount === data.max_members}
           />
         </div>
       )}
