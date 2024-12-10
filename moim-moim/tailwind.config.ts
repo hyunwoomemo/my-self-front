@@ -34,6 +34,14 @@ const config: Config = {
         main: "linear-gradient(to right, #24C76D, #0da0c5)",
       },
       keyframes: {
+        showSlideBar: {
+          "0%": {
+            left: "130%",
+          },
+          "100%": {
+            left: "50%",
+          },
+        },
         // shadowRolling: {
         //   "0%": {
         //     boxShadow:
@@ -70,6 +78,7 @@ const config: Config = {
       },
       animation: {
         shadowRolling: "shadowRolling 1s linear infinite",
+        showSlideBar: "showSlideBar 0.1s linear alternate",
       },
       screens: {
         w_sm: { raw: "(max-width: 599px)" },

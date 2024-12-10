@@ -41,7 +41,7 @@ const SlideBar = ({ show, setShow }) => {
 
   return (
     <>
-      <div className="fixed left-0 top-0 h-screen w-screen bg-white">
+      <div className="animate-showSlideBar absolute left-1/2 top-0 h-screen w-screen max-w-[600px] -translate-x-1/2 bg-white">
         <div className="flex items-center justify-between">
           <PageHeader title="모아보기" onPrevClick={handleClick} style={{ flex: 1 }} />
           <div className="flex cursor-pointer gap-4 p-3">
