@@ -5,12 +5,14 @@ import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
-import { messagesAtom } from "@/store/meeting/messages/atom";
-import { useSetAtom } from "jotai";
+import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { GroupedData } from "@/utils/group";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { myInfoProps } from "@/app/client-layout";
 
 export let socket: Socket;
 
@@ -71,6 +73,7 @@ export interface GenerateMeeting {
   type: number;
   category1: number | undefined;
   category2: number | undefined;
+  date: moment.Moment;
 }
 
 export interface EnterMeeting {
@@ -81,11 +84,18 @@ export interface EnterMeeting {
 }
 
 export interface MessagesValue {
+  list: ListValue;
+  total: number;
+}
+export interface ListValue {
+  admin?: number;
   contents: string;
   created_at: string;
   id: number;
   meetings_id: number;
-  unReadCount: number;
+  nickname: string;
+  reply_id: number;
+  users: string;
   users_id: number;
 }
 
@@ -97,7 +107,9 @@ export const useSocket = () => {
   const setCurrentMeeting = useSetAtom(currentMeetingAtom);
   const setActive = useSetAtom(activeAtom);
   const setError = useSetAtom(errorAtom);
+  const setTyping = useSetAtom(typingAtom);
   const router = useRouter();
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
   useEffect(() => {
     //소켓 연결
@@ -124,6 +136,10 @@ export const useSocket = () => {
       setError(error);
     };
 
+    const handleUserTyping = (data) => {
+      setTyping(data);
+    };
+
     socket?.on("connect", handleConnect);
     socket?.on("meetingActive", handleMeetingActive);
     socket?.on("list", handleGetList);
@@ -134,6 +150,7 @@ export const useSocket = () => {
       console.log("disconnect e", e);
     });
     socket?.on("error", handleError);
+    socket?.on("userTyping", handleUserTyping);
   }, []);
 
   const handleGetList = (data: getListProps) => {
@@ -151,8 +168,10 @@ export const useSocket = () => {
   const handleMessagesData = (data: MessagesValue) => {
     console.log("???????", data);
     setLoading(true);
+    if (data && data.list) {
+      setMessages({ ...data, list: GroupedData(data.list).reverse() });
+    }
 
-    setMessages({ ...data, list: GroupedData(data.list).reverse() });
     // setMessages(data);
     setLoading(false);
   };
@@ -215,5 +234,9 @@ export const useSocket = () => {
     socket?.emit("likeMoim", { users_id, meetings_id, region_code });
   };
 
-  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, socket };
+  const userTyping = ({ users_id, meetings_id, region_code }) => {
+    socket?.emit("typing", { users_id, meetings_id, region_code });
+  };
+
+  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, userTyping, socket };
 };

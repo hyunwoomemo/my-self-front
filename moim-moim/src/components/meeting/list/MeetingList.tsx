@@ -20,10 +20,7 @@ const MeetingList = () => {
   const { enterMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
-  console.log("myinfooooo", data);
-
   const activeStatus = (time) => {
-    console.log("👀", time, moment().subtract(10, "minutes").format("LLLL"), moment(time).format("LLLL"));
     if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {
       return "방금 대화";
     } else if (moment().subtract(30, "minutes").format("LLLL") < moment(time).format("LLLL")) {

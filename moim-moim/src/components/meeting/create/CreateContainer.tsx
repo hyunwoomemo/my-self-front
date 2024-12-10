@@ -20,6 +20,7 @@ import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
+import moment from "moment";
 
 interface Values {
   category1: string | undefined;
@@ -70,6 +71,9 @@ const CreateContainer = () => {
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
   const searchParams = useSearchParams();
   const type = searchParams?.get("type");
+  const parseDate = moment(values.date).format("YYYY-MM-DD");
+  const parseTime = moment(values.time).format("HH:mm:ss");
+  const datetime = `${parseDate}T${parseTime}`;
 
   useEffect(() => {
     console.log("values", pathname, values.category1, values.category2);
@@ -114,6 +118,7 @@ const CreateContainer = () => {
       type: values.conditions.direct ? 3 : 4,
       category1: selectedCategory?.c1_id,
       category2: selectedCategory?.c2_id,
+      date: moment(datetime).utc(),
     });
     router.push("/");
   };
@@ -192,7 +197,6 @@ const CreateContainer = () => {
     return <Loader />;
   }
 
-  console.log("🔔", selectedCategory?.c1_id);
   return (
     <div className="p-6">
       <div className="flex flex-col gap-5">
