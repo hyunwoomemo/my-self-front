@@ -18,7 +18,7 @@ const MoreIntro = () => {
     setImgNum(formattedNum);
   }, []);
   return (
-    <div className="relative h-[calc(100%-6.8rem)]">
+    <div className="relative h-[calc(100%-8rem)]">
       <IntroData data={data} />
       {imgNum && (
         <Image src={`/moim_bg_default/moim_bg_default${imgNum}.jpg`} alt="background_default_image" fill priority />
