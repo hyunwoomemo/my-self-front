@@ -4,7 +4,7 @@ import { myInfoProps } from "@/app/client-layout";
 import Button from "@/components/common/Button";
 import { useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
-import { messagesAtom } from "@/store/meeting/messages/atom";
+import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { TbPhoto } from "react-icons/tb";
@@ -17,6 +17,22 @@ const InputBar = ({ id, msgRef }) => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const [isAfterClick, setIsAfterClick] = useState(false);
   const messages = useAtomValue(messagesAtom);
+  const { userTyping } = useSocket();
+  const typing = useAtomValue(typingAtom);
+  const [typingArr, setTypingArr] = useState([]);
+
+  useEffect(() => {
+    const arr = [];
+    const users = typing.map((v) => v.users_id);
+    console.log(
+      "???",
+      users.filter((v) => v !== myInfo.user_id),
+    );
+    arr.push(...users.filter((v) => v !== myInfo.user_id));
+
+    setTypingArr(arr);
+  }, [typing]);
+  console.log("typingArr", typingArr);
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,14 +74,29 @@ const InputBar = ({ id, msgRef }) => {
     setContents(text);
     setCurrentMsg(text);
   };
+
+  const handleTyping = () => {
+    userTyping({ users_id: myInfo.user_id, meetings_id: id, region_code: "RC003" });
+  };
+
   return (
     <div className="bg-[rgba(13,160,197,0.1)] p-4 pt-0">
+      {typingArr.length !== 0 && (
+        <div>
+          {typingArr?.join(", ")}
+          님이 입력 중입니다.
+        </div>
+      )}
+
       <div className="flex flex-col rounded-lg bg-white">
         <textarea
           className="scrollbar w-full flex-1 resize-none whitespace-pre-wrap rounded-lg bg-white p-4 pb-0"
           placeholder="내용을 입력해 주세요..."
           rows={rows}
-          onChange={(e) => handleChangeContents(e.target.value)}
+          onChange={(e) => {
+            handleChangeContents(e.target.value);
+            handleTyping();
+          }}
           onSubmit={() => setContents("")}
           onKeyDown={handleKeyDown}
           value={currentMsg}

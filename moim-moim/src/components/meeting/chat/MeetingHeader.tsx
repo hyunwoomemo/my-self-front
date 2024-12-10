@@ -3,7 +3,7 @@
 import Empty from "@/components/common/Empty";
 import Loader from "@/components/common/Loader";
 import PageHeader from "@/components/common/PageHeader";
-import { getMeetingData } from "@/hooks/useSocket";
+import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { useAtomValue } from "jotai";
@@ -18,6 +18,8 @@ const MeetingHeader = () => {
   const loading = useAtomValue(loadingAtom);
   const [show, setShow] = useState<boolean>(false);
   const router = useRouter();
+  const { socket } = useSocket();
+  const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
 
   const handleClickSideBar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -26,6 +28,7 @@ const MeetingHeader = () => {
 
   const handlePrevClick = () => {
     router.push("/");
+    socket?.emit("exitMoim", { region_code: "RC003", meetings_id: meetingData.id });
   };
 
   if (loading) {

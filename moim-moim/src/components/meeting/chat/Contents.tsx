@@ -27,8 +27,43 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   const loading = useAtomValue(loadingAtom);
   const activeData = useAtomValue(activeAtom);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [hasFocus, setHasFocus] = useState(false);
+  const meetingData = useAtomValue(meetingDataAtom);
+
+  console.log("⭐⭐⭐", meetingData);
 
   useEffect(() => {
+    const handleFocusWindow = () => {
+      setHasFocus(true);
+      if (data) {
+        const target = data.find((v) => {
+          return v.id === Number(id);
+        });
+        console.log("target", target);
+        const type = target?.type;
+        if (type && myInfo) {
+          console.log("🚀focussss");
+          enterMeeting({ region_code: "RC003", meetings_id: Number(id), users_id: myInfo.user_id, type: type });
+        }
+      }
+    };
+    const handleBlurWindow = () => {
+      setHasFocus(false);
+      console.log("🎀blurrrrr");
+      socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
+    };
+
+    window.addEventListener("focus", handleFocusWindow);
+    window.addEventListener("blur", handleBlurWindow);
+
+    return () => {
+      window.removeEventListener("focus", handleFocusWindow);
+      window.removeEventListener("blur", handleBlurWindow);
+    };
+  }, [hasFocus]);
+
+  useEffect(() => {
+    // 스크롤 올렸을 때 "맨 아래로 버튼" 활성화 시키기
     const handleScroll = () => {
       if (msgRef?.current?.offsetTop - 500 > contentsRef?.current.scrollTop + contentsRef?.current?.offsetHeight) {
         setIsVisible(true);
@@ -44,28 +79,25 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   }, []);
 
   useEffect(() => {
+    // 채팅창 처음 켰을 때 맨 아래로 이동 시키기
     if (msgRef.current) {
       msgRef.current.scrollIntoView();
     }
   }, [msgRef.current]);
 
   useEffect(() => {
+    // 새로 고침했을 때 재입장!!!
     if (currentMeeting) return;
-    const controller = new AbortController();
 
-    // 새로고침 했을 때만 !!
     if (data) {
       const target = data.find((v) => {
         return v.id === Number(id);
       });
       const type = target?.type;
-      //   console.log("!!", target);
       if (type && myInfo) {
         enterMeeting({ region_code: "RC003", meetings_id: Number(id), users_id: myInfo.user_id, type: type });
       }
     }
-
-    return () => controller.abort();
   }, [currentMeeting, data]);
 
   useEffect(() => {
@@ -74,7 +106,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
       if (currentMeeting) {
         setCurrentMeeting(-1);
         console.log("방 떠남");
-        socket?.emit("leaveMeeting", { region_code: "RC003", meetings_id: Number(id) });
+        socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
       }
     };
   }, []);
@@ -132,7 +164,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
     return unReadCount;
   };
 
-  // console.log("messages", messages);
+  console.log("messages", messages);
 
   if (loading) {
     return <Loader />;
