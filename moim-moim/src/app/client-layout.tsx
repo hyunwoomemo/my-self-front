@@ -7,6 +7,10 @@ import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { setCookie } from "cookies-next";
 import { errorAtom } from "@/store/common/atom";
 
+export interface MyInfoAddressesProps {
+  address: string;
+  address_code: string;
+}
 export interface myInfoProps {
   birthdate: string;
   created_at: string;
@@ -23,6 +27,7 @@ export interface myInfoProps {
   provider: string;
   provider_id: number;
   updated_at: string;
+  addresses: MyInfoAddressProps;
 }
 const ClientLayout = ({ children }) => {
   const { joinArea } = useSocket();
