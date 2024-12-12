@@ -90,7 +90,7 @@ const Region = ({
                   setAddressKeyword(
                     `${region_1depth_name} ${region_2depth_name} ${region_3depth_h_name || region_3depth_name}`,
                   );
-                  setAddress([]);
+                  setAddress([v]);
                 }}
               >
                 {region_1depth_name} {region_2depth_name} {region_3depth_h_name || region_3depth_name}
