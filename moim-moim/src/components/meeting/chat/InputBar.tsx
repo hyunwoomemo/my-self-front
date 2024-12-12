@@ -9,11 +9,11 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { TbPhoto } from "react-icons/tb";
 
-const InputBar = ({ id, msgRef }) => {
+const InputBar = ({ id, lastMsgRef }) => {
   const [contents, setContents] = useState<string>("");
   const [currentMsg, setCurrentMsg] = useState("");
   const { sendMessage } = useSocket();
-  const [rows, setrows] = useState<number>(() => (window.innerWidth > 480 ? 3 : 1));
+  const [rows, setRows] = useState<number>(() => (window.innerWidth > 480 ? 3 : 1));
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const [isAfterClick, setIsAfterClick] = useState(false);
   const messages = useAtomValue(messagesAtom);
@@ -36,7 +36,9 @@ const InputBar = ({ id, msgRef }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setrows(window.innerWidth > 480 ? 3 : 1);
+      if (typeof window !== undefined) {
+        setRows(window.innerWidth > 480 ? 3 : 1);
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -45,9 +47,9 @@ const InputBar = ({ id, msgRef }) => {
 
   useEffect(() => {
     //스크롤 위에 있을때, 내가 작성한 메세지가 보내지면 아래로 스크롤
-    if (isAfterClick && msgRef.current) {
-      console.log("msgRef.current", msgRef.current);
-      msgRef.current.scrollIntoView();
+    if (isAfterClick && lastMsgRef.current) {
+      console.log("lastMsgRef.current", lastMsgRef.current);
+      lastMsgRef.current.scrollIntoView();
       setIsAfterClick(false);
     }
   }, [messages]);
