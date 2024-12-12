@@ -41,17 +41,17 @@ const SlideBar = ({ show, setShow }) => {
 
   return (
     <>
-      <div className="animate-showSlideBar absolute left-1/2 top-0 h-screen w-screen max-w-[600px] -translate-x-1/2 bg-white">
+      <div className="animate-showSlideBar absolute left-1/2 top-0 z-20 h-screen w-screen max-w-[600px] -translate-x-1/2 bg-white">
         <div className="flex items-center justify-between">
           <PageHeader title="모아보기" onPrevClick={handleClick} style={{ flex: 1 }} />
-          <div className="flex cursor-pointer gap-4 p-3">
+          <div className="flex h-[calc(100%-8rem)] cursor-pointer gap-4 p-3">
             <GoHeartFill color={`${isLike ? "#ff0000" : "#ebebeb"}`} size={24} onClick={handleClickHeart} />
             <GoShareAndroid size={24} />
           </div>
         </div>
         <Tabs data={tabData} setTabValue={setTabValue} tabValue={tabValue} type="default" />
         {tabValue.value === "MoreIntro" && <MoreIntro />}
-        {tabValue.value === "Members" && <Members />}
+        {tabValue.value === "Members" && <Members meetingData={meetingData} />}
       </div>
     </>
   );

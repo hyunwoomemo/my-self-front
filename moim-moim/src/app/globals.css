@@ -377,3 +377,25 @@ a {
 .bg-social.apple {
   background-image: url("/account/apple.png");
 }
+
+/* 모아보기 방장 아이콘 */
+.crown {
+  position: relative;
+}
+.crown:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background-image: url(/moim/leader_crown.png);
+  background-size: contain;
+}
+
+@media all and (max-width: 600px) {
+  .crown:after {
+    width: 15px;
+    height: 15px;
+  }
+}
