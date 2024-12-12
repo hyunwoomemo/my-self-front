@@ -99,6 +99,16 @@ export interface ListValue {
   users_id: number;
 }
 
+export interface ActiveDataProps {
+  id: number;
+  last_active_time: string;
+  meetings_id: number;
+  nickname: string;
+  status: number;
+  updated_at: string;
+  users_id: number;
+}
+
 export const useSocket = () => {
   const setList = useSetAtom(listAtom);
   const setLoading = useSetAtom(loadingAtom);
@@ -180,6 +190,7 @@ export const useSocket = () => {
     console.log("handleReceiveMessage", data);
     setLoading(true);
     setMessages((prev: MessagesValue) => {
+      console.log("⭐prev", prev);
       return { ...prev, list: GroupedData([data, ...prev.list]).reverse() };
     });
     setLoading(false);
@@ -238,5 +249,9 @@ export const useSocket = () => {
     socket?.emit("typing", { users_id, meetings_id, region_code });
   };
 
-  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, userTyping, socket };
+  const leaveMoim = ({ users_id, meetings_id, region_code }) => {
+    socket?.emit("leaveMoim", { users_id, meetings_id, region_code });
+  };
+
+  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, userTyping, leaveMoim, socket };
 };
