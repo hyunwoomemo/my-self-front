@@ -13,16 +13,20 @@ const AddressStep = ({ formData, setFormData }: { formData: any; setFormData: an
 
   const handleNextStep = (e) => {
     e.preventDefault();
+    const { address: searchAddress } = address[0];
+    const { region_1depth_name, region_2depth_name, region_3depth_h_name, region_3depth_name } = searchAddress;
+
     const addresses = [
       {
         address: selectedArea,
         address_code: "test",
+        region_1depth_name,
+        region_2depth_name,
+        region_3depth_name: region_3depth_h_name || region_3depth_name
       },
     ];
-
     const birthdate = formData.birthdate + formData.gender;
     const updatedFormData = { ...formData, addresses, birthdate };
-
     // API 호출
     accountApi
       .register(updatedFormData)

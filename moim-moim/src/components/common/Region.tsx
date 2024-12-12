@@ -172,7 +172,7 @@ const Region = ({
                 onClick={() => {
                   setSelectedArea(v.address_name);
                   setAddressKeyword(parseRegionName);
-                  setAddress([]);
+                  setAddress([v]);
                 }}
               >
                 {parseRegionName}
