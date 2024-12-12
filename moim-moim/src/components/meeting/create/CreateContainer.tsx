@@ -2,7 +2,7 @@
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiCalendar, CiTimer } from "react-icons/ci";

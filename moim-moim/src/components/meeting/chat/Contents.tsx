@@ -5,18 +5,18 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { HiArrowSmallDown } from "react-icons/hi2";
 import { loadingAtom } from "@/store/common/atom";
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import { activeAtom } from "@/store/meeting/active/atom";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Empty from "@/components/common/Empty";
-import { meetingDataAtom } from "@/store/meeting/data/atom";
+import { FiCornerDownRight } from "react-icons/fi";
 
-const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
+const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
   const data = useAtomValue(listAtom) as getListProps[];
   const [currentMeeting, setCurrentMeeting] = useAtom(currentMeetingAtom);
   const { enterMeeting, socket } = useSocket();
@@ -28,9 +28,11 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   const activeData = useAtomValue(activeAtom);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [hasFocus, setHasFocus] = useState(false);
-  const meetingData = useAtomValue(meetingDataAtom);
-
-  console.log("⭐⭐⭐", meetingData);
+  const msgRefs = useRef([]);
+  const [isHover, setIsHover] = useState({
+    index: 0,
+    value: false,
+  });
 
   useEffect(() => {
     const handleFocusWindow = () => {
@@ -47,10 +49,11 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
         }
       }
     };
+
     const handleBlurWindow = () => {
       setHasFocus(false);
       console.log("🎀blurrrrr");
-      socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
+      socket?.emit("blurMoim", { region_code: "RC003", meetings_id: Number(id) });
     };
 
     window.addEventListener("focus", handleFocusWindow);
@@ -65,7 +68,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
   useEffect(() => {
     // 스크롤 올렸을 때 "맨 아래로 버튼" 활성화 시키기
     const handleScroll = () => {
-      if (msgRef?.current?.offsetTop - 500 > contentsRef?.current.scrollTop + contentsRef?.current?.offsetHeight) {
+      if (lastMsgRef?.current?.offsetTop - 500 > contentsRef?.current.scrollTop + contentsRef?.current?.offsetHeight) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
@@ -80,10 +83,10 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
 
   useEffect(() => {
     // 채팅창 처음 켰을 때 맨 아래로 이동 시키기
-    if (msgRef.current) {
-      msgRef.current.scrollIntoView();
+    if (lastMsgRef.current) {
+      lastMsgRef.current.scrollIntoView();
     }
-  }, [msgRef.current]);
+  }, [lastMsgRef.current]);
 
   useEffect(() => {
     // 새로 고침했을 때 재입장!!!
@@ -118,22 +121,43 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
       }
     });
 
-    if (msgRef.current) {
-      observer.observe(msgRef.current);
+    if (lastMsgRef.current) {
+      observer.observe(lastMsgRef.current);
     }
 
     return () => {
-      if (msgRef.current) {
-        observer.unobserve(msgRef.current);
+      if (lastMsgRef.current) {
+        observer.unobserve(lastMsgRef.current);
       }
     };
-  }, [msgRef.current]);
+  }, [lastMsgRef.current]);
 
   const handleToBottom = () => {
-    if (msgRef.current) {
-      msgRef.current.scrollIntoView();
+    if (lastMsgRef.current) {
+      lastMsgRef.current.scrollIntoView();
     }
   };
+
+  //답장하기
+  const handleMouseOver = (i) => {
+    setIsHover({
+      index: i,
+      value: true,
+    });
+  };
+  const handleMouseOut = (i) => {
+    setIsHover({
+      index: i,
+      value: true,
+    });
+  };
+
+  msgRefs.current.map((v, i) => {
+    if (msgRefs.current) {
+      v?.addEventListener("mouseover", () => handleMouseOver(i));
+      v?.addEventListener("mouseout", () => handleMouseOut(i));
+    }
+  });
 
   //메시지가 없을 때
   if (!messages) return;
@@ -164,7 +188,7 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
     return unReadCount;
   };
 
-  console.log("messages", messages);
+  // console.log("messages", messages);
 
   if (loading) {
     return <Loader />;
@@ -181,23 +205,31 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
           return ( */}
           {/* <div key={key} className={`flex flex-col gap-2`}> */}
 
-          {messages?.list?.map((v) => {
+          {messages?.list?.map((v, i) => {
             return (
               <div key={v.id} className={`flex flex-col gap-2`}>
                 {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
                 {/* {myInfo.user_id !== v.users_id && <div>{v.users_nickname}</div>} */}
                 <div
-                  className={`flex w-full items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse self-end" : undefined}`}
+                  ref={(el) => (msgRefs.current[i] = el)}
+                  className={`relative flex w-fit items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse self-end" : ""}`}
                 >
                   {v.admin === 1 ? (
                     <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
                       {v.contents}
                     </div>
                   ) : (
-                    <div
-                      className={`w-fit max-w-[70%] whitespace-pre-wrap rounded-3xl p-3 ${myInfo.user_id === v.users_id ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
-                    >
-                      {v.contents}
+                    <div className={`flex items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse" : ""}`}>
+                      <div
+                        className={`w-fit max-w-[70%] flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${myInfo.user_id === v.users_id ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
+                      >
+                        {v.contents}
+                      </div>
+                      {isHover.index === i && isHover.value && (
+                        <div className="absolute bottom-0 left-full">
+                          <FiCornerDownRight />
+                        </div>
+                      )}
                     </div>
                   )}
                   {v.time && v.admin !== 1 && (
@@ -215,10 +247,10 @@ const Contents = ({ id, scrollRef, msgRef, contentsRef }) => {
 
           <div ref={scrollRef}></div>
         </div>
-        <div ref={msgRef}></div>
+        <div ref={lastMsgRef}></div>
         {isVisible && (
           <div
-            className="fixed bottom-56 left-1/2 z-40 flex h-10 w-10 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md shadow-gray-300"
+            className="fixed bottom-56 left-1/2 z-10 flex h-10 w-10 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md shadow-gray-300"
             onClick={handleToBottom}
           >
             <HiArrowSmallDown size={20} />

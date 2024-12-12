@@ -1,7 +1,7 @@
 "use client";
 
 import Empty from "@/components/common/Empty";
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import PageHeader from "@/components/common/PageHeader";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { loadingAtom } from "@/store/common/atom";
@@ -39,7 +39,7 @@ const MeetingHeader = () => {
 
   return (
     <>
-      <div className="sticky top-0 w-full border-b border-solid border-border bg-[rgba(255,255,255,0.5)] backdrop-blur-[2px]">
+      <div className="sticky top-0 z-10 w-full border-b border-solid border-border bg-[rgba(255,255,255,0.5)] backdrop-blur-[2px]">
         <PageHeader
           title={data.name}
           icon={<FaBars size={22} color="#333" />}

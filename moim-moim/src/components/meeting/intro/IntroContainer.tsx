@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { IoCloseOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import { useAtomValue } from "jotai";
 import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
@@ -38,7 +38,7 @@ const IntroContainer = () => {
         // <div className="relative" style={{ height: "calc(100vh - (21px + 4.625rem))" }}>
         <div className="relative h-screen">
           <div className="absolute left-0 right-0 top-0 z-20 flex w-full items-center justify-end p-5">
-            <button className="text-4xl text-white" onClick={() => router.back()}>
+            <button className="text-4xl text-white" onClick={() => router.push("/")}>
               <IoCloseOutline />
             </button>
           </div>

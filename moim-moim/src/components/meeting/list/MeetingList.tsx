@@ -6,7 +6,7 @@ import moment from "moment";
 import "moment/locale/ko";
 import { getListProps, useSocket } from "@/hooks/useSocket";
 import { loadingAtom } from "@/store/common/atom";
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Dot from "@/components/common/Dot";

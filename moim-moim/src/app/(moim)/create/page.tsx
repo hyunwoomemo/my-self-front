@@ -1,4 +1,4 @@
-import Loader from "@/components/common/Loader";
+import { Loader } from "@/components/common/Loader";
 import PageHeader from "@/components/common/PageHeader";
 import Category from "@/components/meeting/create/Category";
 
