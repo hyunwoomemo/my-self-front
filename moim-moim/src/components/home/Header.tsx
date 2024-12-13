@@ -31,7 +31,7 @@ const Header = () => {
     <div className="flex justify-between p-6 pb-4">
       <div className="relative">
         <div className="flex cursor-pointer items-center gap-2" onClick={handleClickArea}>
-          <span className="text-xl font-bold">{myInfo?.addresses[0]?.address}</span>
+          <span className="text-xl font-bold">{myInfo?.addresses[0]?.region_3depth_name}</span>
           {isShow ? <FaChevronUp /> : <FaChevronDown />}
         </div>
         {isShow && (

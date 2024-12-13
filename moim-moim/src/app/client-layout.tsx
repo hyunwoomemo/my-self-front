@@ -10,6 +10,9 @@ import { errorAtom } from "@/store/common/atom";
 export interface MyInfoAddressesProps {
   address: string;
   address_code: string;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_name: string;
 }
 export interface myInfoProps {
   birthdate: string;
@@ -27,7 +30,8 @@ export interface myInfoProps {
   provider: string;
   provider_id: number;
   updated_at: string;
-  addresses: MyInfoAddressProps;
+  addresses: MyInfoAddressesProps;
+  interests: string;
 }
 const ClientLayout = ({ children }) => {
   const { joinArea } = useSocket();

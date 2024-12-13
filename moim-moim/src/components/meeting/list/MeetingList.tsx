@@ -12,8 +12,6 @@ import { myInfoProps } from "@/app/client-layout";
 import Dot from "@/components/common/Dot";
 import Empty from "@/components/common/Empty";
 
-moment.locale("ko");
-
 const MeetingList = () => {
   const loading = useAtomValue(loadingAtom);
   const data = useAtomValue(listAtom) as getListProps[];
@@ -36,11 +34,10 @@ const MeetingList = () => {
   if (loading) {
     return <Loader />;
   }
+
   if (data.length === 0) {
     return <Empty text="<span>개설된 모임방이 없어요. <br />관심있는 모임방을 만들어 볼까요?</span>" />;
   }
-
-  console.log("lodaing", loading, data);
 
   return (
     <>
@@ -50,7 +47,6 @@ const MeetingList = () => {
           className="flex cursor-pointer items-center gap-4 border-b border-solid border-surface pb-5"
           onClick={() => handleEnterMeeting(v)}
         >
-          {/* <Image src={} alt={} /> */}
           <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-xl bg-[var(--point)] text-7xl text-white w_sm:h-20 w_sm:w-20 w_sm:text-6xl">
             <PiUsersThree />
           </div>
@@ -66,7 +62,6 @@ const MeetingList = () => {
             <div className="flex justify-between">
               <div className="flex items-center justify-center gap-2">
                 <div className="rounded-3xl bg-[var(--darkSurface)] px-3 py-[0.15rem] text-xs">
-                  {" "}
                   {v.category1_name}/{v.category2_name}
                 </div>
                 {v.last_active_time && (

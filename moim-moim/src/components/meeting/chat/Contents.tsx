@@ -279,6 +279,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
           <div ref={scrollRef}>최상단!!!</div>
         </div>
         <div ref={lastMsgRef}></div>
+
         {isVisible && (
           <div
             className="fixed bottom-56 left-1/2 z-10 flex h-10 w-10 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md shadow-gray-300"

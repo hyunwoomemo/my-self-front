@@ -6,7 +6,7 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
@@ -31,6 +31,7 @@ export interface getListProps {
   region_code: string;
   userCount: number;
   type: number;
+  last_active_time: string;
 }
 
 export interface getMeetingData {
@@ -83,7 +84,7 @@ export interface EnterMeeting {
   meetings_id: number;
   users_id: number;
   type: number;
-  afterBlur: boolean;
+  afterBlur?: boolean;
 }
 
 export interface MessagesValue {
@@ -117,12 +118,11 @@ export const useSocket = () => {
   const setLoading = useSetAtom(loadingAtom);
   const setMeetingData = useSetAtom(meetingDataAtom);
   const setMessages = useSetAtom(messagesAtom);
-  const setCurrentMeeting = useSetAtom(currentMeetingAtom);
+  const [currentMeeting, setCurrentMeeting] = useAtom(currentMeetingAtom);
   const setActive = useSetAtom(activeAtom);
   const setError = useSetAtom(errorAtom);
   const setTyping = useSetAtom(typingAtom);
   const router = useRouter();
-  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
   useEffect(() => {
     //소켓 연결
@@ -155,6 +155,16 @@ export const useSocket = () => {
 
     socket?.on("connect", handleConnect);
     socket?.on("meetingActive", handleMeetingActive);
+    socket?.on("enterRes", (data) => {
+      console.log("enterRes", data);
+      if (data.CODE === "EM000") {
+        router.push(`/moim/${currentMeeting}/chat`);
+      } else if (data.CODE === "EM001") {
+        router.push(`/moim/${currentMeeting}/intro`);
+      } else {
+        console.log("enter error");
+      }
+    });
     socket?.on("list", handleGetList);
     socket?.on("meetingData", handleGetMeetingData);
     socket?.on("messages", handleMessagesData);
@@ -164,7 +174,7 @@ export const useSocket = () => {
     });
     socket?.on("error", handleError);
     socket?.on("userTyping", handleUserTyping);
-  }, []);
+  }, [currentMeeting]);
 
   const handleGetList = (data: getListProps) => {
     setLoading(true);
@@ -203,20 +213,11 @@ export const useSocket = () => {
 
   const enterMeeting = ({ region_code, meetings_id, users_id, type, afterBlur }: EnterMeeting) => {
     setLoading(true);
+    console.log("meetings_id???????????", meetings_id);
     setCurrentMeeting(meetings_id);
     setLoading(false);
 
     socket?.emit("enterMeeting", { region_code, meetings_id, users_id, type, afterBlur });
-    socket?.on("enterRes", (data) => {
-      console.log("enterRes", data);
-      if (data.CODE === "EM000") {
-        router.push(`/moim/${meetings_id}/chat`);
-      } else if (data.CODE === "EM001") {
-        router.push(`/moim/${meetings_id}/intro`);
-      } else {
-        console.log("enter error");
-      }
-    });
   };
 
   const generateMeeting = (params: GenerateMeeting) => {
@@ -225,16 +226,6 @@ export const useSocket = () => {
 
   const joinMeeting = (params: JoinMeetingProps) => {
     socket?.emit("joinMeeting", params);
-    socket?.on("enterRes", (data) => {
-      console.log("enterRes", data);
-      if (data.CODE === "EM000") {
-        router.push(`/moim/${params.meetings_id}/chat`);
-      } else if (data.CODE === "EM001") {
-        router.push(`/moim/${params.meetings_id}/intro`);
-      } else {
-        console.log("enter error");
-      }
-    });
   };
 
   const sendMessage = (params: SendMessageProps) => {
