@@ -30,7 +30,6 @@ const MeetingList = () => {
     }
   };
   const handleEnterMeeting = (data) => {
-    console.log("data???", data);
     enterMeeting({ region_code: "RC003", meetings_id: data.id, users_id: myInfo.user_id, type: data.type });
   };
 

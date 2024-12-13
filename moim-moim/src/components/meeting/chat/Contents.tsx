@@ -15,8 +15,9 @@ import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Empty from "@/components/common/Empty";
 import { FiCornerDownRight } from "react-icons/fi";
+import Hr from "@/components/common/Hr";
 
-const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
+const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   const data = useAtomValue(listAtom) as getListProps[];
   const [currentMeeting, setCurrentMeeting] = useAtom(currentMeetingAtom);
   const { enterMeeting, socket } = useSocket();
@@ -29,10 +30,18 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [hasFocus, setHasFocus] = useState(false);
   const msgRefs = useRef([]);
-  const [isHover, setIsHover] = useState({
-    index: 0,
-    value: false,
-  });
+  const [isHover, setIsHover] = useState({});
+
+  useEffect(() => {
+    console.log("방 입장");
+    return () => {
+      if (currentMeeting) {
+        setCurrentMeeting(-1);
+        console.log("방 떠남");
+        socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleFocusWindow = () => {
@@ -45,7 +54,13 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
         const type = target?.type;
         if (type && myInfo) {
           console.log("🚀focussss");
-          enterMeeting({ region_code: "RC003", meetings_id: Number(id), users_id: myInfo.user_id, type: type });
+          enterMeeting({
+            region_code: "RC003",
+            meetings_id: Number(id),
+            users_id: myInfo.user_id,
+            type: type,
+            afterBlur: true,
+          });
         }
       }
     };
@@ -103,34 +118,23 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
     }
   }, [currentMeeting, data]);
 
-  useEffect(() => {
-    console.log("방 입장");
-    return () => {
-      if (currentMeeting) {
-        setCurrentMeeting(-1);
-        console.log("방 떠남");
-        socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     if (!entries[0].isIntersecting) {
+  //       setIsVisible(!isVisible);
+  //     }
+  //   });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) {
-        setIsVisible(!isVisible);
-      }
-    });
+  //   if (lastMsgRef.current) {
+  //     observer.observe(lastMsgRef.current);
+  //   }
 
-    if (lastMsgRef.current) {
-      observer.observe(lastMsgRef.current);
-    }
-
-    return () => {
-      if (lastMsgRef.current) {
-        observer.unobserve(lastMsgRef.current);
-      }
-    };
-  }, [lastMsgRef.current]);
+  //   return () => {
+  //     if (lastMsgRef.current) {
+  //       observer.unobserve(lastMsgRef.current);
+  //     }
+  //   };
+  // }, [lastMsgRef.current]);
 
   const handleToBottom = () => {
     if (lastMsgRef.current) {
@@ -141,14 +145,12 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
   //답장하기
   const handleMouseOver = (i) => {
     setIsHover({
-      index: i,
-      value: true,
+      [i]: true,
     });
   };
   const handleMouseOut = (i) => {
     setIsHover({
-      index: i,
-      value: true,
+      [i]: false,
     });
   };
 
@@ -170,8 +172,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
     // 읽어야할 사람들
     const users = (data.users || "")
       .split(",") //string을 ","로 구분하여 배열로 만들어서
-      .map((v) => Number(v)) //string을 Number로 바꾸고,
-      .filter((v) => v !== myInfo.user_id); // 나 아닌 것들만 추출
+      .map((v) => Number(v)); //string을 Number로 바꾸고,
 
     const unReadCount = users.reduce((result, cur) => {
       // console.log("activeData", activeData, cur, data); // 내가 활용할 수 있는 데이터들
@@ -196,56 +197,86 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef }) => {
   if (!messages) return <Empty text="불러올 메시지가 없습니다." />;
   return (
     <>
-      <div className="p-4">
-        <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
-          모임 방이 개설되었어요.
-        </div>
-        <div className="flex flex-col-reverse gap-2">
-          {/* {Object.entries(messages).map(([key, msg]) => {
-          return ( */}
-          {/* <div key={key} className={`flex flex-col gap-2`}> */}
-
-          {messages?.list?.map((v, i) => {
+      <div>
+        <div className="flex h-full flex-col-reverse gap-2 p-4">
+          {messages?.list?.map((v) => {
+            const isMe = myInfo.user_id === v.users_id;
             return (
               <div key={v.id} className={`flex flex-col gap-2`}>
                 {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
                 {/* {myInfo.user_id !== v.users_id && <div>{v.users_nickname}</div>} */}
-                <div
-                  ref={(el) => (msgRefs.current[i] = el)}
-                  className={`relative flex w-fit items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse self-end" : ""}`}
-                >
-                  {v.admin === 1 ? (
-                    <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
-                      {v.contents}
-                    </div>
-                  ) : (
-                    <div className={`flex items-end gap-1 ${myInfo.user_id === v.users_id ? "flex-row-reverse" : ""}`}>
+
+                {v.admin === 1 ? (
+                  <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+                    {v.contents}
+                  </div>
+                ) : (
+                  <div
+                    ref={(el) => (msgRefs.current[v.id] = el)}
+                    className={`relative flex w-fit max-w-[70%] items-end gap-1 ${isMe ? "flex-row-reverse self-end" : ""}`}
+                  >
+                    <div className={`flex items-end gap-1 ${isMe ? "flex-row-reverse pl-14" : "pr-14"}`}>
                       <div
-                        className={`w-fit max-w-[70%] flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${myInfo.user_id === v.users_id ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
+                        className={`w-fit flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${isMe ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
                       >
-                        {v.contents}
+                        {/* 답장일 때 */}
+                        {v.reply_id !== 0 && (
+                          <div
+                            onClick={() => {
+                              const replyElement = msgRefs.current?.[v.reply_id];
+                              console.log("replyElement", v.id, v.reply_id);
+                              if (replyElement) {
+                                replyElement.scrollIntoView({
+                                  behavior: "smooth", // 부드럽게 스크롤
+                                  block: "top", // 화면 중앙으로 위치
+                                });
+                              } else {
+                                console.error(`Element with ID ${v.reply_id} not found.`);
+                              }
+                            }}
+                          >
+                            <div className="text-xs text-primary">
+                              {v.reply_nickname === myInfo?.nickname ? "나" : v.reply_nickname}
+                              에게 답장
+                            </div>
+                            <div className="break-all text-sm text-disabledText">{v.reply_contents}</div>
+                            <div className="h-[1px] w-full bg-[rgba(0,0,0,0.1)]"></div>
+                          </div>
+                        )}
+                        <div className="pt-1">{v.contents}</div>
                       </div>
-                      {isHover.index === i && isHover.value && (
-                        <div className="absolute bottom-0 left-full">
-                          <FiCornerDownRight />
-                        </div>
+
+                      {/* 답장하기 아이콘 */}
+                      {isHover[v.id] && (
+                        <button
+                          className={`group absolute bottom-0 cursor-pointer p-1 ${isMe ? "right-[calc(100%-3rem)]" : "left-[calc(100%-3rem)]"}`}
+                          onClick={() => handleReply(v.id)}
+                          // onClick={() => console.log("clicked")}
+                        >
+                          <span className="block rounded-full bg-black bg-opacity-5 p-1 text-white group-hover:bg-opacity-10">
+                            <FiCornerDownRight size={12} />
+                          </span>
+                        </button>
+                      )}
+                      {/* 시간 */}
+                      {v.time && (
+                        <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
+                      )}
+                      {/* 읽음 표시 */}
+                      {getUnReadCount(v) !== 0 && (
+                        <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
                       )}
                     </div>
-                  )}
-                  {v.time && v.admin !== 1 && (
-                    <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
-                  )}
-                  {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}
-
-                  {v.admin !== 1 && getUnReadCount(v) !== 0 && (
-                    <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
-                  )}
-                </div>
+                  </div>
+                )}
+                {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}
               </div>
             );
           })}
-
-          <div ref={scrollRef}></div>
+          <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+            모임 방이 개설되었어요.
+          </div>
+          <div ref={scrollRef}>최상단!!!</div>
         </div>
         <div ref={lastMsgRef}></div>
         {isVisible && (

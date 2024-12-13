@@ -8,8 +8,9 @@ import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { TbPhoto } from "react-icons/tb";
+import { IoCloseOutline } from "react-icons/io5";
 
-const InputBar = ({ id, lastMsgRef }) => {
+const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   const [contents, setContents] = useState<string>("");
   const [currentMsg, setCurrentMsg] = useState("");
   const { sendMessage } = useSocket();
@@ -20,19 +21,15 @@ const InputBar = ({ id, lastMsgRef }) => {
   const { userTyping } = useSocket();
   const typing = useAtomValue(typingAtom);
   const [typingArr, setTypingArr] = useState([]);
+  const replyMsg = messages?.list.find((v) => v.id === Number(Object.keys(isReply)));
 
   useEffect(() => {
     const arr = [];
     const users = typing.map((v) => v.users_id);
-    console.log(
-      "???",
-      users.filter((v) => v !== myInfo.user_id),
-    );
     arr.push(...users.filter((v) => v !== myInfo.user_id));
 
     setTypingArr(arr);
   }, [typing]);
-  console.log("typingArr", typingArr);
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,12 +52,24 @@ const InputBar = ({ id, lastMsgRef }) => {
   }, [messages]);
 
   const handleClick = () => {
-    sendMessage({
-      contents: contents,
-      meetings_id: id,
-      region_code: "RC003",
-      users_id: myInfo.user_id,
-    });
+    if (Object.keys(isReply).length === 1) {
+      console.log("답장보내기");
+      sendMessage({
+        contents: contents,
+        meetings_id: id,
+        region_code: "RC003",
+        users_id: myInfo.user_id,
+        reply_id: Number(Object.keys(isReply)),
+      });
+    } else {
+      sendMessage({
+        contents: contents,
+        meetings_id: id,
+        region_code: "RC003",
+        users_id: myInfo.user_id,
+      });
+    }
+
     setCurrentMsg("");
     setIsAfterClick(true);
   };
@@ -69,6 +78,7 @@ const InputBar = ({ id, lastMsgRef }) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleClick();
+      setIsReply([]);
     }
   };
 
@@ -81,12 +91,29 @@ const InputBar = ({ id, lastMsgRef }) => {
     userTyping({ users_id: myInfo.user_id, meetings_id: id, region_code: "RC003" });
   };
 
+  const handleCloseReply = () => {
+    setIsReply([]);
+  };
+
   return (
     <div className="bg-[rgba(13,160,197,0.1)] p-4 pt-0">
       {typingArr.length !== 0 && (
         <div>
           {typingArr?.join(", ")}
           님이 입력 중입니다.
+        </div>
+      )}
+      {Object.keys(isReply).length !== 0 && (
+        <div className="mb-1 flex items-start justify-between rounded-lg bg-white p-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm text-point">
+              {replyMsg?.nickname === myInfo?.nickname ? "나" : replyMsg?.nickname}에게 답장
+            </span>
+            <span>{replyMsg?.contents}</span>
+          </div>
+          <button className="text-textGray hover:text-text" onClick={handleCloseReply}>
+            <IoCloseOutline size={20} />
+          </button>
         </div>
       )}
 

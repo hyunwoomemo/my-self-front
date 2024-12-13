@@ -68,25 +68,25 @@ const Input = ({
     );
   }
   return (
-<div className={` ${error ? "flex flex-col gap-1" : ""}`}>
-    <div
-      className={`flex-1 rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
-    >
-      {icon && <div className={`p-5 pr-0 text-2xl ${align ? `text-${align}` : undefined}`}>{icon}</div>}
-      <input
-        type={type}
-        name={name}
-        className="w-full rounded-xl p-5 disabled:text-textGray"
-        placeholder={placeholder}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-        minLength={minLength}
-        maxLength={maxLength}
-        {...res}
-      />
-      {error && <span className="text-sm text-red-600">{errorText}</span>}
-    </div>
+    <div className={` ${error ? "flex flex-col gap-1" : ""}`}>
+      <div
+        className={`flex-1 rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
+      >
+        {icon && <div className={`p-5 pr-0 text-2xl ${align ? `text-${align}` : undefined}`}>{icon}</div>}
+        <input
+          type={type}
+          name={name}
+          className="w-full rounded-xl p-5 disabled:text-textGray"
+          placeholder={placeholder}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          minLength={minLength}
+          maxLength={maxLength}
+          {...res}
+        />
+        {error && <span className="text-sm text-red-600">{errorText}</span>}
+      </div>
     </div>
   );
 };

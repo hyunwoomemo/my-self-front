@@ -55,6 +55,8 @@ export interface SendMessageProps {
   meetings_id: number;
   region_code: string;
   users_id: number;
+  reply_id?: number;
+  tag_id?: number;
 }
 
 export interface JoinMeetingProps {
@@ -81,6 +83,7 @@ export interface EnterMeeting {
   meetings_id: number;
   users_id: number;
   type: number;
+  afterBlur: boolean;
 }
 
 export interface MessagesValue {
@@ -176,7 +179,6 @@ export const useSocket = () => {
   };
 
   const handleMessagesData = (data: MessagesValue) => {
-    console.log("???????", data);
     setLoading(true);
     if (data && data.list) {
       setMessages({ ...data, list: GroupedData(data.list).reverse() });
@@ -190,7 +192,6 @@ export const useSocket = () => {
     console.log("handleReceiveMessage", data);
     setLoading(true);
     setMessages((prev: MessagesValue) => {
-      console.log("⭐prev", prev);
       return { ...prev, list: GroupedData([data, ...prev.list]).reverse() };
     });
     setLoading(false);
@@ -200,13 +201,12 @@ export const useSocket = () => {
     socket?.emit("join", { region_code });
   };
 
-  const enterMeeting = ({ region_code, meetings_id, users_id, type }: EnterMeeting) => {
+  const enterMeeting = ({ region_code, meetings_id, users_id, type, afterBlur }: EnterMeeting) => {
     setLoading(true);
-    console.log("enterMeetingenterMeeting");
     setCurrentMeeting(meetings_id);
     setLoading(false);
 
-    socket?.emit("enterMeeting", { region_code, meetings_id, users_id, type });
+    socket?.emit("enterMeeting", { region_code, meetings_id, users_id, type, afterBlur });
     socket?.on("enterRes", (data) => {
       console.log("enterRes", data);
       if (data.CODE === "EM000") {

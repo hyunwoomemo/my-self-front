@@ -13,9 +13,16 @@ const ChatContainer = ({ id }) => {
   const scrollRef = useRef(null);
   const [isFetch, setIsFetch] = useState<boolean>(false);
   const [messages, setMessages] = useAtom(messagesAtom);
-  const isEnd = messages?.total <= messages?.list.length;
-  const msgRef = useRef(null);
+  const isEnd = messages?.total <= messages?.list?.length;
+  const lastMsgRef = useRef(null);
   const contentsRef = useRef(null);
+  const [isReply, setIsReply] = useState({});
+
+  const handleReply = (id) => {
+    setIsReply({
+      [id]: true,
+    });
+  };
 
   const moreMsgs = useCallback(async () => {
     console.log("messagesmessages", messages);
@@ -41,7 +48,8 @@ const ChatContainer = ({ id }) => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isEnd && !isFetch) {
-          moreMsgs(); //채팅창 처음 켰을 때(아래로 내렸을 때만 실행)
+          console.log("🎀entries", entries);
+          moreMsgs();
         }
       },
       { threshold: 0.5, rootMargin: "0px" },
@@ -62,9 +70,15 @@ const ChatContainer = ({ id }) => {
     <>
       <div className="scrollbar flex-1 overflow-y-auto bg-[rgba(13,160,197,0.1)]" ref={contentsRef}>
         <MeetingHeader />
-        <Contents msgRef={msgRef} scrollRef={scrollRef} id={id} contentsRef={contentsRef} />
+        <Contents
+          lastMsgRef={lastMsgRef}
+          scrollRef={scrollRef}
+          id={id}
+          contentsRef={contentsRef}
+          handleReply={handleReply}
+        />
       </div>
-      <InputBar msgRef={msgRef} id={id} />
+      <InputBar lastMsgRef={lastMsgRef} id={id} isReply={isReply} setIsReply={setIsReply} />
     </>
   );
 };
