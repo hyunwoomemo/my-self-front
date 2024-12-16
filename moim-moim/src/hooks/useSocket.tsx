@@ -5,14 +5,12 @@ import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
-import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
+import { messagesAtom, recentMsgAtom, typingAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { GroupedData } from "@/utils/group";
-import { myInfoAtom } from "@/store/account/myInfo/atom";
-import { myInfoProps } from "@/app/client-layout";
 
 export let socket: Socket;
 
@@ -123,6 +121,7 @@ export const useSocket = () => {
   const setError = useSetAtom(errorAtom);
   const setTyping = useSetAtom(typingAtom);
   const router = useRouter();
+  const setRecentMsg = useSetAtom(recentMsgAtom);
 
   useEffect(() => {
     //소켓 연결
@@ -202,8 +201,9 @@ export const useSocket = () => {
     console.log("handleReceiveMessage", data);
     setLoading(true);
     setMessages((prev: MessagesValue) => {
-      return { ...prev, list: GroupedData([data, ...prev.list]).reverse() };
+      return { ...prev, list: GroupedData([data, ...prev?.list]).reverse() };
     });
+    setRecentMsg(data);
     setLoading(false);
   };
 

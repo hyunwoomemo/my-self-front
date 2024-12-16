@@ -189,8 +189,6 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
     return unReadCount;
   };
 
-  // console.log("messages", messages);
-
   if (loading) {
     return <Loader />;
   }
@@ -227,8 +225,8 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
                               console.log("replyElement", v.id, v.reply_id);
                               if (replyElement) {
                                 replyElement.scrollIntoView({
-                                  behavior: "smooth", // 부드럽게 스크롤
-                                  block: "top", // 화면 중앙으로 위치
+                                  behavior: "smooth",
+                                  block: "start",
                                 });
                               } else {
                                 console.error(`Element with ID ${v.reply_id} not found.`);
@@ -276,7 +274,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
           <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
             모임 방이 개설되었어요.
           </div>
-          <div ref={scrollRef}>최상단!!!</div>
+          <div ref={scrollRef}></div>
         </div>
         <div ref={lastMsgRef}></div>
 

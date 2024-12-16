@@ -27,10 +27,15 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   const activeData = useAtomValue(activeAtom) as ActiveDataProps;
   const [isTag, setIsTag] = useState(false);
   const [focusIndex, setFocusIndex] = useState(0);
+  const [tagId, setTagId] = useState(-1);
 
   useEffect(() => {
     if (focusIndex === activeData?.length) {
       setFocusIndex(0);
+    }
+
+    if (focusIndex === -1) {
+      setFocusIndex(activeData?.length - 1);
     }
   }, [focusIndex, activeData]);
 
@@ -72,6 +77,15 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
         users_id: myInfo.user_id,
         reply_id: Number(Object.keys(isReply)),
       });
+    } else if (tagId !== -1) {
+      //언급 보내기
+      sendMessage({
+        contents: contents,
+        meetings_id: id,
+        region_code: "RC003",
+        users_id: myInfo.user_id,
+        tag_id: tagId,
+      });
     } else {
       //그냥 보내기
       sendMessage({
@@ -87,16 +101,34 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    console.log("eeeeeeeeeeeeeeeeeeeeeeeee", e);
+
+    if (e.key === "Enter" && contents === "") {
+      //아무 내용없을 때 전송 방지
+      e.preventDefault();
+      setContents("");
+      return;
+    }
+    if (e.key === "Enter" && !e.shiftKey && !isTag) {
       e.preventDefault();
       handleClick();
       setIsReply([]);
+      setContents("");
+      if (tagId !== -1) {
+        setTagId(-1);
+        setContents("");
+      }
     } else {
       if (keyEvent[e.key]) keyEvent[e.key]();
     }
   };
 
   const keyEvent = {
+    Escape: () => {
+      if (isTag) {
+        setIsTag(false);
+      }
+    },
     "@": () => {
       setIsTag(true);
     },
@@ -116,9 +148,24 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
         });
       }
     },
-    Enter: () => {},
+    Enter: () => {
+      console.log("isTag⏰⏰⏰⏰⏰:", isTag);
+      console.log("tagId:⏰⏰⏰⏰⏰", tagId);
+      if (isTag) {
+        //언급창 떠있을 때
+        setTagId(activeData[focusIndex].users_id);
+        setIsTag(false);
+        setCurrentMsg(`@${activeData[focusIndex].nickname} `);
+      } else {
+        console.log("읭?");
+      }
+    },
   };
 
+  useEffect(() => {
+    console.log("isTag⏰⏰⏰⏰⏰:", isTag);
+    console.log("tagId:⏰⏰⏰⏰⏰", tagId);
+  }, [isTag, tagId]);
   const handleChangeContents = (text: string) => {
     setContents(text);
     setCurrentMsg(text);
@@ -173,13 +220,13 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
                   <span className="flex items-center justify-center gap-1">
                     <span className="h-5 w-5 rounded-full bg-point p-[2px] text-xs text-white">나</span>
                     <span>
-                      @{v.nickname}
+                      {v.nickname}
                       {i}
                     </span>
                   </span>
                 ) : (
                   <span>
-                    @{v.nickname}
+                    {v.nickname}
                     {i}
                   </span>
                 )}
