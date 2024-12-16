@@ -1,12 +1,13 @@
 "use client";
 
-import { getListProps, useSocket } from "@/hooks/useSocket";
+import { getListProps, getMeetingData, useSocket } from "@/hooks/useSocket";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
+import "moment/locale/ko";
 import { HiArrowSmallDown } from "react-icons/hi2";
 import { loadingAtom } from "@/store/common/atom";
 import { Loader } from "@/components/common/Loader";
@@ -15,7 +16,7 @@ import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Empty from "@/components/common/Empty";
 import { FiCornerDownRight } from "react-icons/fi";
-import Hr from "@/components/common/Hr";
+import { meetingDataAtom } from "@/store/meeting/data/atom";
 
 const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   const data = useAtomValue(listAtom) as getListProps[];
@@ -31,6 +32,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   const [hasFocus, setHasFocus] = useState(false);
   const msgRefs = useRef([]);
   const [isHover, setIsHover] = useState({});
+  const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
 
   useEffect(() => {
     console.log("방 입장");
@@ -44,14 +46,19 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   }, []);
 
   useEffect(() => {
+    // 채팅창 처음 켰을 때 맨 아래로 이동 시키기
+    handleToBottom();
+  }, [lastMsgRef.current]);
+
+  useEffect(() => {
     const handleFocusWindow = () => {
       setHasFocus(true);
       if (data) {
         const target = data.find((v) => {
           return v.id === Number(id);
         });
-        console.log("target", target);
         const type = target?.type;
+
         if (type && myInfo) {
           console.log("🚀focussss");
           enterMeeting({
@@ -97,13 +104,6 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   }, []);
 
   useEffect(() => {
-    // 채팅창 처음 켰을 때 맨 아래로 이동 시키기
-    if (lastMsgRef.current) {
-      lastMsgRef.current.scrollIntoView();
-    }
-  }, [lastMsgRef.current]);
-
-  useEffect(() => {
     // 새로 고침했을 때 재입장!!!
     if (currentMeeting) return;
 
@@ -117,24 +117,6 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
       }
     }
   }, [currentMeeting, data]);
-
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     if (!entries[0].isIntersecting) {
-  //       setIsVisible(!isVisible);
-  //     }
-  //   });
-
-  //   if (lastMsgRef.current) {
-  //     observer.observe(lastMsgRef.current);
-  //   }
-
-  //   return () => {
-  //     if (lastMsgRef.current) {
-  //       observer.unobserve(lastMsgRef.current);
-  //     }
-  //   };
-  // }, [lastMsgRef.current]);
 
   const handleToBottom = () => {
     if (lastMsgRef.current) {
@@ -192,17 +174,23 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   if (loading) {
     return <Loader />;
   }
+
   if (!messages) return <Empty text="불러올 메시지가 없습니다." />;
   return (
     <>
       <div>
         <div className="flex h-full flex-col-reverse gap-2 p-4">
-          {messages?.list?.map((v) => {
+          {messages?.list?.map((v, i, arr) => {
             const isMe = myInfo.user_id === v.users_id;
             return (
               <div key={v.id} className={`flex flex-col gap-2`}>
+                {moment(arr[i + 1]?.created_at).format("YYYY MM DD dddd") !==
+                  moment(v?.created_at).format("YYYY MM DD dddd") && (
+                  <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+                    {moment(v?.created_at).format("YYYY년 MM월 DD일 dddd")}
+                  </div>
+                )}
                 {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
-                {/* {myInfo.user_id !== v.users_id && <div>{v.users_nickname}</div>} */}
 
                 {v.admin === 1 ? (
                   <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
@@ -272,7 +260,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
             );
           })}
           <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
-            모임 방이 개설되었어요.
+            {moment(meetingData?.created_at).format("YYYY년 MM월 DD일 dddd")}
           </div>
           <div ref={scrollRef}></div>
         </div>
