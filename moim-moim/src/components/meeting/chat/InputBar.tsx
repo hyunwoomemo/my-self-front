@@ -5,17 +5,15 @@ import Button from "@/components/common/Button";
 import { ActiveDataProps, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { messagesAtom, typingAtom } from "@/store/meeting/messages/atom";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { TbPhoto } from "react-icons/tb";
 import { IoCloseOutline } from "react-icons/io5";
 import { activeAtom } from "@/store/meeting/active/atom";
 
 const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
-  const [contents, setContents] = useState<string>("");
-  const [currentMsg, setCurrentMsg] = useState("");
+  const [contents, setContents] = useState("");
   const { sendMessage } = useSocket();
-  const [rows, setRows] = useState<number>(-1);
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const [isAfterClick, setIsAfterClick] = useState(false);
   const messages = useAtomValue(messagesAtom);
@@ -28,14 +26,13 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   const [isTag, setIsTag] = useState(false);
   const [focusIndex, setFocusIndex] = useState(0);
   const [tagId, setTagId] = useState(-1);
+  const editableRef = useRef<HTMLDivElement>(null);
+  const [tagNick, setTagNick] = useState(activeData?.[0]?.nickname);
 
   useEffect(() => {
-    if (focusIndex === activeData?.length) {
-      setFocusIndex(0);
-    }
-
-    if (focusIndex === -1) {
-      setFocusIndex(activeData?.length - 1);
+    // focusIndex 변경 시 tagNick 동기화
+    if (focusIndex >= 0 && focusIndex < activeData?.length) {
+      setTagNick(activeData[focusIndex]?.nickname || "");
     }
   }, [focusIndex, activeData]);
 
@@ -48,20 +45,16 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   }, [typing]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setRows(window.innerWidth > 480 ? 3 : 1);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if (editableRef.current) {
+      editableRef.current.focus();
+
+      focusContentEditableTextToEnd(editableRef.current);
+    }
   }, []);
 
   useEffect(() => {
     //스크롤 위에 있을때, 내가 작성한 메세지가 보내지면 아래로 스크롤
     if (isAfterClick && lastMsgRef.current) {
-      console.log("lastMsgRef.current", lastMsgRef.current);
       lastMsgRef.current.scrollIntoView();
       setIsAfterClick(false);
     }
@@ -96,13 +89,11 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       });
     }
 
-    setCurrentMsg("");
+    setContents("");
     setIsAfterClick(true);
   };
 
   const handleKeyDown = (e) => {
-    console.log("eeeeeeeeeeeeeeeeeeeeeeeee", e);
-
     if (e.key === "Enter" && contents === "") {
       //아무 내용없을 때 전송 방지
       e.preventDefault();
@@ -114,12 +105,13 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       handleClick();
       setIsReply([]);
       setContents("");
+      if (editableRef.current) editableRef.current.innerHTML = "";
       if (tagId !== -1) {
         setTagId(-1);
         setContents("");
       }
     } else {
-      if (keyEvent[e.key]) keyEvent[e.key]();
+      if (keyEvent[e.key]) keyEvent[e.key](e);
     }
   };
 
@@ -135,7 +127,8 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
     ArrowDown: () => {
       if (isTag) {
         setFocusIndex((prev) => {
-          const newIndex = prev + 1;
+          const newIndex = (prev + 1) % activeData.length; //배열 길이로 나눈 나머지
+          setTagNick(activeData[newIndex]?.nickname || "");
           return newIndex;
         });
       }
@@ -143,32 +136,42 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
     ArrowUp: () => {
       if (isTag) {
         setFocusIndex((prev) => {
-          const newIndex = prev - 1;
+          const newIndex = prev - 1 < 0 ? activeData.length - 1 : prev - 1; //맨 위로 올라가면 맨 아래로 이동
+          setTagNick(activeData[newIndex]?.nickname || "");
           return newIndex;
         });
       }
     },
-    Enter: () => {
-      console.log("isTag⏰⏰⏰⏰⏰:", isTag);
-      console.log("tagId:⏰⏰⏰⏰⏰", tagId);
+    Enter: (e) => {
       if (isTag) {
         //언급창 떠있을 때
+        e.preventDefault();
         setTagId(activeData[focusIndex].users_id);
         setIsTag(false);
-        setCurrentMsg(`@${activeData[focusIndex].nickname} `);
-      } else {
-        console.log("읭?");
+        setTagNick(activeData[focusIndex].nickname);
+        setFocusIndex(0);
+        handleTagNick();
       }
     },
   };
+  const handleTagNick = () => {
+    if (editableRef.current) {
+      let currentHTML = editableRef.current.innerHTML;
 
-  useEffect(() => {
-    console.log("isTag⏰⏰⏰⏰⏰:", isTag);
-    console.log("tagId:⏰⏰⏰⏰⏰", tagId);
-  }, [isTag, tagId]);
-  const handleChangeContents = (text: string) => {
-    setContents(text);
-    setCurrentMsg(text);
+      currentHTML = currentHTML.replace(/^@/, ""); //현재는 첫번째 @만 삭제됨,, 개선 필요,,
+      currentHTML += ` <span class="text-point font-bold">@${tagNick}</span>&nbsp;`;
+      editableRef.current.innerHTML = currentHTML;
+
+      // 커서를 태그 뒤로 이동
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(editableRef.current);
+      range.collapse(false); // 끝으로 이동
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+
+      document.execCommand("styleWithCSS", false, "false");
+    }
   };
 
   const handleTyping = () => {
@@ -180,11 +183,29 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   };
 
   //답장 시 포커스
-  if (isReply && inputRef.current) {
-    inputRef.current.focus();
+  if (isReply && editableRef.current) {
+    editableRef.current.focus();
   }
+  const handleInput = () => {
+    const currentText = editableRef.current?.innerText;
+    setContents(currentText);
+  };
 
-  console.log("🚀focusIndex", isTag, focusIndex);
+  const focusContentEditableTextToEnd = (e: HTMLElement) => {
+    if (e.innerText.length === 0) {
+      e.focus();
+
+      return;
+    }
+
+    const selection = window.getSelection();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(e);
+    newRange.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(newRange);
+  };
+
   return (
     <div className="bg-[rgba(13,160,197,0.1)] p-4 pt-0">
       {typingArr.length !== 0 && (
@@ -207,8 +228,8 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
           </button>
         </div>
       )}
-      {/* 태그할 때 */}
       <div className="relative flex flex-col rounded-lg bg-white">
+        {/* 태그창 열기 */}
         {isTag && (
           <div className="absolute bottom-[calc(100%+1rem)] left-8 w-52 rounded-lg shadow-lg">
             {activeData?.map((v, i) => (
@@ -219,40 +240,35 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
                 {v.nickname === myInfo.nickname ? (
                   <span className="flex items-center justify-center gap-1">
                     <span className="h-5 w-5 rounded-full bg-point p-[2px] text-xs text-white">나</span>
-                    <span>
-                      {v.nickname}
-                      {i}
-                    </span>
+                    <span>{v.nickname}</span>
                   </span>
                 ) : (
-                  <span>
-                    {v.nickname}
-                    {i}
-                  </span>
+                  <span>{v.nickname}</span>
                 )}
               </button>
             ))}
           </div>
         )}
         {/* 채팅 입력창 */}
-        <textarea
-          ref={inputRef}
-          className="scrollbar w-full flex-1 resize-none whitespace-pre-wrap rounded-lg bg-white p-4 pb-0"
-          placeholder="내용을 입력해 주세요..."
-          rows={rows}
-          onChange={(e) => {
-            handleChangeContents(e.target.value);
-            handleTyping();
-          }}
-          onSubmit={() => setContents("")}
-          onKeyDown={handleKeyDown}
-          value={currentMsg}
-        />
+        <div className="relative flex flex-col rounded-lg bg-white">
+          <div
+            ref={editableRef}
+            contentEditable
+            className="w-full whitespace-pre-wrap rounded-lg p-4 text-black outline-none"
+            onInput={(e) => {
+              handleInput(e);
+              focusContentEditableTextToEnd(e.currentTarget);
+              handleTyping();
+            }}
+            onKeyDown={handleKeyDown}
+            suppressContentEditableWarning
+          ></div>
+        </div>
         <div className="flex items-center justify-between p-4">
           <button className="flex h-12 w-12 items-center justify-center rounded-lg bg-white p-2 shadow-md">
             <TbPhoto size={20} />
           </button>
-          <Button title="전송" disabled={currentMsg.length === 0} onClick={handleClick} />
+          <Button title="전송" disabled={contents?.length === 0} onClick={handleClick} />
         </div>
       </div>
     </div>
