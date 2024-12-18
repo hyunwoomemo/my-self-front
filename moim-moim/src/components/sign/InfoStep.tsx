@@ -132,7 +132,7 @@ const InfoStep = ({
         <br />
         회원가입 후 모임을 찾아봐요.
       </h1>
-      <form className="mt-10 flex h-[calc(100vh-24rem)] flex-col gap-5 scroll-smooth">
+      <form className="mt-10 flex flex-col gap-5 scroll-smooth">
         {!isSocial && (
           <div>
             <Input type="email" label="이메일 주소" disabled value={formData.email} />

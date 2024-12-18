@@ -80,5 +80,5 @@ export function SignContainer() {
     }
   };
 
-  return <>{isLoading && <div className="px-5 pb-5 pt-20">{renderStep()}</div>}</>;
+  return <>{isLoading && <div className="scrollbar h-screen overflow-y-auto px-5 pb-5 pt-20">{renderStep()}</div>}</>;
 }

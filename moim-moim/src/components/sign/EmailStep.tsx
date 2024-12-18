@@ -138,7 +138,7 @@ const EmailStep = ({
         <br />
         간단한 본인 인증이 필요해요.
       </h1>
-      <form className="mt-10 flex h-[calc(100vh-24rem)] flex-col gap-5">
+      <form className="scrollbar mt-10 flex h-[calc(100vh-24rem)] flex-col gap-5 overflow-y-auto">
         <div>
           <span className="text-lg font-bold">이메일 주소</span>
           <div className="mt-2 flex flex-row items-center gap-2">
