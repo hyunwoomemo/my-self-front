@@ -4,7 +4,7 @@
 
 @layer components {
   .commonLayoutContainer {
-    @apply mx-auto min-h-full w-full min-w-[320px] max-w-[600px] overflow-hidden bg-[--layoutBg] shadow-md;
+    @apply mx-auto h-full w-full min-w-[320px] max-w-[600px] overflow-hidden bg-[--layoutBg] shadow-md;
   }
   .labelBtn {
     @apply rounded-xl border border-solid font-normal !important;

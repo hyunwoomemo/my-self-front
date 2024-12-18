@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import MeetingHeader from "./MeetingHeader";
 import Contents from "./Contents";
 import InputBar from "./InputBar";
-import { msgApi } from "@/app/api";
+import { moimApi } from "@/app/api";
 import { useAtom } from "jotai";
 import { messagesAtom } from "@/store/meeting/messages/atom";
 import { GroupedData } from "@/utils/group";
@@ -28,7 +28,7 @@ const ChatContainer = ({ id }) => {
     console.log("messagesmessages", messages);
     setIsFetch(true);
     try {
-      const res = await msgApi.getMoreMessage(id, messages.list.length);
+      const res = await moimApi.getMoreMessage(id, messages.list.length);
 
       if (res.DATA.list) {
         setTimeout(() => {

@@ -6,7 +6,7 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom, recentMsgAtom, typingAtom } from "@/store/meeting/messages/atom";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
@@ -151,7 +151,6 @@ export const useSocket = () => {
     const handleUserTyping = (data) => {
       setTyping(data);
     };
-
     socket?.on("connect", handleConnect);
     socket?.on("meetingActive", handleMeetingActive);
     socket?.on("enterRes", (data) => {
@@ -244,5 +243,15 @@ export const useSocket = () => {
     socket?.emit("leaveMoim", { users_id, meetings_id, region_code });
   };
 
-  return { joinArea, enterMeeting, generateMeeting, joinMeeting, sendMessage, likeMoim, userTyping, leaveMoim, socket };
+  return {
+    joinArea,
+    enterMeeting,
+    generateMeeting,
+    joinMeeting,
+    sendMessage,
+    likeMoim,
+    userTyping,
+    leaveMoim,
+    socket,
+  };
 };

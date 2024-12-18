@@ -38,8 +38,23 @@ export const accountApi = {
   },
 };
 
-export const msgApi = {
+export const moimApi = {
+  myMoim: (id: number) => {
+    return request.get(`/moim/myMoim/${id}`);
+  },
   getMoreMessage: (id, total) => {
     return request.post("/moim/getMoreMessage", { meetings_id: id, length: total });
+  },
+};
+
+export const addressApi = {
+  createAddress: ({ address_name, region_1depth_name, region_2depth_name, region_3depth_name, prev_address_id }) => {
+    return request.post("/address/createAddress", {
+      address_name,
+      region_1depth_name,
+      region_2depth_name,
+      region_3depth_name,
+      prev_address_id,
+    });
   },
 };

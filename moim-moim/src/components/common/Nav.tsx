@@ -18,8 +18,8 @@ const NavLink = [
     icon: BiMap,
   },
   {
-    label: "마이 모임",
-    href: "/mymoim",
+    label: "내 모임",
+    href: "/my_list",
     icon: RiChatSmile2Line,
   },
   {
@@ -32,7 +32,6 @@ const NavLink = [
 const Nav = () => {
   const [active, setActive] = useState(NavLink[0].href);
   const pathname = usePathname();
-  console.log("pathname", pathname);
 
   const handleClick = (url: string) => {
     setActive(url);
@@ -41,7 +40,8 @@ const Nav = () => {
   if (
     (pathname?.includes("/moim/") && pathname?.endsWith("/intro")) ||
     pathname?.endsWith("/chat") ||
-    pathname?.includes("/sign")
+    pathname?.includes("/sign") ||
+    pathname?.includes("/create")
   ) {
     return null;
   }

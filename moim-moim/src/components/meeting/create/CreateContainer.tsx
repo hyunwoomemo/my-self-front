@@ -111,7 +111,7 @@ const CreateContainer = () => {
   const handleClick = () => {
     generateMeeting({
       name: values.title,
-      region_code: "RC003",
+      region_code: selectedArea, //여기 수정해야 함
       maxMembers: values.nolimitMembers ? -1 : Number(values.members),
       description: values.details,
       users_id: myInfo.user_id,
@@ -196,14 +196,14 @@ const CreateContainer = () => {
   if (loading) {
     return <Loader />;
   }
-
+  console.log("myyyyyyyyyyy", myInfo);
   return (
-    <div className="p-6">
+    <div className="scrollbar h-[calc(100vh-5rem)] overflow-y-auto p-6">
       <div className="flex flex-col gap-5">
         <Region
           address={address}
           setAddress={setAddress}
-          addressKeyword={type === "edit" ? meetingData.region_code : addressKeyword}
+          addressKeyword={type === "edit" ? meetingData.region_code : myInfo?.addresses.address}
           setAddressKeyword={setAddressKeyword}
           // selectedArea={selectedArea}
           setSelectedArea={setSelectedArea}

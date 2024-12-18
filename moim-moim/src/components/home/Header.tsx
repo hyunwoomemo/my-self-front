@@ -2,17 +2,20 @@ import { FaChevronDown, FaBell, FaMagnifyingGlass, FaRegCalendar, FaChevronUp } 
 import { BsPencil } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
+import { socket, useSocket } from "@/hooks/useSocket";
+import { currentAreaAtom } from "@/store/area/atom";
+import { selectedAreaValue } from "../common/Region";
 
 const Header = () => {
   const [isShow, setIsShow] = useState<boolean>(false);
   const router = useRouter();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const { joinArea } = useSocket();
 
   useEffect(() => {
-    console.log("isShow", isShow);
     const handleClick = (e) => {
       e.stopPropagation();
       setIsShow(false);
@@ -27,20 +30,36 @@ const Header = () => {
     e.stopPropagation();
     setIsShow(!isShow);
   };
+
+  const handleJoin = (index) => {
+    joinArea(myInfo.addresses[index].address_code);
+    localStorage.setItem("address", JSON.stringify(myInfo.addresses[index]));
+  };
   return (
     <div className="flex justify-between p-6 pb-4">
       <div className="relative">
         <div className="flex cursor-pointer items-center gap-2" onClick={handleClickArea}>
-          <span className="text-xl font-bold">{myInfo?.addresses[0]?.region_3depth_name}</span>
+          <span className="text-xl font-bold">
+            {localStorage.getItem("address")
+              ? JSON.parse(localStorage.getItem("address")).region_3depth_name
+              : myInfo?.addresses[0].address.region_3depth_name}
+          </span>
           {isShow ? <FaChevronUp /> : <FaChevronDown />}
         </div>
         {isShow && (
-          <div className="absolute -left-4 top-[calc(100%+0.5rem)] z-10 flex flex-col rounded-lg bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.1)]">
+          <div className="absolute -left-4 top-[calc(100%+0.5rem)] z-10 flex flex-col rounded-lg border border-solid border-border bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.1)]">
             <div className="flex min-w-32 flex-col">
-              <div className="cursor-pointer border-b border-solid border-border p-3 text-center first:rounded-t-lg hover:bg-lightPrimary">
-                논현 2동
-              </div>
-              <div className="cursor-pointer border-b border-solid border-border p-3 text-center">논현 2동</div>
+              {myInfo.addresses.map((v, i) => {
+                return (
+                  <div
+                    key={v.address_code}
+                    className="cursor-pointer border-b border-solid border-border p-3 text-center first:rounded-t-lg hover:bg-lightPrimary"
+                    onClick={() => handleJoin(i)}
+                  >
+                    {v.region_3depth_name}
+                  </div>
+                );
+              })}
             </div>
             <div
               className="flex cursor-pointer items-center justify-center gap-2 rounded-b-lg bg-surface p-1"

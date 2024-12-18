@@ -1,8 +1,8 @@
 import { getCookie } from "cookies-next";
 
+//클라이언트 컴포넌트에서 (토큰 필요한)api 호출할 때
 export const nextFetch = async (url, options) => {
   const token = await getCookie("accessToken");
-  // const token = await cookieStore.get("accessToken")?.value;
   console.log("token", token);
 
   const newOption = {

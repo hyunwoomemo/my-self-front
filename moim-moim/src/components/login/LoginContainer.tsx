@@ -6,9 +6,13 @@ import "@/app/(auth)/styles/login.scss";
 import { accountApi } from "@/app/api";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import { useSetAtom } from "jotai";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
 
 export function LoginContainer() {
   const router = useRouter();
+  const setMyinfo = useSetAtom(myInfoAtom);
   const handleLoginWithGoogle = () => {
     // loginWithProvider("google");
   };
@@ -16,7 +20,7 @@ export function LoginContainer() {
   const handleLoginWithKakao = () => {
     // loginWithProvider("kakao");
     // window.location.href = 'http://localhost/auth/kakao'
-    window.location.href = 'http://moimmoim.duckdns.org/auth/kakao'
+    window.location.href = "http://moimmoim.duckdns.org/auth/kakao";
   };
 
   const handleLoginWithNaver = () => {
@@ -35,6 +39,12 @@ export function LoginContainer() {
         console.log("datatata", res);
         setCookie("accessToken", data.accessToken);
         setCookie("refreshToken", data.refreshToken);
+
+        const userInfo = await getUserInfo();
+        if (userInfo.success) {
+          setMyinfo(userInfo.data);
+        }
+
         router.push("/");
       } else {
         return;

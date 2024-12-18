@@ -1,28 +1,30 @@
 import { useState } from "react";
 import Button from "../common/Button";
-import Region, { Address } from "../common/Region";
+import Region, { Address, selectedAreaValue } from "../common/Region";
 import { accountApi } from "@/app/api";
 import { useRouter } from "next/navigation";
+import { useSetAtom } from "jotai";
+import { currentAreaAtom } from "@/store/area/atom";
 
 const AddressStep = ({ formData, setFormData }: { formData: any; setFormData: any }) => {
   const router = useRouter();
 
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
-  const [selectedArea, setSelectedArea] = useState<string>(""); // 선택한 지역
+  const [selectedArea, setSelectedArea] = useState<selectedAreaValue>(); // 선택한 지역
   const [addressKeyword, setAddressKeyword] = useState<string>(""); // 입력한 키워드
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    const { address: searchAddress } = address[0];
+    const { address: searchAddress } = selectedArea;
     const { region_1depth_name, region_2depth_name, region_3depth_h_name, region_3depth_name } = searchAddress;
 
     const addresses = [
       {
-        address: selectedArea,
+        address: selectedArea?.address_name,
         address_code: "test",
         region_1depth_name,
         region_2depth_name,
-        region_3depth_name: region_3depth_h_name || region_3depth_name
+        region_3depth_name: region_3depth_h_name || region_3depth_name,
       },
     ];
     const birthdate = formData.birthdate + formData.gender;
@@ -62,7 +64,7 @@ const AddressStep = ({ formData, setFormData }: { formData: any; setFormData: an
             setSelectedArea={setSelectedArea}
           />
         </div>
-        <Button custom="full" title="완료" onClick={handleNextStep}></Button>
+        <Button custom="full" title="완료" disabled={!selectedArea} onClick={handleNextStep}></Button>
       </form>
     </>
   );

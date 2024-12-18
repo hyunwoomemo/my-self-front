@@ -33,8 +33,39 @@ interface RegionProps {
   addressKeyword: string;
   setAddressKeyword: (keyword: string) => void;
   //   selectedArea: string;
-  setSelectedArea: (area: string) => void;
+  setSelectedArea: () => void;
   label?: string;
+}
+
+export interface RegionAddressValue {
+  address_name: string;
+  b_code: string;
+  h_code: string;
+  main_address_no: string;
+  mountain_yn: string;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_h_name: string;
+  region_3depth_name: string;
+  sub_address_no: string;
+  x: string;
+  y: string;
+}
+export interface selectedAreaValue {
+  address: RegionAddressValue;
+  address_name: string;
+  address_type: string;
+  road_type: string;
+  x: string;
+  y: string;
+}
+export interface selectedAreaValue {
+  address: RegionAddressValue;
+  address_name: string;
+  address_type: string;
+  road_address: string;
+  x: string;
+  y: string;
 }
 
 const Region = ({
@@ -139,19 +170,16 @@ const Region = ({
       setAddressKeyword(
         `${address[focusIndex]?.address.region_1depth_name} ${address[focusIndex]?.address.region_2depth_name} ${address[focusIndex]?.address.region_3depth_h_name || address[focusIndex]?.address.region_3depth_name}`,
       );
-      setSelectedArea(
-        `${address[focusIndex]?.address.region_1depth_name} ${address[focusIndex]?.address.region_2depth_name} ${address[focusIndex]?.address.region_3depth_h_name || address[focusIndex]?.address.region_3depth_name}`,
-      );
+      setSelectedArea(address[focusIndex]);
       setAddress([]);
     },
   };
-
   const parseAddress = address.filter((v) => (v.address.region_3depth_h_name || v.address.region_3depth_name) !== "");
 
   return (
     <div className="relative">
       <Input
-        label={label ? label : "지역"}
+        label={label ? label : ""}
         placeholder="동/읍/면으로 찾기"
         type="main"
         value={isAutoSearch ? autoSearchKeyword : addressKeyword}
@@ -161,7 +189,7 @@ const Region = ({
         onKeyDown={handleKeyDown}
       />
       {parseAddress.length > 0 && (
-        <div className="absolute z-10 flex w-full flex-col gap-2 rounded-lg bg-white p-5 shadow-md">
+        <div className="absolute z-10 flex w-full flex-col gap-2 rounded-lg border border-t-0 border-solid border-border bg-white p-5 shadow-md">
           {parseAddress.map((v, i) => {
             const { region_1depth_name, region_2depth_name, region_3depth_h_name, region_3depth_name } = v.address;
             const parseRegionName = `${region_1depth_name} ${region_2depth_name} ${region_3depth_h_name || region_3depth_name}`;
@@ -170,9 +198,9 @@ const Region = ({
                 className={`cursor-pointer hover:text-primary ${focusIndex === i ? "bg-red" : undefined}`}
                 key={v.address_name}
                 onClick={() => {
-                  setSelectedArea(v.address_name);
+                  setSelectedArea(v);
                   setAddressKeyword(parseRegionName);
-                  setAddress([v]);
+                  setAddress([]);
                 }}
               >
                 {parseRegionName}

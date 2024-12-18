@@ -6,6 +6,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { setCookie } from "cookies-next";
 import { errorAtom } from "@/store/common/atom";
+import { currentAreaAtom } from "@/store/area/atom";
 
 export interface MyInfoAddressesProps {
   address: string;
@@ -43,7 +44,6 @@ const ClientLayout = ({ children }) => {
       alert(`에러났어용, 에러 메세지: ${error.message}`);
     }
   }, [error]);
-
   useEffect(() => {
     const fetchTokenData = async () => {
       try {
@@ -71,17 +71,15 @@ const ClientLayout = ({ children }) => {
     fetchTokenData();
   }, []);
 
-  // useEffect(() => {
-  //   accountApi.myInfo().then((res) => setMyinfo(res.data));
-  // }, []);
-
-  console.log("myInfo", myInfo);
   useEffect(() => {
-    //회원가입 완료되면 해야할 일 : 지역담는 변수를 jotai 전역 변수로 만들고 setter함수로 myInfo에 있는 지역을 담고 dependency array에는 전역변수 담기
-    joinArea("RC003");
-  }, [joinArea]);
+    if (localStorage.getItem("address")) {
+      joinArea(JSON.parse(localStorage.getItem("address")).address_code);
+    } else {
+      joinArea(myInfo?.addresses[0]?.address_code);
+    }
+  }, []);
 
+  console.log("localStorage.getItem('address')", localStorage.getItem("address"));
   return <>{children}</>;
 };
-
 export default ClientLayout;
