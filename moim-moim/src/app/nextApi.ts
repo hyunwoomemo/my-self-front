@@ -7,16 +7,19 @@ export const accountApi = {
   },
 
   interests: () => {
-    return nextFetch("/auth/interests");
+    return nextFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/interests`);
   },
 
   confirmNickname: (nickname: string) => {
-    return nextFetch(`/auth/confirmNickname?nickname=${nickname}`);
+    return nextFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/confirmNickname?nickname=${nickname}`);
   },
 };
 
 export const moimApi = {
-  myMoim: (id: number) => {
-    return nextFetch(`/moim/myMoim/${id}`);
+  myMoim: (id) => {
+    return nextFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/moim/myMoim/${id}`);
+  },
+  myLike: (id) => {
+    return nextFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/moim/like/${id}`);
   },
 };
