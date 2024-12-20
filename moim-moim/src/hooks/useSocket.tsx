@@ -5,7 +5,7 @@ import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
-import { messagesAtom, recentMsgAtom, typingAtom } from "@/store/meeting/messages/atom";
+import { endMsgAtom, messagesAtom, messagesValue, recentMsgAtom, typingAtom } from "@/store/meeting/messages/atom";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -88,10 +88,6 @@ export interface EnterMeeting {
   afterBlur?: boolean;
 }
 
-export interface MessagesValue {
-  list: ListValue;
-  total: number;
-}
 export interface ListValue {
   admin?: number;
   contents: string;
@@ -126,6 +122,7 @@ export const useSocket = () => {
   const router = useRouter();
   const setRecentMsg = useSetAtom(recentMsgAtom);
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const setEndMsg = useSetAtom(endMsgAtom);
 
   useEffect(() => {
     //소켓 연결
@@ -193,21 +190,24 @@ export const useSocket = () => {
     setLoading(false);
   };
 
-  const handleMessagesData = (data: MessagesValue) => {
+  const handleMessagesData = (data: messagesValue) => {
     setLoading(true);
-    if (data && data.list) {
-      setMessages({ ...data, list: GroupedData(data.list).reverse() });
+    console.log("data?.end🔔", data);
+    setEndMsg(data?.end);
+    if (data) {
+      const list = Array.isArray(data?.list) ? data.list : [];
+      return { ...data, list: GroupedData([data, ...list]).reverse() };
     }
-
     // setMessages(data);
     setLoading(false);
   };
 
-  const handleReceiveMessage = (data: MessagesValue) => {
+  const handleReceiveMessage = (data: messagesValue) => {
     console.log("handleReceiveMessage", data);
     setLoading(true);
-    setMessages((prev: MessagesValue) => {
-      return { ...prev, list: GroupedData([data, ...prev?.list]).reverse() };
+    setMessages((prev: messagesValue) => {
+      const list = Array.isArray(prev?.list) ? prev.list : [];
+      return { ...prev, list: GroupedData([data, ...list]).reverse() };
     });
     setRecentMsg(data);
     setLoading(false);

@@ -5,8 +5,8 @@ import MeetingHeader from "./MeetingHeader";
 import Contents from "./Contents";
 import InputBar from "./InputBar";
 import { moimApi } from "@/app/api";
-import { useAtom } from "jotai";
-import { messagesAtom } from "@/store/meeting/messages/atom";
+import { useAtom, useAtomValue } from "jotai";
+import { endMsgAtom, messagesAtom } from "@/store/meeting/messages/atom";
 import { GroupedData } from "@/utils/group";
 
 const ChatContainer = ({ id }) => {
@@ -17,6 +17,8 @@ const ChatContainer = ({ id }) => {
   const lastMsgRef = useRef(null);
   const contentsRef = useRef(null);
   const [isReply, setIsReply] = useState({});
+  const endMsg = useAtomValue(endMsgAtom);
+  console.log("endMsg🔔", endMsg);
 
   const handleReply = (id) => {
     setIsReply({
@@ -46,7 +48,7 @@ const ChatContainer = ({ id }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isEnd && !isFetch && !messages.end) {
+        if (entries[0].isIntersecting && !isEnd && !isFetch && !endMsg) {
           console.log("🎀entries", entries);
           moreMsgs();
         }
