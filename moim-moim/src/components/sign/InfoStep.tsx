@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../common/Button";
 import Input from "../common/Input";
-import { accountApiv1 } from "@/app/api";
+import { accountApi } from "@/app/nextApi";
 
 const InfoStep = ({
   formData,
@@ -101,7 +101,7 @@ const InfoStep = ({
   const handleNextStep = async (e) => {
     e.preventDefault();
     try {
-      const { statusCode } = await accountApiv1.confirmNickname(formData.nickname);
+      const { statusCode } = await accountApi.confirmNickname(formData.nickname);
       if (statusCode !== 200) return;
       // 유효성 검사
       let isInvalid = false;
