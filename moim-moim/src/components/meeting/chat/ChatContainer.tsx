@@ -23,7 +23,6 @@ const ChatContainer = ({ id }) => {
       [id]: true,
     });
   };
-
   const moreMsgs = useCallback(async () => {
     console.log("messagesmessages", messages);
     setIsFetch(true);
@@ -47,7 +46,7 @@ const ChatContainer = ({ id }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isEnd && !isFetch) {
+        if (entries[0].isIntersecting && !isEnd && !isFetch && !messages.end) {
           console.log("🎀entries", entries);
           moreMsgs();
         }
