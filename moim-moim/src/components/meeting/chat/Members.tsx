@@ -20,7 +20,7 @@ const Members = ({ meetingData }) => {
   const membersList = Object.values(
     activeData.filter((v) => v.users_id !== myInfo.user_id && v.users_id !== meetingData.creator_id),
   );
-
+  console.log("membersList", activeData);
   const handleLeaveMoim = () => {
     leaveMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: meetingData.region_code });
     router.push("/");
@@ -70,7 +70,7 @@ const Members = ({ meetingData }) => {
               <span className="font-bold text-point">{meetingData.creator_name}</span>
             </li>
           )}
-          {/* 나 */}
+          {/* 방장이 나일때 */}
           {meetingData.creator_id !== leaderId && (
             <li className={`flex items-center gap-2`}>
               <div>
@@ -79,6 +79,13 @@ const Members = ({ meetingData }) => {
               <span>{myInfo.nickname}</span>
             </li>
           )}
+          {/* 나 */}
+          <li className={`flex items-center gap-2`}>
+            <div>
+              <Image src="/moim/default_profile.png" alt="default profile image" width={48} height={48} />
+            </div>
+            <span>{myInfo.nickname}</span>
+          </li>
           {activeData &&
             membersList.map((v) => {
               return (
@@ -87,7 +94,7 @@ const Members = ({ meetingData }) => {
                     <Image src="/moim/default_profile.png" alt="default profile image" width={48} height={48} />
                   </div>
                   <span className={`${meetingData.creator_id === v.users_id ? "font-bold text-point" : "font-normal"}`}>
-                    {v.nickname}
+                    {v.nickname}?
                   </span>
                 </li>
               );
