@@ -1,9 +1,22 @@
-import { nextFetch } from "@/utils/fetch";
+import { getToken } from "./getToekn";
 
 export const getUserInfo = async () => {
+  const token = await getToken();
+  console.log("token", token);
+
   //서버 컴포넌트에서 myInfo 사용
   try {
-    return await nextFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/myInfo`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/myInfo`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["myInfo"],
+      },
+    });
+
+    console.log("getUserInfo myInfo", res);
+    return await res.json();
   } catch (error) {
     console.error("api 호출 실패", error);
   }
