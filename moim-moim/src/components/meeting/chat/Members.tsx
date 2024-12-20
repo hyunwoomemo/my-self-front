@@ -29,7 +29,7 @@ const Members = ({ meetingData }) => {
   return (
     <div className="flex h-[calc(100%-7rem)] flex-col p-4">
       <div className="relative">
-        <Input placeholder="멤버를 검색하세요." />
+        {/* <Input placeholder="멤버를 검색하세요." /> */}
         {/* <div className="absolute flex w-full flex-col gap-2 rounded-lg bg-white p-5 shadow-md">
           {address.map((v) => {
             const { region_1depth_name, region_2depth_name, region_3depth_h_name, region_3depth_name } = v.address;
@@ -52,7 +52,7 @@ const Members = ({ meetingData }) => {
           })}
         </div> */}
       </div>
-      <div className="flex max-h-[calc(100%-6rem)] flex-col px-2 py-6">
+      <div className="flex max-h-[calc(100%-6rem)] flex-col px-2 py-6 pt-0">
         <div className="flex justify-between">
           <span className="font-bold">총 {activeData.length}명</span>
           <div className="flex items-center gap-1">
