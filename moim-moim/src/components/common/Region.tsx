@@ -189,13 +189,13 @@ const Region = ({
         onKeyDown={handleKeyDown}
       />
       {parseAddress.length > 0 && (
-        <div className="absolute z-10 flex w-full flex-col gap-2 rounded-lg border border-t-0 border-solid border-border bg-white p-5 shadow-md">
+        <div className="absolute z-10 flex w-full flex-col gap-2 rounded-lg border border-t-0 border-solid border-border bg-white shadow-md">
           {parseAddress.map((v, i) => {
             const { region_1depth_name, region_2depth_name, region_3depth_h_name, region_3depth_name } = v.address;
             const parseRegionName = `${region_1depth_name} ${region_2depth_name} ${region_3depth_h_name || region_3depth_name}`;
             return (
               <div
-                className={`cursor-pointer hover:text-primary ${focusIndex === i ? "bg-red" : undefined}`}
+                className={`cursor-pointer px-5 py-3 hover:text-primary ${focusIndex === i ? "bg-lightPrimary" : undefined} first:rounded-t-lg last:rounded-b-lg`}
                 key={v.address_name}
                 onClick={() => {
                   setSelectedArea(v);
