@@ -2,8 +2,7 @@ import { myInfoProps } from "@/app/client-layout";
 import Button from "@/components/common/Button";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
-import { meetingDataAtom } from "@/store/meeting/data/atom";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import moment from "moment";
 import { CiHeart } from "react-icons/ci";
 import { GoHeartFill } from "react-icons/go";
@@ -12,7 +11,9 @@ import { TbCrown } from "react-icons/tb";
 import { MdOutlineEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { TbPhotoEdit } from "react-icons/tb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { moimApi } from "@/app/nextApi";
+import { myLikeMoimAtom } from "@/store/meeting/list/atom";
 
 interface IntroDataProps {
   data: getMeetingData;
@@ -22,15 +23,28 @@ interface IntroDataProps {
 const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const { joinMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
-  const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
   const router = useRouter();
   const { likeMoim } = useSocket();
+  const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
+
+  const [myLikeMoim, setMyLikeMoim] = useAtom(myLikeMoimAtom);
+  const isLike = myLikeMoim.some((v) => v.receiver_id === data.id);
+
+  useEffect(() => {
+    //나의 찜 모임방 목록 atom에 저장하기
+    const myLikemoimConst = async () => {
+      const res = await moimApi.myLike(myInfo?.user_id);
+      setMyLikeMoim(res.data);
+    };
+    myLikemoimConst();
+  }, [data?.likeCount]);
+  console.log("🚀data", data);
 
   const handleEnterClick = () => {
     //입장하기 or 입장 신청하기 버튼 클릭
     joinMeeting({
       meetings_id: data.id,
-      region_code: "RC003",
+      region_code: currentRegion,
       users_id: myInfo.user_id,
       type: data.type,
     });
@@ -41,10 +55,9 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
     router.push(`/create/write?type=edit`);
   };
 
-  const handleClickHeart = () => {
+  const handleClickHeart = async () => {
     console.log("heart clicked!!!");
-    likeMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: "RC003" });
-    setIsLike(!isLike);
+    likeMoim({ users_id: myInfo.user_id, meetings_id: data.id, region_code: currentRegion });
   };
 
   return (
@@ -81,9 +94,10 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
                 </div>
               </div>
               <span className="text-sm font-bold text-semiPrimary">
-                {data.region_code} · {moment(data.event_date).format("LL")} · {moment(data.event_date).format("LT")}
+                {data.address} · {moment(data.event_date).format("YY년 MM월 DD일")}{" "}
+                {moment(data.event_date).format("HH시 mm분")}
               </span>
-              {!enterIntro && myInfo.user_id === meetingData.creator_id && (
+              {!enterIntro && myInfo.user_id === data.creator_id && (
                 <div className="mt-2 flex w-full items-center justify-center gap-3">
                   <button className="text-2xl" onClick={handleSettingClick} title="수정하기">
                     <TbPhotoEdit size={22} color="#fff" />
@@ -104,7 +118,7 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
       {enterIntro && (
         <div className="flex gap-2">
           <div className="cursor-pointer rounded-lg bg-white p-5 text-3xl text-textGray" onClick={handleClickHeart}>
-            <GoHeartFill color={meetingData.likeCount ? "#ff0000" : "#e5e7eb"} />
+            <GoHeartFill color={isLike ? "#ff0000" : "#e5e7eb"} />
           </div>
           <Button
             title={

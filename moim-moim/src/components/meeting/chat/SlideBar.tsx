@@ -11,6 +11,7 @@ import { useAtomValue } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { myInfoProps } from "@/app/client-layout";
+import { moimApi } from "@/app/nextApi";
 
 const tabData = [
   {
@@ -28,20 +29,24 @@ const SlideBar = ({ show, setShow }) => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
   const [isLike, setIsLike] = useState(false);
+  const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
   const handleClick = (e) => {
     e.stopPropagation();
     setShow(!show);
   };
 
-  const handleClickHeart = () => {
-    likeMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: "RC003" });
-    setIsLike(!isLike);
+  const handleClickHeart = async () => {
+    likeMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: currentRegion });
+
+    const res = await moimApi.myLike(myInfo.user_id);
+    console.log("Resresres", res);
+    setIsLike(res.data.map((v) => v.receiver_id === meetingData.id));
   };
 
   return (
     <>
-      <div className="animate-showSlideBar absolute left-1/2 top-0 z-20 h-screen w-screen max-w-[600px] -translate-x-1/2 bg-white">
+      <div className="absolute left-1/2 top-0 z-20 h-screen w-screen max-w-[600px] -translate-x-1/2 animate-showSlideBar bg-white">
         <div className="flex items-center justify-between">
           <PageHeader title="모아보기" onPrevClick={handleClick} style={{ flex: 1 }} />
           <div className="flex h-[calc(100%-8rem)] cursor-pointer gap-4 p-3">

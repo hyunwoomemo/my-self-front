@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { IoCloseOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/common/Loader";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { loadingAtom } from "@/store/common/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { getMeetingData } from "@/hooks/useSocket";
 import Empty from "@/components/common/Empty";
 import IntroData from "./IntroData";
+import { myLikeMoimAtom } from "@/store/meeting/list/atom";
+import { moimApi } from "@/app/nextApi";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
 
 const IntroContainer = () => {
   const [imgNum, setImgNum] = useState<string | null>(null);

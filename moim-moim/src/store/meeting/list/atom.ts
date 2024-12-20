@@ -23,5 +23,17 @@ export interface myListValue {
   likeCount: number;
 }
 
+export interface myLikeMoimValue {
+  created_at: string;
+  deleted_at: string;
+  id: number;
+  receiver_id: number;
+  sender_id: number;
+  status: string;
+  type: string;
+  updated_at: string;
+}
+
 export const listAtom = atom();
 export const myListAtom = atom<myListValue[]>([]);
+export const myLikeMoimAtom = atom<myLikeMoimValue[]>([]);
