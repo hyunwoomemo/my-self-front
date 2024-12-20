@@ -30,6 +30,7 @@ export interface getListProps {
   userCount: number;
   type: number;
   last_active_time: string;
+  likeCount: number;
 }
 
 export interface getMeetingData {

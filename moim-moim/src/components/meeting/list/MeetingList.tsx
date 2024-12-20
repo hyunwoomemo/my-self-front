@@ -75,7 +75,7 @@ const MeetingList = () => {
               <div className="flex gap-1">
                 <div className="flex items-center">
                   <CiHeart className="text-2xl" />
-                  <span>7</span>
+                  <span>{v.likeCount}</span>
                 </div>
                 <Dot />
                 <div className="flex items-center gap-1">
