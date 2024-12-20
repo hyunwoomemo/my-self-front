@@ -14,7 +14,7 @@ interface ListValue {
   users: string;
   users_id: number;
 }
-interface messagesValue {
+export interface messagesValue {
   end: boolean;
   list: ListValue;
   total: number;
@@ -24,3 +24,4 @@ interface messagesValue {
 export const messagesAtom = atom<messagesValue>();
 export const typingAtom = atom([]);
 export const recentMsgAtom = atom({});
+export const endMsgAtom = atom(false);

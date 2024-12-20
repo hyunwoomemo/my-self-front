@@ -4,7 +4,7 @@ import { deleteCookie, getCookie } from "cookies-next";
 export const nextFetch = async (url, options) => {
   try {
     const token = await getCookie("accessToken");
-    if (!token) throw new Error("토큰 없음");
+    // if (!token) throw new Error("토큰 없음");
 
     const newOption = {
       ...options,
