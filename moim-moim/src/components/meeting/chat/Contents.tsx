@@ -33,6 +33,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   const msgRefs = useRef([]);
   const [isHover, setIsHover] = useState({});
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
+  const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
   useEffect(() => {
     console.log("방 입장");
@@ -40,7 +41,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
       if (currentMeeting) {
         setCurrentMeeting(-1);
         console.log("방 떠남");
-        socket?.emit("exitMoim", { region_code: "RC003", meetings_id: Number(id) });
+        socket?.emit("exitMoim", { region_code: currentRegion, meetings_id: Number(id) });
       }
     };
   }, []);
@@ -62,7 +63,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
         if (type && myInfo) {
           console.log("🚀focussss");
           enterMeeting({
-            region_code: "RC003",
+            region_code: currentRegion,
             meetings_id: Number(id),
             users_id: myInfo.user_id,
             type: type,
@@ -75,7 +76,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
     const handleBlurWindow = () => {
       setHasFocus(false);
       console.log("🎀blurrrrr");
-      socket?.emit("blurMoim", { region_code: "RC003", meetings_id: Number(id) });
+      socket?.emit("blurMoim", { region_code: currentRegion, meetings_id: Number(id) });
     };
 
     window.addEventListener("focus", handleFocusWindow);
@@ -113,7 +114,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
       });
       const type = target?.type;
       if (type && myInfo) {
-        enterMeeting({ region_code: "RC003", meetings_id: Number(id), users_id: myInfo.user_id, type: type });
+        enterMeeting({ region_code: currentRegion, meetings_id: Number(id), users_id: myInfo.user_id, type: type });
       }
     }
   }, [currentMeeting, data]);

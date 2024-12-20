@@ -28,6 +28,7 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   const [tagId, setTagId] = useState(-1);
   const editableRef = useRef<HTMLDivElement>(null);
   const [tagNick, setTagNick] = useState(activeData?.[0]?.nickname);
+  const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
   useEffect(() => {
     // focusIndex 변경 시 tagNick 동기화
@@ -66,7 +67,7 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       sendMessage({
         contents: contents,
         meetings_id: id,
-        region_code: "RC003",
+        region_code: currentRegion,
         users_id: myInfo.user_id,
         reply_id: Number(Object.keys(isReply)),
       });
@@ -75,7 +76,7 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       sendMessage({
         contents: contents,
         meetings_id: id,
-        region_code: "RC003",
+        region_code: currentRegion,
         users_id: myInfo.user_id,
         tag_id: tagId,
       });
@@ -84,13 +85,16 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       sendMessage({
         contents: contents,
         meetings_id: id,
-        region_code: "RC003",
+        region_code: currentRegion,
         users_id: myInfo.user_id,
       });
     }
 
     setContents("");
     setIsAfterClick(true);
+    if (editableRef.current) {
+      editableRef.current.innerText = "";
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -122,7 +126,10 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       }
     },
     "@": () => {
-      setIsTag(true);
+      if (!editableRef.current?.innerText.includes("@")) {
+        // 한 명만 언급하기 (추후에 수정 필요)
+        setIsTag(true);
+      }
     },
     ArrowDown: () => {
       if (isTag) {
@@ -154,6 +161,7 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       }
     },
   };
+
   const handleTagNick = () => {
     if (editableRef.current) {
       let currentHTML = editableRef.current.innerHTML;
@@ -175,7 +183,7 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   };
 
   const handleTyping = () => {
-    userTyping({ users_id: myInfo.user_id, meetings_id: id, region_code: "RC003" });
+    userTyping({ users_id: myInfo.user_id, meetings_id: id, region_code: currentRegion });
   };
 
   const handleCloseReply = () => {
@@ -186,9 +194,23 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   if (isReply && editableRef.current) {
     editableRef.current.focus();
   }
-  const handleInput = () => {
-    const currentText = editableRef.current?.innerText;
-    setContents(currentText);
+  const handleInput = (e) => {
+    const text = e.target.innerText || "";
+    setContents(text);
+
+    //커서
+    const selection = window.getSelection();
+    if (selection?.rangeCount > 0) {
+      const range = selection?.getRangeAt(0);
+      const textBeforeCursor = range?.startContainer.textContent?.substring(0, range?.startOffset) || "";
+
+      //커서 앞에 '@'가 있으면 태그창 열리기
+      if (textBeforeCursor.endsWith("@")) {
+        setIsTag(true);
+      } else {
+        setIsTag(false);
+      }
+    }
   };
 
   const focusContentEditableTextToEnd = (e: HTMLElement) => {
@@ -198,12 +220,12 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
       return;
     }
 
-    const selection = window.getSelection();
-    const newRange = document.createRange();
-    newRange.selectNodeContents(e);
-    newRange.collapse(false);
-    selection?.removeAllRanges();
-    selection?.addRange(newRange);
+    // const selection = window.getSelection();
+    // const newRange = document.createRange();
+    // newRange.selectNodeContents(e);
+    // newRange.collapse(false);
+    // selection?.removeAllRanges();
+    // selection?.addRange(newRange);
   };
 
   return (
@@ -257,8 +279,8 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
             className="w-full whitespace-pre-wrap rounded-lg p-4 text-black outline-none"
             onInput={(e) => {
               handleInput(e);
-              focusContentEditableTextToEnd(e.currentTarget);
               handleTyping();
+              focusContentEditableTextToEnd(e.currentTarget);
             }}
             onKeyDown={handleKeyDown}
             suppressContentEditableWarning

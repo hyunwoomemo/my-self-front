@@ -65,11 +65,11 @@ const MyList = () => {
                   <div className="flex flex-col">
                     <h3 className="text-[1.1rem] font-bold">{v.name}</h3>
                     <span className="text-sm">
-                      {v.address} · 멤버 {v.max_members}명
+                      {v.address} · 멤버 {v.userCount}명
                     </span>
                   </div>
                   <span className="text-sm text-point">
-                    {moment(v.event_date).format("YYYY년 MM월 DD일 dddd HH:mm")}
+                    {moment(v.event_date).format("YYYY년 MM월 DD일 dddd HH시 mm분")}
                   </span>
                 </div>
                 <span className="text-sm text-textGray">{moment(v.last_active_time).format("LT")}</span>

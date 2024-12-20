@@ -17,6 +17,7 @@ const MeetingList = () => {
   const data = useAtomValue(listAtom) as getListProps[];
   const { enterMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const currentRegion = JSON.parse(localStorage.getItem("address"))?.address_code;
 
   const activeStatus = (time) => {
     if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {
@@ -28,7 +29,7 @@ const MeetingList = () => {
     }
   };
   const handleEnterMeeting = (data) => {
-    enterMeeting({ region_code: "RC003", meetings_id: data.id, users_id: myInfo.user_id, type: data.type });
+    enterMeeting({ region_code: currentRegion, meetings_id: data.id, users_id: myInfo.user_id, type: data.type });
   };
 
   if (loading) {
@@ -64,6 +65,10 @@ const MeetingList = () => {
                 <div className="rounded-3xl bg-[var(--darkSurface)] px-3 py-[0.15rem] text-xs">
                   {v.category1_name}/{v.category2_name}
                 </div>
+                <Dot />
+                <span className="text-xs">
+                  {moment(v.event_date).format("YY년 MM월 DD일")} {moment(v.event_date).format("HH시 mm분")}
+                </span>
                 {v.last_active_time && (
                   <>
                     <Dot />

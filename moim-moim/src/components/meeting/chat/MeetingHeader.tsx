@@ -20,6 +20,7 @@ const MeetingHeader = () => {
   const router = useRouter();
   const { socket } = useSocket();
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
+  const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
   const handleClickSideBar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -28,7 +29,7 @@ const MeetingHeader = () => {
 
   const handlePrevClick = () => {
     router.push("/");
-    socket?.emit("exitMoim", { region_code: "RC003", meetings_id: meetingData.id });
+    socket?.emit("exitMoim", { region_code: currentRegion, meetings_id: meetingData.id });
   };
 
   if (loading) {
