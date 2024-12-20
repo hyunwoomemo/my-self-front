@@ -6,11 +6,13 @@ import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { listAtom } from "@/store/meeting/list/atom";
 import { messagesAtom, recentMsgAtom, typingAtom } from "@/store/meeting/messages/atom";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { GroupedData } from "@/utils/group";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { myInfoProps } from "@/app/client-layout";
 
 export let socket: Socket;
 
@@ -123,6 +125,7 @@ export const useSocket = () => {
   const setTyping = useSetAtom(typingAtom);
   const router = useRouter();
   const setRecentMsg = useSetAtom(recentMsgAtom);
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
   useEffect(() => {
     //소켓 연결
@@ -137,7 +140,10 @@ export const useSocket = () => {
       socket?.removeAllListeners();
     }
 
-    const handleConnect = () => console.log("connected!");
+    const handleConnect = () => {
+      console.log("connected!", myInfo?.user_id);
+      register({ users_id: myInfo?.user_id });
+    };
 
     const handleMeetingActive = (data) => {
       setLoading(true);
@@ -173,7 +179,7 @@ export const useSocket = () => {
     });
     socket?.on("error", handleError);
     socket?.on("userTyping", handleUserTyping);
-  }, [currentMeeting]);
+  }, [currentMeeting, myInfo]);
 
   const handleGetList = (data: getListProps) => {
     setLoading(true);
@@ -205,6 +211,10 @@ export const useSocket = () => {
     });
     setRecentMsg(data);
     setLoading(false);
+  };
+
+  const register = ({ users_id }) => {
+    socket?.emit("register", { users_id });
   };
 
   const joinArea = (region_code: string) => {
@@ -245,6 +255,7 @@ export const useSocket = () => {
   };
 
   return {
+    register,
     joinArea,
     enterMeeting,
     generateMeeting,
