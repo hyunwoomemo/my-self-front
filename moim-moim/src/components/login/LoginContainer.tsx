@@ -17,7 +17,11 @@ export function LoginContainer() {
     // loginWithProvider("google");
   };
 
-  // server client
+  useEffect(() => {
+    localStorage.removeItem("address");
+    localStorage.removeItem("category1");
+    localStorage.removeItem("category2");
+  }, []);
 
   const handleLoginWithKakao = () => {
     // loginWithProvider("kakao");
