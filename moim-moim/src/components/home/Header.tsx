@@ -2,18 +2,21 @@ import { FaChevronDown, FaBell, FaMagnifyingGlass, FaRegCalendar, FaChevronUp } 
 import { BsPencil } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
-import { socket, useSocket } from "@/hooks/useSocket";
-import { currentAreaAtom } from "@/store/area/atom";
-import { selectedAreaValue } from "../common/Region";
+import { useSocket } from "@/hooks/useSocket";
+import { revalidateContents } from "@/utils/revalidateTag";
 
 const Header = () => {
   const [isShow, setIsShow] = useState<boolean>(false);
   const router = useRouter();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const { joinArea } = useSocket();
+
+  useEffect(() => {
+    revalidateContents("myInfo");
+  }, []);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -25,6 +28,14 @@ const Header = () => {
 
     return () => window.removeEventListener("click", handleClick);
   }, [isShow]);
+
+  useEffect(() => {
+    if (myInfo?.addresses[0]) {
+      localStorage.setItem("address", JSON.stringify(myInfo?.addresses[0]));
+    } else {
+      localStorage.removeItem("address");
+    }
+  }, [myInfo?.addresses?.[0]]);
 
   const handleClickArea = (e) => {
     e.stopPropagation();
@@ -42,14 +53,14 @@ const Header = () => {
           <span className="text-xl font-bold">
             {localStorage.getItem("address")
               ? JSON.parse(localStorage.getItem("address")).region_3depth_name
-              : myInfo?.addresses[0].address.region_3depth_name}
+              : myInfo?.addresses[0].region_3depth_name}
           </span>
           {isShow ? <FaChevronUp /> : <FaChevronDown />}
         </div>
         {isShow && (
           <div className="absolute -left-4 top-[calc(100%+0.5rem)] z-10 flex flex-col rounded-lg border border-solid border-border bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.1)]">
             <div className="flex min-w-32 flex-col">
-              {myInfo.addresses.map((v, i) => {
+              {myInfo?.addresses.map((v, i) => {
                 return (
                   <div
                     key={v.address_code}
