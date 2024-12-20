@@ -38,7 +38,6 @@ const MeetingList = () => {
   if (data.length === 0) {
     return <Empty text="<span>개설된 모임방이 없어요. <br />관심있는 모임방을 만들어 볼까요?</span>" />;
   }
-  console.log("datadta", data);
 
   return (
     <>
@@ -81,7 +80,8 @@ const MeetingList = () => {
                 <div className="flex items-center gap-1">
                   <PiUsersLight className="text-2xl" />
                   <span className={`${v.userCount === v.max_members ? "text-red" : "text-text"}`}>
-                    {v.userCount}/{v.max_members}
+                    {v.userCount}
+                    {v.max_members === -1 ? undefined : `/${v.max_members}`}
                   </span>
                 </div>
               </div>
