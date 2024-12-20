@@ -1,12 +1,12 @@
 "use client";
 import { useSocket } from "@/hooks/useSocket";
 import { useEffect } from "react";
-import { accountApi } from "./api";
-import { useAtom, useAtomValue } from "jotai";
+import { accountApi } from "./nextApi";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { setCookie } from "cookies-next";
 import { errorAtom } from "@/store/common/atom";
-import { currentAreaAtom } from "@/store/area/atom";
+// import { revalidateContents } from "@/utils/revalidateTag";
 
 export interface MyInfoAddressesProps {
   address: string;
@@ -34,10 +34,14 @@ export interface myInfoProps {
   addresses: MyInfoAddressesProps;
   interests: string;
 }
-const ClientLayout = ({ children }) => {
+const ClientLayout = ({ children, myInfo }) => {
   const { joinArea } = useSocket();
-  const [myInfo, setMyinfo] = useAtom(myInfoAtom);
+  const setMyinfo = useSetAtom(myInfoAtom);
   const error = useAtomValue(errorAtom);
+
+  useEffect(() => {
+    setMyinfo(myInfo);
+  }, [myInfo]);
 
   useEffect(() => {
     if (error) {
@@ -61,8 +65,7 @@ const ClientLayout = ({ children }) => {
         // 토큰 저장 후 myInfo API 호출
         const currentPath = window.location.pathname;
         if (!(currentPath === "/login" || currentPath === "/sign")) {
-          const response = await accountApi.myInfo();
-          setMyinfo(response.data);
+          setMyinfo(myInfo);
         }
       } catch (err) {
         console.error("에러:", err);
@@ -79,7 +82,6 @@ const ClientLayout = ({ children }) => {
     }
   }, []);
 
-  console.log("localStorage.getItem('address')", localStorage.getItem("address"));
   return <>{children}</>;
 };
 export default ClientLayout;

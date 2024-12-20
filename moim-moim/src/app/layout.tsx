@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import Nav from "@/components/common/Nav";
 import React from "react";
 import ClientLayout from "./client-layout";
+import { getUserInfo } from "@/actions/user/getUserInfo";
 
 const gamtan = localFont({
   src: [
@@ -35,15 +36,17 @@ export const metadata: Metadata = {
   description: "맛집, 취미, 여행 이젠 함께하세요.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const myInfo = await getUserInfo();
+  console.log("layout myInfo", myInfo);
   return (
     <html lang="en" className={`${gamtan.className} ${tantan.variable} scrollbar`}>
       <body>
-        <ClientLayout>
+        <ClientLayout myInfo={myInfo.data}>
           <div className="commonLayoutContainer">
             <main className="relative w-full max-w-[600px]">{children}</main>
             <Nav />
