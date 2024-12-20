@@ -14,6 +14,7 @@ import "moment/locale/ko";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { PiUsersThree } from "react-icons/pi";
+import Hr from "@/components/common/Hr";
 
 const MyList = () => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
@@ -35,7 +36,7 @@ const MyList = () => {
       }
     };
     myList();
-  }, [myInfo]);
+  }, [myInfo?.user_id]);
 
   const sortList = myList.sort((a, b) => {
     return moment(b?.last_active_time).valueOf() - moment(a?.last_active_time).valueOf();
@@ -45,7 +46,8 @@ const MyList = () => {
   return (
     <>
       <Header />
-      <div className="p-4">
+      <Hr />
+      <div className="p-4 pt-0">
         {sortList.map((v) => {
           return (
             <div
@@ -63,7 +65,7 @@ const MyList = () => {
                   <div className="flex flex-col">
                     <h3 className="text-[1.1rem] font-bold">{v.name}</h3>
                     <span className="text-sm">
-                      {v.region_code} · 멤버 {v.max_members}명
+                      {v.address} · 멤버 {v.max_members}명
                     </span>
                   </div>
                   <span className="text-sm text-point">
