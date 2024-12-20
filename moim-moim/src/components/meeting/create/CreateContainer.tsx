@@ -43,7 +43,7 @@ const CreateContainer = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
-  const [selectedArea, setSelectedArea] = useState<string>(""); // 선택한 지역
+  const [selectedArea, setSelectedArea] = useState<Address[]>(); // 선택한 지역
   const [addressKeyword, setAddressKeyword] = useState<string>(""); // 입력한 키워드
 
   const selectedCategory = useAtomValue(selectedCategoryAtom);
@@ -111,7 +111,7 @@ const CreateContainer = () => {
   const handleClick = () => {
     generateMeeting({
       name: values.title,
-      region_code: selectedArea, //여기 수정해야 함
+      region_code: selectedArea.address.address_name,
       maxMembers: values.nolimitMembers ? -1 : Number(values.members),
       description: values.details,
       users_id: myInfo.user_id,
@@ -203,7 +203,9 @@ const CreateContainer = () => {
         <Region
           address={address}
           setAddress={setAddress}
-          addressKeyword={type === "edit" ? meetingData.region_code : myInfo?.addresses.address}
+          addressKeyword={
+            type === "edit" ? meetingData.region_code : JSON.parse(localStorage.getItem("address")).address
+          }
           setAddressKeyword={setAddressKeyword}
           // selectedArea={selectedArea}
           setSelectedArea={setSelectedArea}
