@@ -42,7 +42,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const myInfo = await getUserInfo();
-  console.log("layout myInfo", myInfo);
+
   return (
     <html lang="en" className={`${gamtan.className} ${tantan.variable} scrollbar`}>
       <body>

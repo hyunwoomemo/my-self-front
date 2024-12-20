@@ -2,7 +2,7 @@ import { getToken } from "./getToekn";
 
 export const getUserInfo = async () => {
   const token = await getToken();
-  console.log("token", token);
+  // console.log("token", token);
 
   //서버 컴포넌트에서 myInfo 사용
   try {

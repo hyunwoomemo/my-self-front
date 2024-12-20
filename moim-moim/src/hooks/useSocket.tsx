@@ -223,7 +223,7 @@ export const useSocket = () => {
 
   const enterMeeting = ({ region_code, meetings_id, users_id, type, afterBlur }: EnterMeeting) => {
     setLoading(true);
-    console.log("meetings_id???????????", meetings_id);
+    console.log("현재 입장한 방의 id, currentMeeting", meetings_id);
     setCurrentMeeting(meetings_id);
     setLoading(false);
 
