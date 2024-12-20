@@ -7,11 +7,12 @@ import { useState } from "react";
 import MoreIntro from "./MoreIntro";
 import Members from "./Members";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
 import { myInfoProps } from "@/app/client-layout";
 import { moimApi } from "@/app/nextApi";
+import { myLikeMoimAtom } from "@/store/meeting/list/atom";
 
 const tabData = [
   {
@@ -27,8 +28,9 @@ const SlideBar = ({ show, setShow }) => {
   const [tabValue, setTabValue] = useState(tabData[0]);
   const { likeMoim } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const [myLikeMoim, setMyLikeMoim] = useAtom(myLikeMoimAtom);
   const meetingData = useAtomValue(meetingDataAtom) as getMeetingData;
-  const [isLike, setIsLike] = useState(false);
+  const isLike = myLikeMoim.some((v) => v.receiver_id === meetingData.id);
   const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
   const handleClick = (e) => {
@@ -38,10 +40,6 @@ const SlideBar = ({ show, setShow }) => {
 
   const handleClickHeart = async () => {
     likeMoim({ users_id: myInfo.user_id, meetings_id: meetingData.id, region_code: currentRegion });
-
-    const res = await moimApi.myLike(myInfo.user_id);
-    console.log("Resresres", res);
-    setIsLike(res.data.map((v) => v.receiver_id === meetingData.id));
   };
 
   return (
