@@ -74,6 +74,7 @@ const CreateContainer = () => {
   const parseDate = moment(values.date).format("YYYY-MM-DD");
   const parseTime = moment(values.time).format("HH:mm:ss");
   const datetime = `${parseDate}T${parseTime}`;
+  const MeetingRegion = type === "edit" ? meetingData.region_code : JSON.parse(localStorage.getItem("address"));
 
   useEffect(() => {
     console.log("values", pathname, values.category1, values.category2);
@@ -111,7 +112,7 @@ const CreateContainer = () => {
   const handleClick = () => {
     generateMeeting({
       name: values.title,
-      region_code: selectedArea.address.address_name,
+      region_code: MeetingRegion.address_code,
       maxMembers: values.nolimitMembers ? -1 : Number(values.members),
       description: values.details,
       users_id: myInfo.user_id,
@@ -196,21 +197,23 @@ const CreateContainer = () => {
   if (loading) {
     return <Loader />;
   }
-  console.log("myyyyyyyyyyy", myInfo);
   return (
     <div className="scrollbar h-[calc(100vh-5rem)] overflow-y-auto p-6">
       <div className="flex flex-col gap-5">
-        <Region
+        {/* <Region
           address={address}
           setAddress={setAddress}
           addressKeyword={
             type === "edit" ? meetingData.region_code : JSON.parse(localStorage.getItem("address")).address
           }
           setAddressKeyword={setAddressKeyword}
-          // selectedArea={selectedArea}
+          selectedArea={selectedArea}
           setSelectedArea={setSelectedArea}
-        />
-
+        /> */}
+        <div className="flex flex-col gap-2">
+          <span>지역</span>
+          <span className="rounded-lg border border-solid border-border p-4">{MeetingRegion.address}</span>
+        </div>
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">주제</div>
           <div className="flex gap-2">
@@ -334,10 +337,11 @@ const CreateContainer = () => {
             disabled={
               !values.title ||
               errorMsg.title.length > 0 ||
-              !selectedArea ||
+              !MeetingRegion ||
               !values.date ||
               !values.time ||
               !values.title ||
+              !values.details ||
               errorMsg.details.length > 0 ||
               errorMsg.members.length > 0 ||
               (Number(values.members) === 0 && !values.nolimitMembers)
