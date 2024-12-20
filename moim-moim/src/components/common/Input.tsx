@@ -45,7 +45,7 @@ const Input = ({
   if (label) {
     return (
       <div className="flex flex-col gap-1">
-        <div className={`${disabled ? "text-disabledText" : undefined}`}>{label}</div>
+        {label && <div className="text-lg font-bold">{label}</div>}
         <div
           className={`rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-2" : undefined} focus-within:border-primary`}
         >
@@ -63,20 +63,20 @@ const Input = ({
             {...res}
           />
         </div>
-        {error && <span className="text-sm text-red-600">{errorText}</span>}
+        {error && <span className="text-sm text-red">{errorText}</span>}
       </div>
     );
   }
   return (
-    <div className={` ${error ? "flex flex-col gap-1" : ""}`}>
+    <div className={`flex-1 ${error ? "flex flex-col gap-1" : ""}`}>
       <div
-        className={`flex-1 rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
+        className={`rounded-xl border border-solid border-border ${disabled ? "bg-disabled" : undefined} ${typeClass()} ${icon ? "flex items-center gap-1" : undefined} focus-within:border-primary`}
       >
         {icon && <div className={`p-5 pr-0 text-2xl ${align ? `text-${align}` : undefined}`}>{icon}</div>}
         <input
           type={type}
           name={name}
-          className="w-full rounded-xl p-5 disabled:text-textGray"
+          className={`w-full rounded-xl p-5 disabled:text-textGray text-${align}`}
           placeholder={placeholder}
           value={value}
           disabled={disabled}
@@ -85,7 +85,7 @@ const Input = ({
           maxLength={maxLength}
           {...res}
         />
-        {error && <span className="text-sm text-red-600">{errorText}</span>}
+        {error && <span className="text-red-600 text-sm">{errorText}</span>}
       </div>
     </div>
   );
