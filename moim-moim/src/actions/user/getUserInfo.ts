@@ -15,7 +15,6 @@ export const getUserInfo = async () => {
       },
     });
 
-    console.log("getUserInfo myInfo", res);
     return await res.json();
   } catch (error) {
     console.error("api 호출 실패", error);

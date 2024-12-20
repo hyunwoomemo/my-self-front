@@ -1,6 +1,6 @@
-import { accountApi } from "@/app/api";
 import { useEffect, useState } from "react";
 import Button from "../common/Button";
+import { accountApi } from "@/app/nextApi";
 interface Interests {
   id: number;
   interest: string;

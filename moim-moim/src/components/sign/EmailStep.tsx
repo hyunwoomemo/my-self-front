@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { accountApi } from "@/app/api";
+import { accountApiv1 } from "@/app/api";
 
 const EmailStep = ({
   formData,
@@ -29,7 +29,7 @@ const EmailStep = ({
     if (isValidEmail(formData.email)) {
       setIsLoading(true);
       try {
-        const { message, statusCode } = await accountApi.requestEmail({ email: formData.email });
+        const { message, statusCode } = await accountApiv1.requestEmail({ email: formData.email });
         if (statusCode === 200) {
           setIsVerified(true); // 인증 상태 업데이트
           setIsTimerActive(true); // 타이머 활성화
@@ -73,7 +73,7 @@ const EmailStep = ({
       alert("인증시간 초과");
     } else {
       try {
-        const { message, statusCode } = await accountApi.confirmEmail({
+        const { message, statusCode } = await accountApiv1.confirmEmail({
           email: formData.email,
           code: verifyCode.value,
         });

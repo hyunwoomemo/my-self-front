@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import { redirect } from "next/navigation";
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // 백엔드 API URL
   // withCredentials: true,           // 쿠키 및 인증 정보 허용
@@ -16,11 +15,11 @@ apiClient.interceptors.request.use(
         console.log("config.url", config.url);
         if (config.url && config.url.includes("myInfo")) {
           console.warn("myinfo API 호출이 차단되었습니다.");
-          return null
+          return null;
         }
       }
 
-      //클라이언트 컴포넌트에서만 사용(서버 컴포넌트에서 사용하려면 fetch 이용하시길)
+      //클라이언트 컴포넌트에서만 사용
       const accessToken = getCookie("accessToken");
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -38,7 +37,6 @@ apiClient.interceptors.response.use(
   (response) => response, // 성공 응답 그대로 반환
   async (error) => {
     const originalRequest = error.config;
-
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 재시도 플래그 설정
 

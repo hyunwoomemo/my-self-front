@@ -1,10 +1,8 @@
 import { useState } from "react";
 import Button from "../common/Button";
 import Region, { Address, selectedAreaValue } from "../common/Region";
-import { accountApi } from "@/app/api";
+import { accountApiv1 } from "@/app/api";
 import { useRouter } from "next/navigation";
-import { useSetAtom } from "jotai";
-import { currentAreaAtom } from "@/store/area/atom";
 
 const AddressStep = ({ formData, setFormData }: { formData: any; setFormData: any }) => {
   const router = useRouter();
@@ -30,7 +28,7 @@ const AddressStep = ({ formData, setFormData }: { formData: any; setFormData: an
     const birthdate = formData.birthdate + formData.gender;
     const updatedFormData = { ...formData, addresses, birthdate };
     // API 호출
-    accountApi
+    accountApiv1
       .register(updatedFormData)
       .then(({ message }) => {
         alert(message);

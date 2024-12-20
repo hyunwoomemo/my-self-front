@@ -1,6 +1,6 @@
 import request from "@/utils/axios";
 
-export const accountApi = {
+export const accountApiv1 = {
   register: (data: {
     email: string;
     nickname: string;
@@ -21,27 +21,15 @@ export const accountApi = {
   login: (data: { email: string; password: string }) => {
     return request.post("/auth/login", data);
   },
-  myInfo: () => {
-    return request.get("/user/myInfo");
-  },
-  interests: () => {
-    return request.get("/auth/interests");
-  },
   requestEmail: (data: { email: string }) => {
     return request.post("/auth/requestEmail", data);
   },
   confirmEmail: (data: { email: string; code: string }) => {
     return request.post("/auth/confirmEmail", data);
   },
-  confirmNickname: (nickname: string) => {
-    return request.get(`/auth/confirmNickname?nickname=${nickname}`);
-  },
 };
 
 export const moimApi = {
-  myMoim: (id: number) => {
-    return request.get(`/moim/myMoim/${id}`);
-  },
   getMoreMessage: (id, total) => {
     return request.post("/moim/getMoreMessage", { meetings_id: id, length: total });
   },

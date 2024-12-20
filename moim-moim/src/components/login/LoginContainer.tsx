@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { LoginForm } from "@/components/login/LoginForm";
 import "@/app/(auth)/styles/login.scss";
-import { accountApi } from "@/app/api";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { getUserInfo } from "@/actions/user/getUserInfo";
 import { useSetAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { accountApi } from "@/app/nextApi";
+import { accountApiv1 } from "@/app/api";
 
 export function LoginContainer() {
   const router = useRouter();
@@ -16,6 +16,8 @@ export function LoginContainer() {
   const handleLoginWithGoogle = () => {
     // loginWithProvider("google");
   };
+
+  // server client
 
   const handleLoginWithKakao = () => {
     // loginWithProvider("kakao");
@@ -33,17 +35,18 @@ export function LoginContainer() {
 
   const handleLoginClick = async (data: { email: string; password: string }) => {
     try {
-      const res = await accountApi.login(data);
+      const res = await accountApiv1.login(data);
       if (res.statusCode === 200) {
         const { data } = res;
         console.log("datatata", res);
         setCookie("accessToken", data.accessToken);
         setCookie("refreshToken", data.refreshToken);
 
-        const userInfo = await getUserInfo();
-        if (userInfo.success) {
-          setMyinfo(userInfo.data);
-        }
+        accountApi.myInfo().then((userInfo) => {
+          if (userInfo.success) {
+            setMyinfo(userInfo.data);
+          }
+        });
 
         router.push("/");
       } else {

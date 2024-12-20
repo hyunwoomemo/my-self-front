@@ -1,6 +1,6 @@
 "use client";
 
-import { moimApi } from "@/app/api";
+import { moimApi } from "@/app/nextApi";
 import { myInfoProps } from "@/app/client-layout";
 import { Loader } from "@/components/common/Loader";
 import CreateButton from "@/components/home/AddButton";
