@@ -80,7 +80,7 @@ const ClientLayout = ({ children, myInfo }) => {
     } else {
       joinArea(myInfo?.addresses[0]?.address_code);
     }
-  }, []);
+  }, [myInfo?.addresses[0]?.address_code, localStorage.getItem("address")]);
 
   return <>{children}</>;
 };
