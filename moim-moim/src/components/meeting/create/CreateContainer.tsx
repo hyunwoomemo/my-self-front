@@ -3,7 +3,7 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { Loader } from "@/components/common/Loader";
-import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiCalendar, CiTimer } from "react-icons/ci";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +15,6 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Textarea from "@/components/common/Textarea";
 import { useAtomValue } from "jotai";
 import { selectedCategoryAtom } from "@/store/meeting/category/atom";
-import Region, { Address } from "@/components/common/Region";
 import { getMeetingData, useSocket } from "@/hooks/useSocket";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
@@ -42,9 +41,6 @@ const CreateContainer = () => {
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [address, setAddress] = useState<Address[]>([]); // 검색한 지역 목록들
-  const [selectedArea, setSelectedArea] = useState<Address[]>(); // 선택한 지역
-  const [addressKeyword, setAddressKeyword] = useState<string>(""); // 입력한 키워드
 
   const selectedCategory = useAtomValue(selectedCategoryAtom);
   const [values, setValues] = useState<Values>({
@@ -75,21 +71,25 @@ const CreateContainer = () => {
   const parseTime = moment(values.time).format("HH:mm:ss");
   const datetime = `${parseDate}T${parseTime}`;
   const MeetingRegion = type === "edit" ? meetingData.region_code : JSON.parse(localStorage.getItem("address"));
+  const localCategory1 = localStorage.getItem("category1");
+  const localCategory2 = localStorage.getItem("category2");
+  const [selectedArea, setSelectedArea] = useState("");
+  const [isShow, setIsShow] = useState(false); //나의 지역들
 
   useEffect(() => {
     console.log("values", pathname, values.category1, values.category2);
     const { category1, category2 } = values;
 
     if (!category1 || !category2) {
-      router.push("/create");
+      setValues((prev) => {
+        return {
+          ...prev,
+          [category1]: localCategory1,
+          [category2]: localCategory2,
+        };
+      });
     }
   }, [values.category1, values.category2]);
-
-  useEffect(() => {
-    window.addEventListener("click", () => {
-      setAddress([]);
-    });
-  }, []);
 
   useEffect(() => {
     setLoading(false);
@@ -107,7 +107,6 @@ const CreateContainer = () => {
   const preventClose = (e: BeforeUnloadEvent) => {
     e.preventDefault();
     e.returnValue = "";
-    router.push("/create");
   };
   const handleClick = () => {
     generateMeeting({
@@ -200,30 +199,66 @@ const CreateContainer = () => {
   return (
     <div className="scrollbar h-[calc(100vh-5rem)] overflow-y-auto p-6">
       <div className="flex flex-col gap-5">
-        {/* <Region
-          address={address}
-          setAddress={setAddress}
-          addressKeyword={
-            type === "edit" ? meetingData.region_code : JSON.parse(localStorage.getItem("address")).address
-          }
-          setAddressKeyword={setAddressKeyword}
-          selectedArea={selectedArea}
-          setSelectedArea={setSelectedArea}
-        /> */}
         <div className="flex flex-col gap-2">
-          <span>지역</span>
-          <span className="rounded-lg border border-solid border-border p-4">{MeetingRegion.address}</span>
+          <div className="text-lg font-bold">지역</div>
+          <div className="relative">
+            <button
+              className="w-full rounded-lg border border-solid border-border p-4 text-left"
+              onClick={() => setIsShow(true)}
+            >
+              {selectedArea ? selectedArea : MeetingRegion.address}
+            </button>
+            {isShow && (
+              <div className="absolute z-10 flex w-full flex-col gap-2 rounded-lg border border-t-0 border-solid border-border bg-white shadow-md">
+                {myInfo.addresses
+                  .filter((a) => a.address !== MeetingRegion.address)
+                  .map((v, i) => {
+                    return (
+                      <div
+                        className={`cursor-pointer px-5 py-3 first:rounded-t-lg last:rounded-b-lg hover:bg-lightPrimary hover:text-primary`}
+                        key={i}
+                        onClick={() => {
+                          setSelectedArea(v.address);
+                          setIsShow(false);
+                        }}
+                      >
+                        {v.address}
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <div className="text-lg font-bold">주제</div>
           <div className="flex gap-2">
             <Input
               placeholder="대분류"
-              value={type === "edit" ? meetingData?.category1_name : values.category1}
+              value={
+                type === "edit"
+                  ? meetingData?.category1_name
+                  : values.category1
+                    ? values.category1
+                    : String(localCategory1)
+              }
               disabled
               type="main"
+              align="center"
             />
-            <Input placeholder="소분류" value={values.category2} disabled type="main" />
+            <Input
+              placeholder="소분류"
+              value={
+                type === "edit"
+                  ? meetingData?.category2_name
+                  : values.category2
+                    ? values.category2
+                    : String(localCategory2)
+              }
+              disabled
+              type="main"
+              align="center"
+            />
             <Button title="변경" onClick={() => router.back()} />
           </div>
         </div>
@@ -250,6 +285,7 @@ const CreateContainer = () => {
                 placeholderText="날짜 선택"
                 calendarClassName="custom-calendar"
                 showPopperArrow={false}
+                minDate={new Date()}
                 renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
                   <div className="flex items-center justify-between pb-3">
                     <button className="rounded-lg border border-solid border-border p-1" onClick={decreaseMonth}>
@@ -274,7 +310,7 @@ const CreateContainer = () => {
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={30}
-                dateFormat="hh:mm"
+                dateFormat="HH:mm"
                 placeholderText="시간 선택"
                 showTimeCaption={false}
                 calendarClassName="custom-calendar"

@@ -25,6 +25,8 @@ const Category = ({ dataCategory1, dataCategory2 }: CategoryProps) => {
       setSelectedCategory({ c1_id: -1, c1_name: "", c2_id: -1, c2_name: "" });
     } else {
       setSelectedCategory({ c1_id: v1.id, c1_name: v1.name, c2_id: v2.id, c2_name: v2.name });
+      localStorage.setItem("category1", v1.name);
+      localStorage.setItem("category2", v2.name);
     }
   };
 

@@ -325,6 +325,13 @@ a {
   font-weight: 600;
   color: #333;
 }
+.custom-calendar .react-datepicker__day--disabled,
+.custom-calendar .react-datepicker__month-text--disabled,
+.custom-calendar .react-datepicker__quarter-text--disabled,
+.custom-calendar .react-datepicker__year-text--disabled {
+  color: #bbb;
+  font-weight: normal;
+}
 .react-datepicker__tab-loop,
 .react-datepicker-popper > div {
   width: 100%;
