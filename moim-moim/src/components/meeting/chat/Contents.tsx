@@ -145,9 +145,7 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   });
 
   //메시지가 없을 때
-  if (!messages) return;
-  // console.log(
-  //   "sdsd??sss",
+  // if (!messages) return;
 
   const getUnReadCount = (data) => {
     // console.log("🔔", data, activeData);
@@ -176,7 +174,14 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
     return <Loader />;
   }
 
-  if (!messages) return <Empty text="불러올 메시지가 없습니다." />;
+  if (!messages)
+    return (
+      <div className="flex flex-col-reverse gap-2 p-4">
+        <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+          {moment(meetingData?.created_at).format("YYYY년 MM월 DD일 dddd")}
+        </div>
+      </div>
+    );
   return (
     <>
       <div>
