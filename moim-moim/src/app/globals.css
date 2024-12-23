@@ -323,7 +323,10 @@ a {
 
 .custom-calendar .react-datepicker__day {
   font-weight: 600;
-  color: #333;
+  color: var(--text);
+}
+.custom-calendar .react-datepicker__day--today {
+  color: var(--primary);
 }
 .custom-calendar .react-datepicker__day--disabled,
 .custom-calendar .react-datepicker__month-text--disabled,
