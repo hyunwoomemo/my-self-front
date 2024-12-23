@@ -75,12 +75,17 @@ const ClientLayout = ({ children, myInfo }) => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("address")) {
-      joinArea(JSON.parse(localStorage.getItem("address")).address_code);
-    } else {
-      joinArea(myInfo?.addresses[0]?.address_code);
+    if (typeof window !== "undefined") {
+      const savedAddress = localStorage.getItem("address");
+      if (savedAddress) {
+        joinArea(JSON.parse(localStorage.getItem("address")).address_code);
+        console.log("joinArea(myInfo?.addresses[0]?.address_code);", joinArea(myInfo?.addresses[0]?.address_code));
+      } else {
+        joinArea(myInfo?.addresses[0]?.address_code);
+        console.log("joinArea(myInfo?.addresses[0]?.address_code)", joinArea(myInfo?.addresses[0]?.address_code));
+      }
     }
-  }, [myInfo?.addresses[0]?.address_code, localStorage?.getItem("address")]);
+  }, [myInfo?.addresses[0]?.address_code]);
 
   return <>{children}</>;
 };
