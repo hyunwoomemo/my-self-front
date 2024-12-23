@@ -26,7 +26,6 @@ const ChatContainer = ({ id }) => {
     });
   };
   const moreMsgs = useCallback(async () => {
-    console.log("messagesmessages", messages);
     setIsFetch(true);
     try {
       const res = await moimApi.getMoreMessage(id, messages.list.length);
@@ -48,8 +47,8 @@ const ChatContainer = ({ id }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        console.log("🎀entries", entries[0].isIntersecting, isEnd, isFetch, endMsg);
         if (entries[0].isIntersecting && !isEnd && !isFetch && !endMsg) {
-          console.log("🎀entries", entries);
           moreMsgs();
         }
       },
