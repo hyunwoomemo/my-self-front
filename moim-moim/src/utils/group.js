@@ -2,7 +2,7 @@ import moment from "moment";
 
 export const GroupedData = (data) => {
   const formattedData = data.map((v) => {
-    return { ...v, formattedDate: moment(v.created_at).format("YY-MM-DD HH:mm") };
+    return { ...v, formattedDate: moment(v?.created_at).format("YY-MM-DD HH:mm") };
   });
   // console.log("formattedData", formattedData);
   const newArr = formattedData.reverse().map((v, i, arr) => {
