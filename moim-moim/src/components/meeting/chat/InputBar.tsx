@@ -39,8 +39,8 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
 
   useEffect(() => {
     const arr = [];
-    const users = typing.map((v) => v.users_id);
-    arr.push(...users.filter((v) => v !== myInfo.user_id));
+    const users = typing.map((v) => v.nickname);
+    arr.push(...users.filter((v) => v !== myInfo.nickname));
 
     setTypingArr(arr);
   }, [typing]);
@@ -231,10 +231,10 @@ const InputBar = ({ id, lastMsgRef, isReply, setIsReply }) => {
   return (
     <div className="bg-[rgba(13,160,197,0.1)] p-4 pt-0">
       {typingArr.length !== 0 && (
-        <div>
-          {typingArr?.join(", ")}
+        <span className="mb-1 ml-1 text-sm">
+          <span className="text-sm font-bold">{typingArr?.join(", ")}</span>
           님이 입력 중입니다.
-        </div>
+        </span>
       )}
       {/* 답장할 때 */}
       {Object.keys(isReply).length !== 0 && (
