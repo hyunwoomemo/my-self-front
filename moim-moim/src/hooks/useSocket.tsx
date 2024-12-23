@@ -194,11 +194,11 @@ export const useSocket = () => {
     setLoading(true);
     console.log("data?.end🔔", data);
     setEndMsg(data?.end);
-    if (data) {
-      const list = Array.isArray(data?.list) ? data.list : [];
-      return { ...data, list: GroupedData([data, ...list]).reverse() };
-    }
-    // setMessages(data);
+    setMessages((prev: messagesValue) => {
+      const list = Array.isArray(prev?.list) ? prev.list : [];
+      return { ...prev, list: GroupedData([data, ...list]).reverse() };
+    });
+    setMessages(data);
     setLoading(false);
   };
 
