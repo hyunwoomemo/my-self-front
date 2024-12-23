@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tabs from "../common/Tabs";
 import MainFilter from "./MainFilter";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,12 @@ import CreateButton from "./AddButton";
 import Header from "./Header";
 import Hr from "../common/Hr";
 import MeetingList from "../meeting/list/MeetingList";
+import { useAtomValue, useSetAtom } from "jotai";
+import { loadingAtom } from "@/store/common/atom";
+import { myListAtom } from "@/store/meeting/list/atom";
+import { moimApi } from "@/app/nextApi";
+import { myInfoAtom } from "@/store/account/myInfo/atom";
+import { myInfoProps } from "@/app/client-layout";
 
 const tabList = [
   {
@@ -31,6 +37,25 @@ const tabList = [
 const MeetingListContainer = () => {
   const [value, setValue] = useState(tabList[0]);
   const router = useRouter();
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const setLoading = useSetAtom(loadingAtom);
+  const setMyList = useSetAtom(myListAtom);
+
+  useEffect(() => {
+    const myList = async () => {
+      try {
+        setLoading(true);
+        const res = await moimApi.myMoim(myInfo?.user_id);
+        console.log("resresresrsesrses", res);
+        setMyList(res.data);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    myList();
+  }, [myInfo?.user_id]);
 
   return (
     <>

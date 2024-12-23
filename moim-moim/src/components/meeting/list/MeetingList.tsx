@@ -1,7 +1,7 @@
 import { PiUsersThree, PiUsersLight } from "react-icons/pi";
 import { CiHeart } from "react-icons/ci";
 import { useAtomValue } from "jotai";
-import { listAtom } from "@/store/meeting/list/atom";
+import { listAtom, myListAtom } from "@/store/meeting/list/atom";
 import moment from "moment";
 import "moment/locale/ko";
 import { getListProps, useSocket } from "@/hooks/useSocket";
@@ -18,6 +18,8 @@ const MeetingList = () => {
   const { enterMeeting } = useSocket();
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const currentRegion = JSON.parse(localStorage.getItem("address"))?.address_code;
+  const myList = useAtomValue(myListAtom);
+  console.log("myList", myList);
 
   const activeStatus = (time) => {
     if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {
@@ -36,7 +38,7 @@ const MeetingList = () => {
     return <Loader />;
   }
 
-  if (data.length === 0) {
+  if (data && data.length === 0) {
     return <Empty text="<span>개설된 모임방이 없어요. <br />관심있는 모임방을 만들어 볼까요?</span>" />;
   }
 
@@ -53,9 +55,15 @@ const MeetingList = () => {
           </div>
           <div className="flex max-w-[calc(100%-7rem)] flex-1 flex-col justify-between gap-3 w_sm:max-w-[calc(100%-6rem)]">
             <div className="flex flex-col">
-              <h3 className="w-full truncate text-[1.1rem] font-bold" title={v.name}>
-                {v.name}
-              </h3>
+              <div className="flex gap-2">
+                <h3 className="w-fit truncate text-[1.1rem] font-bold" title={v.name}>
+                  {v.name}
+                </h3>
+                {myList?.some((m) => m.id === v.id) && (
+                  <span className="rounded-full rounded-bl-none bg-point px-2 py-1 text-xs text-white">참여중</span>
+                )}
+              </div>
+
               <h5 className="w-full truncate text-sm text-[var(--textGray)]" title={v.description}>
                 {v.description}
               </h5>
