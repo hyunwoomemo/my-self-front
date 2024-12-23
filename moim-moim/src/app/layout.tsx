@@ -46,7 +46,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${gamtan.className} ${tantan.variable} scrollbar`}>
       <body>
-        <ClientLayout myInfo={myInfo.data}>
+        <ClientLayout myInfo={myInfo?.data}>
           <div className="commonLayoutContainer">
             <main className="relative w-full max-w-[600px]">{children}</main>
             <Nav />

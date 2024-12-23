@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 const Home = async () => {
   const myInfo = await getUserInfo();
   console.log("myinfo🙋‍♀️🙋‍♀️🙋‍♀️", myInfo);
-  if (myInfo.statusCode === 401) {
+  if (myInfo?.statusCode === 401 || !myInfo) {
     redirect("/login");
   }
   return <MeetingListContainer />;
