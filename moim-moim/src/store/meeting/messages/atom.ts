@@ -13,10 +13,12 @@ interface ListValue {
   tag_id: number;
   users: string;
   users_id: number;
+  time: string;
+  nick: boolean;
 }
 export interface messagesValue {
   end: boolean;
-  list: ListValue;
+  list: ListValue[];
   total: number;
 }
 

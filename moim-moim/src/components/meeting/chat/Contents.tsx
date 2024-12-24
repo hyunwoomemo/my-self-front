@@ -17,6 +17,7 @@ import { myInfoProps } from "@/app/client-layout";
 import Empty from "@/components/common/Empty";
 import { FiCornerDownRight } from "react-icons/fi";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
+import Image from "next/image";
 
 const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
   const data = useAtomValue(listAtom) as getListProps[];
@@ -196,71 +197,142 @@ const Contents = ({ id, scrollRef, lastMsgRef, contentsRef, handleReply }) => {
                     {moment(v?.created_at).format("YYYY년 MM월 DD일 dddd")}
                   </div>
                 )}
-                {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 && <div className="mt-2">{v.nickname}</div>}
-
-                {v.admin === 1 ? (
-                  <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
-                    {v.contents}
-                  </div>
-                ) : (
-                  <div
-                    ref={(el) => (msgRefs.current[v.id] = el)}
-                    className={`relative flex w-fit max-w-[70%] items-end gap-1 ${isMe ? "flex-row-reverse self-end" : ""}`}
-                  >
-                    <div className={`flex items-end gap-1 ${isMe ? "flex-row-reverse pl-14" : "pr-14"}`}>
-                      <div
-                        className={`w-fit flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${isMe ? "self-end rounded-br-none bg-semiPrimary text-right" : "rounded-bl-none bg-white"}`}
-                      >
-                        {/* 답장일 때 */}
-                        {v.reply_id !== 0 && (
-                          <div
-                            onClick={() => {
-                              const replyElement = msgRefs.current?.[v.reply_id];
-                              console.log("replyElement", v.id, v.reply_id);
-                              if (replyElement) {
-                                replyElement.scrollIntoView({
-                                  behavior: "smooth",
-                                  block: "start",
-                                });
-                              } else {
-                                console.error(`Element with ID ${v.reply_id} not found.`);
-                              }
-                            }}
-                          >
-                            <div className="text-xs text-primary">
-                              {v.reply_nickname === myInfo?.nickname ? "나" : v.reply_nickname}
-                              에게 답장
-                            </div>
-                            <div className="break-all text-sm text-disabledText">{v.reply_contents}</div>
-                            <div className="h-[1px] w-full bg-[rgba(0,0,0,0.1)]"></div>
-                          </div>
-                        )}
-                        <div className="pt-1">{v.contents}</div>
+                {myInfo.user_id !== v.users_id && v.nick && v.admin !== 1 ? (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div className="rounded-full">
+                        <Image src="/moim/default_profile.png" alt="기본 프로필 이미지" width={40} height={40} />
                       </div>
-
-                      {/* 답장하기 아이콘 */}
-                      {isHover[v.id] && (
-                        <button
-                          className={`group absolute bottom-0 cursor-pointer p-1 ${isMe ? "right-[calc(100%-3rem)]" : "left-[calc(100%-3rem)]"}`}
-                          onClick={() => handleReply(v.id)}
-                          // onClick={() => console.log("clicked")}
-                        >
-                          <span className="block rounded-full bg-black bg-opacity-5 p-1 text-white group-hover:bg-opacity-10">
-                            <FiCornerDownRight size={12} />
-                          </span>
-                        </button>
-                      )}
-                      {/* 시간 */}
-                      {v.time && (
-                        <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
-                      )}
-                      {/* 읽음 표시 */}
-                      {getUnReadCount(v) !== 0 && (
-                        <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
-                      )}
+                      <div className="mt-2">{v.nickname}</div>
                     </div>
-                  </div>
+                    <div
+                      ref={(el) => (msgRefs.current[v.id] = el)}
+                      className={`relative flex w-fit max-w-[70%] items-end gap-1 ${isMe ? "flex-row-reverse self-end" : ""}`}
+                    >
+                      <div className={`ml-12 flex items-end gap-1 ${isMe ? "flex-row-reverse pl-14" : "pr-14"}`}>
+                        <div
+                          className={`w-fit flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${isMe ? "self-end rounded-br-none bg-semiPrimary" : "rounded-tl-none bg-white"}`}
+                        >
+                          {/* 답장일 때 */}
+                          {v.reply_id !== 0 && (
+                            <div
+                              onClick={() => {
+                                const replyElement = msgRefs.current?.[v.reply_id];
+                                console.log("replyElement", v.id, v.reply_id);
+                                if (replyElement) {
+                                  replyElement.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start",
+                                  });
+                                } else {
+                                  console.error(`Element with ID ${v.reply_id} not found.`);
+                                }
+                              }}
+                            >
+                              <div className="text-xs text-primary">
+                                {v.reply_nickname === myInfo?.nickname ? "나" : v.reply_nickname}
+                                에게 답장
+                              </div>
+                              <div className="break-all text-sm text-disabledText">{v.reply_contents}</div>
+                              <div className="h-[1px] w-full bg-[rgba(0,0,0,0.1)]"></div>
+                            </div>
+                          )}
+                          <div className={`pt-1 ${isMe ? "text-right" : ""}`}>{v.contents}</div>
+                        </div>
+
+                        {/* 답장하기 아이콘 */}
+                        {isHover[v.id] && (
+                          <button
+                            className={`group absolute bottom-0 cursor-pointer p-1 ${isMe ? "right-[calc(100%-3rem)]" : "left-[calc(100%-3rem)]"}`}
+                            onClick={() => handleReply(v.id)}
+                            // onClick={() => console.log("clicked")}
+                          >
+                            <span className="block rounded-full bg-black bg-opacity-5 p-1 text-white group-hover:bg-opacity-10">
+                              <FiCornerDownRight size={12} />
+                            </span>
+                          </button>
+                        )}
+                        {/* 시간 */}
+                        {v.time && (
+                          <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span>
+                        )}
+                        {/* 읽음 표시 */}
+                        {getUnReadCount(v) !== 0 && (
+                          <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {v.admin === 1 ? (
+                      <div className="w-full rounded-3xl bg-[rgba(95,125,143,0.3)] p-1 text-center text-sm font-thin text-white">
+                        {v.contents}
+                      </div>
+                    ) : (
+                      <div
+                        ref={(el) => (msgRefs.current[v.id] = el)}
+                        className={`relative flex w-fit max-w-[70%] items-end gap-1 ${isMe ? "flex-row-reverse self-end" : ""}`}
+                      >
+                        <div className={`ml-12 flex items-end gap-1 ${isMe ? "flex-row-reverse pl-14" : "pr-14"}`}>
+                          <div
+                            className={`w-fit flex-shrink-0 whitespace-pre-wrap rounded-3xl p-3 ${isMe ? "self-end rounded-br-none bg-semiPrimary" : "rounded-tl-none bg-white"}`}
+                          >
+                            {/* 답장일 때 */}
+                            {v.reply_id !== 0 && (
+                              <div
+                                onClick={() => {
+                                  const replyElement = msgRefs.current?.[v.reply_id];
+                                  console.log("replyElement", v.id, v.reply_id);
+                                  if (replyElement) {
+                                    replyElement.scrollIntoView({
+                                      behavior: "smooth",
+                                      block: "start",
+                                    });
+                                  } else {
+                                    console.error(`Element with ID ${v.reply_id} not found.`);
+                                  }
+                                }}
+                              >
+                                <div className="text-xs text-primary">
+                                  {v.reply_nickname === myInfo?.nickname ? "나" : v.reply_nickname}
+                                  에게 답장
+                                </div>
+                                <div className="break-all text-sm text-disabledText">{v.reply_contents}</div>
+                                <div className="h-[1px] w-full bg-[rgba(0,0,0,0.1)]"></div>
+                              </div>
+                            )}
+                            <div className={`pt-1 ${isMe ? "text-right" : ""}`}>{v.contents}</div>
+                          </div>
+
+                          {/* 답장하기 아이콘 */}
+                          {isHover[v.id] && (
+                            <button
+                              className={`group absolute bottom-0 cursor-pointer p-1 ${isMe ? "right-[calc(100%-3rem)]" : "left-[calc(100%-3rem)]"}`}
+                              onClick={() => handleReply(v.id)}
+                              // onClick={() => console.log("clicked")}
+                            >
+                              <span className="block rounded-full bg-black bg-opacity-5 p-1 text-white group-hover:bg-opacity-10">
+                                <FiCornerDownRight size={12} />
+                              </span>
+                            </button>
+                          )}
+                          {/* 시간 */}
+                          {v.time && (
+                            <span className="pb-1 text-[9px] text-textGray">
+                              {moment(v.created_at).format("HH:mm")}
+                            </span>
+                          )}
+                          {/* 읽음 표시 */}
+                          {getUnReadCount(v) !== 0 && (
+                            <span className="pb-1 text-[9px] text-point">{getUnReadCount(v)}</span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
+
                 {/* <span className="pb-1 text-[9px] text-textGray">{moment(v.created_at).format("HH:mm")}</span> */}
               </div>
             );
