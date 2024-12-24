@@ -1,12 +1,10 @@
 "use client";
 import { useSocket } from "@/hooks/useSocket";
 import { useEffect } from "react";
-import { accountApi, moimApi } from "./nextApi";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { setCookie } from "cookies-next";
-import { errorAtom, loadingAtom } from "@/store/common/atom";
-import { myListAtom } from "@/store/meeting/list/atom";
+import { errorAtom } from "@/store/common/atom";
 // import { revalidateContents } from "@/utils/revalidateTag";
 
 export interface MyInfoAddressesProps {
@@ -39,24 +37,6 @@ const ClientLayout = ({ children, myInfo }) => {
   const { joinArea } = useSocket();
   const setMyinfo = useSetAtom(myInfoAtom);
   const error = useAtomValue(errorAtom);
-  const setLoading = useSetAtom(loadingAtom);
-  const setMyList = useSetAtom(myListAtom);
-
-  useEffect(() => {
-    const myList = async () => {
-      try {
-        setLoading(true);
-        const res = await moimApi.myMoim(myInfo?.user_id);
-        console.log("resresresrsesrses", res);
-        setMyList(res.data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    myList();
-  }, [myInfo?.user_id]);
 
   useEffect(() => {
     setMyinfo(myInfo);

@@ -14,15 +14,15 @@ export const nextFetch = async (url, options) => {
     };
 
     const res = await fetch(url, newOption);
+    const json = await res.json();
+
     if (!res.ok) {
       if (json.statusCode === 401) {
-        window.location.href = "/login";
-        return;
+        // window.location.href = "/login";
       }
       throw new Error("오류", res.status);
     }
 
-    const json = await res.json();
     return json;
   } catch (err) {
     console.error("fetch error", err);
@@ -39,7 +39,7 @@ export const nextFetch = async (url, options) => {
         console.log("refreshToken 없음", err);
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
     }
     throw err;

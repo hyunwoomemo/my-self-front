@@ -7,7 +7,7 @@ import CreateButton from "@/components/home/AddButton";
 import Header from "@/components/home/Header";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { loadingAtom } from "@/store/common/atom";
-import { myListAtom, myListValue } from "@/store/meeting/list/atom";
+import { myListAtom } from "@/store/meeting/list/atom";
 import { useAtom, useAtomValue } from "jotai";
 import moment from "moment";
 import "moment/locale/ko";
@@ -17,10 +17,11 @@ import { PiUsersThree } from "react-icons/pi";
 import Hr from "@/components/common/Hr";
 
 const MyList = () => {
-  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
+  const router = useRouter();
+
   const [loading, setLoading] = useAtom(loadingAtom);
   const [myList, setMyList] = useAtom(myListAtom);
-  const router = useRouter();
+  const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
 
   useEffect(() => {
     const myList = async () => {
