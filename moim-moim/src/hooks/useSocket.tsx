@@ -1,6 +1,6 @@
 "use client";
 
-import { errorAtom, loadingAtom } from "@/store/common/atom";
+import { errorAtom, inviteCodeAtom, loadingAtom } from "@/store/common/atom";
 import { activeAtom } from "@/store/meeting/active/atom";
 import { currentMeetingAtom } from "@/store/meeting/currentMeeting/atom";
 import { meetingDataAtom } from "@/store/meeting/data/atom";
@@ -122,7 +122,7 @@ export const useSocket = () => {
   const router = useRouter();
   const setRecentMsg = useSetAtom(recentMsgAtom);
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
-  const setEndMsg = useSetAtom(endMsgAtom);
+  const setInviteCode = useSetAtom(inviteCodeAtom);
 
   useEffect(() => {
     //소켓 연결
@@ -155,6 +155,13 @@ export const useSocket = () => {
     const handleUserTyping = (data) => {
       setTyping(data);
     };
+
+    const handleInviteCode = (code) => {
+      setLoading(true);
+      setInviteCode(code.invite_code);
+      setLoading(false);
+    };
+
     socket?.on("connect", handleConnect);
     socket?.on("meetingActive", handleMeetingActive);
     socket?.on("enterRes", (data) => {
@@ -176,6 +183,7 @@ export const useSocket = () => {
     });
     socket?.on("error", handleError);
     socket?.on("userTyping", handleUserTyping);
+    socket?.on("inviteCode", handleInviteCode);
   }, [currentMeeting, myInfo]);
 
   const handleGetList = (data: getListProps) => {
@@ -250,6 +258,10 @@ export const useSocket = () => {
     socket?.emit("leaveMoim", { users_id, meetings_id, region_code });
   };
 
+  const generateInviteCode = ({ users_id, meetings_id, region_code }) => {
+    socket?.emit("generateInviteCode", { users_id, meetings_id, region_code });
+  };
+
   return {
     register,
     joinArea,
@@ -260,6 +272,7 @@ export const useSocket = () => {
     likeMoim,
     userTyping,
     leaveMoim,
+    generateInviteCode,
     socket,
   };
 };
