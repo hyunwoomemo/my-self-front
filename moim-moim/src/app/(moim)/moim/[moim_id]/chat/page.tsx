@@ -5,6 +5,8 @@ const Chat = async ({ params }: { params: { moim_id: string } }) => {
   const { moim_id } = await params;
   const userInfo = await getUserInfo();
 
+  // useeffect => storedRoomNum => enterMeeting
+
   return (
     <div className="flex h-screen flex-col">
       <ChatContainer id={Number(moim_id)} userInfo={userInfo?.data} />

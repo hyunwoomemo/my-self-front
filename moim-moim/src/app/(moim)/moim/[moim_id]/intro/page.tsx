@@ -1,5 +1,7 @@
 import IntroContainer from "@/components/meeting/intro/IntroContainer";
 
-export default function Page() {
-  return <IntroContainer />;
-}
+const Intro = async ({ params }: { params: { moim_id: string } }) => {
+  const { moim_id } = await params;
+  return <IntroContainer id={moim_id} />;
+};
+export default Intro;

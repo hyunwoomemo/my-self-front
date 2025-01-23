@@ -47,6 +47,7 @@ const ClientLayout = ({ children, myInfo }) => {
       alert(`에러났어용, 에러 메세지: ${error.message}`);
     }
   }, [error]);
+
   useEffect(() => {
     const fetchTokenData = async () => {
       try {
