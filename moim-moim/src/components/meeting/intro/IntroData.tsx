@@ -27,18 +27,8 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const { likeMoim } = useSocket();
   const currentRegion = JSON.parse(localStorage.getItem("address")).address_code;
 
-  const [myLikeMoim, setMyLikeMoim] = useAtom(myLikeMoimAtom);
+  const myLikeMoim = useAtomValue(myLikeMoimAtom);
   const isLike = myLikeMoim.some((v) => v.receiver_id === data.id);
-
-  useEffect(() => {
-    //나의 찜 모임방 목록 atom에 저장하기
-    const myLikemoimConst = async () => {
-      const res = await moimApi.myLike(myInfo?.user_id);
-      setMyLikeMoim(res.data);
-    };
-    myLikemoimConst();
-  }, [data?.likeCount]);
-  console.log("🚀data", data);
 
   const handleEnterClick = () => {
     //입장하기 or 입장 신청하기 버튼 클릭
@@ -58,6 +48,10 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
   const handleClickHeart = async () => {
     console.log("heart clicked!!!");
     likeMoim({ users_id: myInfo.user_id, meetings_id: data.id, region_code: currentRegion });
+
+    // 백엔드에서 결과주면 성공했을 시에만 아래 단계 실행
+    const res = await moimApi.myLike(myInfo?.user_id);
+    setMyLikeMoim(res.data);
   };
 
   return (
@@ -65,7 +59,7 @@ const IntroData = ({ data, enterIntro }: IntroDataProps) => {
       <div className="flex flex-1 flex-col justify-between">
         <div className="flex flex-col items-center gap-6 pt-20">
           <div className="flex flex-col items-center gap-2">
-            <span className="w-fit rounded-full bg-semiPrimary px-4 py-2 text-xs font-bold">
+            <span className="w-fit rounded-full bg-semiPrimary px-2 py-1 text-xs font-bold">
               {data.category1_name}/{data.category2_name}
             </span>
             <h1 className="text-center text-3xl font-bold text-bg">{data.name}</h1>

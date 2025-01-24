@@ -1,7 +1,7 @@
 import { PiUsersThree, PiUsersLight } from "react-icons/pi";
 import { CiHeart } from "react-icons/ci";
-import { useAtomValue } from "jotai";
-import { listAtom, myListAtom } from "@/store/meeting/list/atom";
+import { useAtomValue, useSetAtom } from "jotai";
+import { listAtom, myLikeMoimAtom, myListAtom } from "@/store/meeting/list/atom";
 import moment from "moment";
 import "moment/locale/ko";
 import { getListProps, useSocket } from "@/hooks/useSocket";
@@ -11,6 +11,8 @@ import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { myInfoProps } from "@/app/client-layout";
 import Dot from "@/components/common/Dot";
 import Empty from "@/components/common/Empty";
+import { useEffect } from "react";
+import { moimApi } from "@/app/nextApi";
 
 const MeetingList = () => {
   const loading = useAtomValue(loadingAtom);
@@ -19,7 +21,6 @@ const MeetingList = () => {
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const currentRegion = JSON.parse(localStorage.getItem("address"))?.address_code;
   const myList = useAtomValue(myListAtom);
-  console.log("myList", myList);
 
   const activeStatus = (time) => {
     if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {

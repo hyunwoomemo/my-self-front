@@ -5,6 +5,8 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { myInfoAtom } from "@/store/account/myInfo/atom";
 import { setCookie } from "cookies-next";
 import { errorAtom } from "@/store/common/atom";
+import { moimApi } from "./nextApi";
+import { myLikeMoimAtom } from "@/store/meeting/list/atom";
 // import { revalidateContents } from "@/utils/revalidateTag";
 
 export interface MyInfoAddressesProps {
@@ -42,6 +44,16 @@ const ClientLayout = ({ children, myInfo }) => {
     setMyinfo(myInfo);
   }, [myInfo]);
 
+  const setMyLikeMoim = useSetAtom(myLikeMoimAtom);
+
+  useEffect(() => {
+    //나의 찜 모임방 목록 atom에 저장하기
+    const myLikemoimConst = async () => {
+      const res = await moimApi.myLike(myInfo?.user_id);
+      setMyLikeMoim(res.data);
+    };
+    myLikemoimConst();
+  }, []);
   useEffect(() => {
     if (error) {
       alert(`에러났어용, 에러 메세지: ${error.message}`);
