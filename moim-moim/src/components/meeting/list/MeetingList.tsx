@@ -23,6 +23,7 @@ const MeetingList = () => {
   const myList = useAtomValue(myListAtom);
 
   const activeStatus = (time) => {
+    console.log("tile", time);
     if (moment().subtract(10, "minutes").format("LLLL") < moment(time).format("LLLL")) {
       return "방금 대화";
     } else if (moment().subtract(30, "minutes").format("LLLL") < moment(time).format("LLLL")) {

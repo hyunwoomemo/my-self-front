@@ -37,29 +37,13 @@ const tabList = [
 
 const MyList = () => {
   const router = useRouter();
-  const [loading, setLoading] = useAtom(loadingAtom);
-  const [myList, setMyList] = useAtom(myListAtom);
+  const loading = useAtomValue(loadingAtom);
+  const myList = useAtomValue(myListAtom);
   const myInfo = useAtomValue(myInfoAtom) as myInfoProps;
   const [tabValue, setTabValue] = useState(tabList[0]);
   const myLikeMoim = useAtomValue(myLikeMoimAtom);
   const list = useAtomValue(listAtom) as ListValue;
   const { likeMoim } = useSocket();
-
-  useEffect(() => {
-    const myList = async () => {
-      try {
-        setLoading(true);
-        const res = await moimApi.myMoim(myInfo?.user_id);
-        console.log("resresresrsesrses", res);
-        setMyList(res.data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    myList();
-  }, [myInfo?.user_id]);
 
   const sortList = myList.sort((a, b) => {
     return moment(b?.last_active_time).valueOf() - moment(a?.last_active_time).valueOf();
@@ -86,6 +70,7 @@ const MyList = () => {
       <div className="pt-1">
         <Tabs data={tabList} setTabValue={setTabValue} tabValue={tabValue} type="default" />
         <div className="px-4">
+          {/* 참여중인 모임 */}
           {tabValue.value === "current" && (
             <>
               {sortList.map((v) => {
@@ -119,7 +104,7 @@ const MyList = () => {
               })}
             </>
           )}
-
+          {/* 내가 찜한 모임 */}
           {tabValue.value === "like" && (
             <>
               {likeList.map((v) => {
